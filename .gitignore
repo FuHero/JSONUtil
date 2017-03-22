@@ -22,3 +22,7 @@ release.properties
 
 # other
 *.TRACE
+/JSONUtil/JSONUtil.iml
+/JSONUtil/.settings
+/JSONUtil/.classpath
+/JSONUtil/.project
