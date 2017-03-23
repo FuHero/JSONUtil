@@ -26,8 +26,7 @@ import static org.kopitubruk.util.json.JSONParser.TokenType;
  * @author Bill Davidson
  * @since 1.2
  */
-public class JSONParserException extends JSONException
-{
+public class JSONParserException extends JSONException {
     private String badData = null;
     private Character quote = null;
     private Exception e = null;
@@ -41,12 +40,11 @@ public class JSONParserException extends JSONException
     /**
      * Constructor for bad data in JSON string.
      *
-     * @param bd The start of the bad data.
+     * @param bd  The start of the bad data.
      * @param idx The exact index of the bad data.
      * @param cfg The config object.
      */
-    JSONParserException( String bd, long idx, JSONConfig cfg )
-    {
+    JSONParserException(String bd, long idx, JSONConfig cfg) {
         super(cfg);
         badData = bd;
         index = idx;
@@ -55,11 +53,10 @@ public class JSONParserException extends JSONException
     /**
      * Constructor for unclosed quote.
      *
-     * @param q the quote character.
+     * @param q   the quote character.
      * @param cfg The config object.
      */
-    JSONParserException( char q, JSONConfig cfg )
-    {
+    JSONParserException(char q, JSONConfig cfg) {
         super(cfg);
         quote = q;
     }
@@ -68,11 +65,10 @@ public class JSONParserException extends JSONException
      * Constructor for an unexpected token type.
      *
      * @param ett expected token type.
-     * @param tt actual token type.
+     * @param tt  actual token type.
      * @param cfg The config object.
      */
-    JSONParserException( TokenType ett, TokenType tt, JSONConfig cfg )
-    {
+    JSONParserException(TokenType ett, TokenType tt, JSONConfig cfg) {
         super(cfg);
         expectedTokenType = ett;
         tokenType = tt;
@@ -81,11 +77,10 @@ public class JSONParserException extends JSONException
     /**
      * Wrapper for other RuntimeExceptions thrown by Java API.
      *
-     * @param e the exception
+     * @param e   the exception
      * @param cfg The config object.
      */
-    JSONParserException( Exception e, JSONConfig cfg )
-    {
+    JSONParserException(Exception e, JSONConfig cfg) {
         super(e, cfg);
         this.e = e;
     }
@@ -94,12 +89,11 @@ public class JSONParserException extends JSONException
      * Constructor for malformed code point.
      *
      * @param high The high surrogate.
-     * @param low The low surrogate.
-     * @param idx The position in the input.
-     * @param cfg the config object.
+     * @param low  The low surrogate.
+     * @param idx  The position in the input.
+     * @param cfg  the config object.
      */
-    JSONParserException( int high, int low, long idx, JSONConfig cfg )
-    {
+    JSONParserException(int high, int low, long idx, JSONConfig cfg) {
         super(cfg);
         index = idx;
         malformedCodePoint = true;
@@ -109,14 +103,13 @@ public class JSONParserException extends JSONException
      * @see org.kopitubruk.util.json.JSONException#internalGetMessage(java.util.Locale)
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
-        if ( quote != null ){
+        if (quote != null) {
             return String.format(bundle.getString("unclosedQuote"), quote);
-        }else if ( expectedTokenType != null ){
-            switch ( expectedTokenType ){
+        } else if (expectedTokenType != null) {
+            switch (expectedTokenType) {
                 case COLON:
                     return String.format(bundle.getString("expectedColon"), String.valueOf(tokenType));
                 case END_OBJECT:
@@ -124,13 +117,13 @@ public class JSONParserException extends JSONException
                 default:
                     return String.format(bundle.getString("expectedValue"), String.valueOf(tokenType));
             }
-        }else if ( malformedCodePoint ){
+        } else if (malformedCodePoint) {
             return String.format(bundle.getString("malformedCodePoint"), high, low, index);
-        }else if ( e != null ){
+        } else if (e != null) {
             return e.getLocalizedMessage();
-        }else{
+        } else {
             String str = badData == null ? "" : badData;
-            return String.format(bundle.getString("unrecognizedData"), index, str );
+            return String.format(bundle.getString("unrecognizedData"), index, str);
         }
     }
 

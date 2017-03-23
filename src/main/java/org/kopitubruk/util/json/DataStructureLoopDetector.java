@@ -23,8 +23,7 @@ import java.util.List;
  * @author Bill Davidson
  * @since 1.7.1
  */
-class DataStructureLoopDetector
-{
+class DataStructureLoopDetector {
     private JSONConfig cfg;
     private Object propertyValue;
     private List<Object> objStack;
@@ -33,17 +32,16 @@ class DataStructureLoopDetector
     /**
      * Make a DataStructureLoopDetector
      *
-     * @param cfg The config object.
+     * @param cfg           The config object.
      * @param propertyValue The property value being checked.
      */
-    DataStructureLoopDetector( JSONConfig cfg, Object propertyValue )
-    {
+    DataStructureLoopDetector(JSONConfig cfg, Object propertyValue) {
         this.cfg = cfg;
         this.propertyValue = propertyValue;
         objStack = cfg.getObjStack();
-        for ( Object o : objStack ){
+        for (Object o : objStack) {
             // reference comparison.
-            if ( o == propertyValue ){
+            if (o == propertyValue) {
                 throw new DataStructureLoopException(propertyValue, cfg);
             }
         }
@@ -55,13 +53,12 @@ class DataStructureLoopDetector
      * Pop the data structure loop detection stack unless there's an error,
      * in which case throws an exception.
      */
-    void popDataStructureStack()
-    {
+    void popDataStructureStack() {
         // remove this value from the stack.
-        if ( objStack.size() == (stackIndex+1) && objStack.get(stackIndex) == propertyValue ){
+        if (objStack.size() == (stackIndex + 1) && objStack.get(stackIndex) == propertyValue) {
             // current propertyValue is the last value in the list.
             objStack.remove(stackIndex);
-        }else{
+        } else {
             // this should never happen.
             throw new LoopDetectionFailureException(stackIndex, cfg);
         }

@@ -27,7 +27,7 @@ import java.util.Map;
  * like using a {@link LinkedHashMap} provided you don't need it to check for
  * duplicate keys.
  * <p>
- * You add properties as key-value pairs using the {@link #add(Object,Object)}
+ * You add properties as key-value pairs using the {@link #add(Object, Object)}
  * method which returns this JsonObject so that you can do adds in series for
  * convenience.
  * <p>
@@ -62,8 +62,7 @@ import java.util.Map;
  *
  * @author Bill Davidson
  */
-public class JsonObject implements JSONAble
-{
+public class JsonObject implements JSONAble {
     /**
      * Pseudo map that's backing this JsonObject
      */
@@ -77,8 +76,7 @@ public class JsonObject implements JSONAble
     /**
      * Create a dynamically sized JsonObject backed by an {@link ArrayList}.
      */
-    public JsonObject()
-    {
+    public JsonObject() {
         this(null);
     }
 
@@ -87,8 +85,7 @@ public class JsonObject implements JSONAble
      *
      * @param cfg A config object to be used with the toJSON or toString methods.
      */
-    public JsonObject( JSONConfig cfg )
-    {
+    public JsonObject(JSONConfig cfg) {
         pseudoMap = new DynamicPseudoMap();
         this.cfg = cfg;
     }
@@ -98,8 +95,7 @@ public class JsonObject implements JSONAble
      *
      * @param size The size of the property array.
      */
-    public JsonObject( int size )
-    {
+    public JsonObject(int size) {
         this(size, null);
     }
 
@@ -107,10 +103,9 @@ public class JsonObject implements JSONAble
      * Create a fixed size JsonObject backed by an array.
      *
      * @param size The size of the property array.
-     * @param cfg A config object to be used with the toJSON or toString methods.
+     * @param cfg  A config object to be used with the toJSON or toString methods.
      */
-    public JsonObject( int size, JSONConfig cfg )
-    {
+    public JsonObject(int size, JSONConfig cfg) {
         pseudoMap = new FixedPseudoMap(size);
         this.cfg = cfg;
     }
@@ -118,12 +113,11 @@ public class JsonObject implements JSONAble
     /**
      * Add a property to the property list.
      *
-     * @param name The name of the property.
+     * @param name  The name of the property.
      * @param value The value of the property.
      * @return This JsonObject allowing you to do adds in series.
      */
-    public JsonObject add( Object name, Object value )
-    {
+    public JsonObject add(Object name, Object value) {
         pseudoMap.put(name, value);
         return this;
     }
@@ -133,16 +127,14 @@ public class JsonObject implements JSONAble
      *
      * @return The number of elements in this property list.
      */
-    public int size()
-    {
+    public int size() {
         return pseudoMap.size();
     }
 
     /**
      * Clear the property list.
      */
-    public void clear()
-    {
+    public void clear() {
         pseudoMap.clear();
     }
 
@@ -151,10 +143,9 @@ public class JsonObject implements JSONAble
      * {@link ArrayList#trimToSize()} on its backing storage. Otherwise, do
      * nothing.
      */
-    public void trimToSize()
-    {
-        if ( pseudoMap instanceof DynamicPseudoMap ){
-            ((DynamicPseudoMap)pseudoMap).trimToSize();
+    public void trimToSize() {
+        if (pseudoMap instanceof DynamicPseudoMap) {
+            ((DynamicPseudoMap) pseudoMap).trimToSize();
         }
     }
 
@@ -163,8 +154,7 @@ public class JsonObject implements JSONAble
      *
      * @return the JSONConfig or null if there isn't one.
      */
-    public JSONConfig getJSONConfig()
-    {
+    public JSONConfig getJSONConfig() {
         return cfg;
     }
 
@@ -173,8 +163,7 @@ public class JsonObject implements JSONAble
      *
      * @param cfg the JSONConfig to set
      */
-    public void setJSONConfig( JSONConfig cfg )
-    {
+    public void setJSONConfig(JSONConfig cfg) {
         this.cfg = cfg;
     }
 
@@ -185,8 +174,7 @@ public class JsonObject implements JSONAble
      * @return the JSON encoding of this object.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return toJSON();
     }
 
@@ -195,8 +183,7 @@ public class JsonObject implements JSONAble
      * set in this object or defaults if they are not set.
      */
     @Override
-    public String toJSON()
-    {
+    public String toJSON() {
         return JSONUtil.toJSON(pseudoMap, cfg);
     }
 
@@ -205,12 +192,11 @@ public class JsonObject implements JSONAble
      * options.
      *
      * @param jsonConfig A configuration object to use to set encoding options.
-     *            If null, then this JsonObject's config will be used if it is
-     *            set.
+     *                   If null, then this JsonObject's config will be used if it is
+     *                   set.
      */
     @Override
-    public String toJSON( JSONConfig jsonConfig )
-    {
+    public String toJSON(JSONConfig jsonConfig) {
         JSONConfig jcfg = jsonConfig == null ? cfg : jsonConfig;
         return JSONUtil.toJSON(pseudoMap, jcfg);
     }
@@ -224,8 +210,7 @@ public class JsonObject implements JSONAble
      * @throws IOException If there is an error on output.
      */
     @Override
-    public void toJSON( Writer json ) throws IOException
-    {
+    public void toJSON(Writer json) throws IOException {
         JSONUtil.toJSON(pseudoMap, cfg, json);
     }
 
@@ -234,14 +219,13 @@ public class JsonObject implements JSONAble
      * the given configuration options.
      *
      * @param jsonConfig A configuration object to use to set encoding options.
-     *            If null, then this JsonObject's config will be used if it is
-     *            set.
-     * @param json A writer for the output.
+     *                   If null, then this JsonObject's config will be used if it is
+     *                   set.
+     * @param json       A writer for the output.
      * @throws IOException If there is an error on output.
      */
     @Override
-    public void toJSON( JSONConfig jsonConfig, Writer json ) throws IOException
-    {
+    public void toJSON(JSONConfig jsonConfig, Writer json) throws IOException {
         JSONConfig jcfg = jsonConfig == null ? cfg : jsonConfig;
         JSONUtil.toJSON(pseudoMap, jcfg, json);
     }

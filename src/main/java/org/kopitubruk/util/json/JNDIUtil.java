@@ -35,8 +35,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Bill Davidson
  */
-class JNDIUtil
-{
+class JNDIUtil {
     // logging.
     private static boolean logging;
     private static LogFactory logFactory = null;
@@ -45,9 +44,8 @@ class JNDIUtil
     /**
      * Make sure that the logger is there.
      */
-    private static synchronized void ensureLogger()
-    {
-        if ( log == null ){
+    private static synchronized void ensureLogger() {
+        if (log == null) {
             logFactory = LogFactory.getFactory();
             log = logFactory.getInstance(JSONConfigDefaults.class);
         }
@@ -56,9 +54,8 @@ class JNDIUtil
     /**
      * Release the logger.
      */
-    private static synchronized void releaseLogger()
-    {
-        if ( log != null ){
+    private static synchronized void releaseLogger() {
+        if (log != null) {
             logFactory.release();
             log = null;
             logFactory = null;
@@ -72,7 +69,7 @@ class JNDIUtil
     private static final String TOMCAT_CONTEXT_FACTORY = ".java.javaURLContextFactory";
 
     static {
-        logging = Boolean.parseBoolean(System.getProperty(JNDIUtil.class.getPackage().getName()+'.'+"logging", "true"));
+        logging = Boolean.parseBoolean(System.getProperty(JNDIUtil.class.getPackage().getName() + '.' + "logging", "true"));
     }
 
     /**
@@ -80,8 +77,7 @@ class JNDIUtil
      *
      * @param logging if true, then generate debug logging for JNDI reads.
      */
-    static synchronized void setLogging( boolean logging )
-    {
+    static synchronized void setLogging(boolean logging) {
         JNDIUtil.logging = logging;
     }
 
@@ -91,23 +87,21 @@ class JNDIUtil
      * @return The env context.
      * @throws NamingException If there's a problem.
      */
-    static Context getEnvContext() throws NamingException
-    {
-        return (Context)new InitialContext().lookup(ENV_CONTEXT);
+    static Context getEnvContext() throws NamingException {
+        return (Context) new InitialContext().lookup(ENV_CONTEXT);
     }
 
     /**
      * Shorthand to look up a context relative to java:/comp/env.
      *
      * @param path The path string for the JNDI context you want. Note that this
-     *        is looked up relative to java:/comp/env so you should not
-     *        include that part.
+     *             is looked up relative to java:/comp/env so you should not
+     *             include that part.
      * @return The context.
      * @throws NamingException If there's a problem.
      */
-    static Context getEnvContext( String path ) throws NamingException
-    {
-        return (Context)getEnvContext().lookup(path);
+    static Context getEnvContext(String path) throws NamingException {
+        return (Context) getEnvContext().lookup(path);
     }
 
     /**
@@ -117,34 +111,33 @@ class JNDIUtil
      * @return A map of names to values.
      * @throws NamingException If there's a problem.
      */
-    static Map<String,Object> getJNDIVariables( Context ctx ) throws NamingException
-    {
-        Map<String,Object> jndiVariables = new HashMap<>();
+    static Map<String, Object> getJNDIVariables(Context ctx) throws NamingException {
+        Map<String, Object> jndiVariables = new HashMap<>();
         NamingEnumeration<Binding> bindings = ctx.listBindings("");
 
-        if ( bindings.hasMore() ){
+        if (bindings.hasMore()) {
             boolean doLogging = logging;
-            if ( doLogging ){
+            if (doLogging) {
                 ensureLogger();
                 doLogging = log.isDebugEnabled();
-                if ( ! doLogging ){
+                if (!doLogging) {
                     releaseLogger();
                 }
             }
 
-            while ( bindings.hasMore() ){
-                try{
+            while (bindings.hasMore()) {
+                try {
                     Binding binding = bindings.next();
                     String name = binding.getName();
                     Object obj = binding.getObject();
-                    if ( obj != null ){
-                        if ( doLogging ){
-                            log.debug(name+" = "+obj);
+                    if (obj != null) {
+                        if (doLogging) {
+                            log.debug(name + " = " + obj);
                         }
                         jndiVariables.put(name, obj);
                     }
-                }catch ( Exception e ){
-                    if ( doLogging ){
+                } catch (Exception e) {
+                    if (doLogging) {
                         log.error("", e);
                     }
                     break;
@@ -161,19 +154,18 @@ class JNDIUtil
      * Get a boolean from a map or return the default value if it's not there.
      *
      * @param jndiVariables A map of JNDI variables to look things up.
-     * @param name The name to look up.
-     * @param defaultValue A default to return if it doesn't exist.
+     * @param name          The name to look up.
+     * @param defaultValue  A default to return if it doesn't exist.
      * @return The value or the default if the value isn't in the map.
      */
-    static boolean getBoolean( Map<String,Object> jndiVariables, String name, boolean defaultValue )
-    {
+    static boolean getBoolean(Map<String, Object> jndiVariables, String name, boolean defaultValue) {
         Object value = jndiVariables.get(name);
-        if ( value instanceof Boolean ){
-            return (Boolean)value;
-        }else{
-            if ( value instanceof CharSequence ){
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
+            if (value instanceof CharSequence) {
                 String val = value.toString();
-                if ( "true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val) ){
+                if ("true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val)) {
                     return Boolean.parseBoolean(val);
                 }
             }
@@ -185,18 +177,17 @@ class JNDIUtil
      * Get a String from a map or return the default value if it's not there.
      *
      * @param jndiVariables A map of JNDI variables to look things up.
-     * @param name The name to look up.
-     * @param defaultValue A default to return if it doesn't exist.
+     * @param name          The name to look up.
+     * @param defaultValue  A default to return if it doesn't exist.
      * @return The value or the default if the value isn't in the map.
      */
-    static String getString( Map<String,Object> jndiVariables, String name, String defaultValue )
-    {
+    static String getString(Map<String, Object> jndiVariables, String name, String defaultValue) {
         Object value = jndiVariables.get(name);
-        if ( value instanceof String ){
-            return (String)value;
-        }else if ( value instanceof CharSequence || value instanceof Character ){
+        if (value instanceof String) {
+            return (String) value;
+        } else if (value instanceof CharSequence || value instanceof Character) {
             return value.toString();
-        }else{
+        } else {
             return defaultValue;
         }
     }
@@ -205,19 +196,18 @@ class JNDIUtil
      * Get a String from a map or return the default value if it's not there.
      *
      * @param jndiVariables A map of JNDI variables to look things up.
-     * @param name The name to look up.
-     * @param defaultValue A default to return if it doesn't exist.
+     * @param name          The name to look up.
+     * @param defaultValue  A default to return if it doesn't exist.
      * @return The value or the default if the value isn't in the map.
      */
-    static int getInt( Map<String,Object> jndiVariables, String name, int defaultValue )
-    {
+    static int getInt(Map<String, Object> jndiVariables, String name, int defaultValue) {
         Object value = jndiVariables.get(name);
-        if ( value instanceof Integer ){
-            return (Integer)value;
-        }else{
-            try{
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            try {
                 return new BigDecimal(value.toString()).intValueExact();
-            }catch ( Exception e ){
+            } catch (Exception e) {
                 return defaultValue;
             }
         }
@@ -228,21 +218,20 @@ class JNDIUtil
      * which don't have a JNDI context available.
      *
      * @param contextName The full name: "java:/comp/env/..."
-     * @param factory the context factory.
-     * @param prefixes The prefixes for your factory.
+     * @param factory     the context factory.
+     * @param prefixes    The prefixes for your factory.
      * @return The final subcontext.
      * @throws NamingException If there's a problem.
      */
-    static Context createContext( String contextName, String factory, String prefixes ) throws NamingException
-    {
+    static Context createContext(String contextName, String factory, String prefixes) throws NamingException {
         InitialContext ctx = null;
         Context result = null;
         String[] parts = contextName.split("/");
 
-        try{
+        try {
             ctx = new InitialContext();
             ctx.lookup(parts[0]);
-        }catch ( NamingException e ){
+        } catch (NamingException e) {
             /*
              * No initial context.  Create one with the given factory/prefixes.
              */
@@ -256,22 +245,22 @@ class JNDIUtil
          */
         StringBuilder ctxNameBuf = new StringBuilder(contextName.length());
         boolean didStart = false;
-        for ( String part : parts ){
-            if ( didStart ){
+        for (String part : parts) {
+            if (didStart) {
                 ctxNameBuf.append('/');
-            }else{
+            } else {
                 didStart = true;
             }
             ctxNameBuf.append(part);
             String ctxName = ctxNameBuf.toString();
-            try{
+            try {
                 ctx.lookup(ctxName);
-            }catch ( NamingException e ){
+            } catch (NamingException e) {
                 result = ctx.createSubcontext(ctxName);
             }
         }
 
-        return result != null && result.toString().equals(contextName) ? result : (Context)ctx.lookup(contextName);
+        return result != null && result.toString().equals(contextName) ? result : (Context) ctx.lookup(contextName);
     }
 
     /**
@@ -284,8 +273,7 @@ class JNDIUtil
      * @return The final subcontext.
      * @throws NamingException If there's a problem.
      */
-    static Context createContext( String contextName ) throws NamingException
-    {
+    static Context createContext(String contextName) throws NamingException {
         return createContext(contextName, TOMCAT_URL_PREFIXES + TOMCAT_CONTEXT_FACTORY, TOMCAT_URL_PREFIXES);
     }
 
@@ -299,8 +287,7 @@ class JNDIUtil
      * @return The final subcontext.
      * @throws NamingException If there's a problem.
      */
-    static Context createEnvContext( String contextName ) throws NamingException
-    {
-        return createContext(ENV_CONTEXT+'/'+contextName);
+    static Context createEnvContext(String contextName) throws NamingException {
+        return createContext(ENV_CONTEXT + '/' + contextName);
     }
 }

@@ -28,8 +28,7 @@ import java.util.Iterator;
  *
  * @author Bill Davidson
  */
-class FastStringCollection implements Collection<String>
-{
+class FastStringCollection implements Collection<String> {
     private final String[] array;
     private final int length;
 
@@ -38,45 +37,38 @@ class FastStringCollection implements Collection<String>
      *
      * @param fieldNames The collection to turn into a list.
      */
-    FastStringCollection( Collection<String> fieldNames )
-    {
+    FastStringCollection(Collection<String> fieldNames) {
         array = fieldNames.toArray(new String[fieldNames.size()]);
         length = array.length;
     }
 
     @Override
-    public Iterator<String> iterator()
-    {
-        return new Iterator<String>()
-               {
-                   private int i = 0;
+    public Iterator<String> iterator() {
+        return new Iterator<String>() {
+            private int i = 0;
 
-                   @Override
-                   public boolean hasNext()
-                   {
-                       return i < length;
-                   }
+            @Override
+            public boolean hasNext() {
+                return i < length;
+            }
 
-                   @Override
-                   public String next()
-                   {
-                       return array[i++];
-                   }
+            @Override
+            public String next() {
+                return array[i++];
+            }
 
-                   @Override
-                   public void remove()
-                   {
-                       throw new UnsupportedOperationException();
-                   }
-               };
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = 1;
 
-        for ( int i = 0; i < length; i++ ){
+        for (int i = 0; i < length; i++) {
             result = 31 * result + array[i].hashCode();
         }
 
@@ -84,18 +76,17 @@ class FastStringCollection implements Collection<String>
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if ( obj == null ){
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
 
-        FastStringCollection other = (FastStringCollection)obj;
-        if ( length != other.length ){
+        FastStringCollection other = (FastStringCollection) obj;
+        if (length != other.length) {
             return false;
         }
-        for ( int i = 0; i < length; i++ ){
-            if ( ! array[i].equals(other.array[i]) ){
+        for (int i = 0; i < length; i++) {
+            if (!array[i].equals(other.array[i])) {
                 return false;
             }
         }
@@ -103,74 +94,62 @@ class FastStringCollection implements Collection<String>
     }
 
     @Override
-    public int size()
-    {
+    public int size() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean contains( Object o )
-    {
+    public boolean contains(Object o) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object[] toArray()
-    {
+    public Object[] toArray() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> T[] toArray( T[] a )
-    {
+    public <T> T[] toArray(T[] a) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean add( String e )
-    {
+    public boolean add(String e) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean remove( Object o )
-    {
+    public boolean remove(Object o) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean containsAll( Collection<?> c )
-    {
+    public boolean containsAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean addAll( Collection<? extends String> c )
-    {
+    public boolean addAll(Collection<? extends String> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean removeAll( Collection<?> c )
-    {
+    public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean retainAll( Collection<?> c )
-    {
+    public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void clear()
-    {
+    public void clear() {
         throw new UnsupportedOperationException();
     }
 }

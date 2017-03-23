@@ -43,21 +43,21 @@ import java.util.regex.Pattern;
  * Using this object with explicit field names allows you a few abilities that
  * normal reflection does not.
  * <ul>
- *   <li>
- *     You can specify exactly the fields that you wish to show and exclude
- *     all others. Privacy settings are ignored.
- *   </li>
- *   <li>
- *     You can specify to include static or transient fields, which normally
- *     are not allowed.
- *   </li>
- *   <li>
- *     You can use getters that don't have an actual field in the object but
- *     do have zero arguments and have names that look like JavaBeans
- *     compliant getter names. Just specify a name as if it's the name of a
- *     field in your fieldNames and it will look for the getter that matches
- *     that pseudo field name.
- *   </li>
+ * <li>
+ * You can specify exactly the fields that you wish to show and exclude
+ * all others. Privacy settings are ignored.
+ * </li>
+ * <li>
+ * You can specify to include static or transient fields, which normally
+ * are not allowed.
+ * </li>
+ * <li>
+ * You can use getters that don't have an actual field in the object but
+ * do have zero arguments and have names that look like JavaBeans
+ * compliant getter names. Just specify a name as if it's the name of a
+ * field in your fieldNames and it will look for the getter that matches
+ * that pseudo field name.
+ * </li>
  * </ul>
  * <p>
  * You can also specify a fieldAliases map so that field names are aliased
@@ -67,8 +67,7 @@ import java.util.regex.Pattern;
  * @author Bill Davidson
  * @since 1.9
  */
-public class JSONReflectedClass implements Cloneable
-{
+public class JSONReflectedClass implements Cloneable {
     // Used to split strings by the JSONReflectedClass(String) constructor.
     private static final Pattern COMMA = Pattern.compile(",");
     private static final Pattern EQUALS = Pattern.compile("=");
@@ -76,57 +75,53 @@ public class JSONReflectedClass implements Cloneable
     // instance data.
     private Class<?> objClass;
     private Set<String> fieldNames;
-    private TreeMap<String,String> fieldAliases;
+    private TreeMap<String, String> fieldAliases;
 
     /**
      * Create a new JSONReflectedClass
      *
      * @param obj An object of the type to be reflect or its class.
      */
-    public JSONReflectedClass( Object obj )
-    {
+    public JSONReflectedClass(Object obj) {
         this(obj, null, null);
     }
 
     /**
      * Create a new JSONReflectedClass
      *
-     * @param obj An object of the type to be reflect or its class.
+     * @param obj        An object of the type to be reflect or its class.
      * @param fieldNames The names of the fields to include in the reflection.
-     *            Internally, this gets converted to a {@link Set} which you can
-     *            access via {@link #getFieldNames()}.  If the input collection
-     *            has an iteration order, that order will be preserved in the
-     *            JSON output.
+     *                   Internally, this gets converted to a {@link Set} which you can
+     *                   access via {@link #getFieldNames()}.  If the input collection
+     *                   has an iteration order, that order will be preserved in the
+     *                   JSON output.
      */
-    public JSONReflectedClass( Object obj, Collection<String> fieldNames )
-    {
+    public JSONReflectedClass(Object obj, Collection<String> fieldNames) {
         this(obj, fieldNames, null);
     }
 
     /**
      * Create a new JSONReflectedClass
      *
-     * @param obj An object of the type to be reflect or its class.
+     * @param obj          An object of the type to be reflect or its class.
      * @param fieldAliases Map from object field names to custom names for output.
      */
-    public JSONReflectedClass( Object obj, Map<String,String> fieldAliases )
-    {
+    public JSONReflectedClass(Object obj, Map<String, String> fieldAliases) {
         this(obj, null, fieldAliases);
     }
 
     /**
      * Create a new JSONReflectedClass
      *
-     * @param obj An object of the type to be reflect or its class.
-     * @param fieldNames The names of the fields to include in the reflection.
-     *            Internally, this gets converted to a {@link Set} which you can
-     *            access via {@link #getFieldNames()}.  If the input collection
-     *            has an iteration order, that order will be preserved in the
-     *            JSON output.
+     * @param obj          An object of the type to be reflect or its class.
+     * @param fieldNames   The names of the fields to include in the reflection.
+     *                     Internally, this gets converted to a {@link Set} which you can
+     *                     access via {@link #getFieldNames()}.  If the input collection
+     *                     has an iteration order, that order will be preserved in the
+     *                     JSON output.
      * @param fieldAliases Map from object field names to custom names for output.
      */
-    public JSONReflectedClass( Object obj, Collection<String> fieldNames, Map<String,String> fieldAliases )
-    {
+    public JSONReflectedClass(Object obj, Collection<String> fieldNames, Map<String, String> fieldAliases) {
         setObjClass(obj);
         setFieldNames(fieldNames);
         setFieldAliases(fieldAliases);
@@ -151,28 +146,27 @@ public class JSONReflectedClass implements Cloneable
      * can pass "org.example.Widget,foo=bar" to this method.
      *
      * @param className The name of the class suitable for
-     *            {@link ClassLoader#loadClass(String)} followed optionally by a
-     *            comma separated list of field names and/or field aliases.
+     *                  {@link ClassLoader#loadClass(String)} followed optionally by a
+     *                  comma separated list of field names and/or field aliases.
      * @throws ClassNotFoundException If the class cannot be loaded.
      * @since 1.9.3
      */
-    public JSONReflectedClass( String className ) throws ClassNotFoundException
-    {
-        String[] parts = COMMA.split(className,0);
+    public JSONReflectedClass(String className) throws ClassNotFoundException {
+        String[] parts = COMMA.split(className, 0);
         Class<?> clazz = ReflectUtil.getClassByName(parts[0].trim());
         List<String> fnames = null;
-        Map<String,String> aliases = null;
-        if ( parts.length > 1 ){
+        Map<String, String> aliases = null;
+        if (parts.length > 1) {
             fnames = new ArrayList<>();
             aliases = new LinkedHashMap<>();
-            for ( int i = 1; i < parts.length; i++ ){
+            for (int i = 1; i < parts.length; i++) {
                 String fieldName = parts[i].trim();
-                if ( fieldName.indexOf('=') >= 0 ){
-                    String[] pair = EQUALS.split(fieldName,0);
-                    if ( pair.length == 2 ){
+                if (fieldName.indexOf('=') >= 0) {
+                    String[] pair = EQUALS.split(fieldName, 0);
+                    if (pair.length == 2) {
                         aliases.put(pair[0].trim(), pair[1].trim());
                     }
-                }else if ( fieldName.length() > 0 ){
+                } else if (fieldName.length() > 0) {
                     fnames.add(fieldName);
                 }
             }
@@ -185,8 +179,7 @@ public class JSONReflectedClass implements Cloneable
     /**
      * Only used for clone()
      */
-    private JSONReflectedClass()
-    {
+    private JSONReflectedClass() {
     }
 
     /**
@@ -194,8 +187,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @return the objClass
      */
-    public Class<?> getObjClass()
-    {
+    public Class<?> getObjClass() {
         return objClass;
     }
 
@@ -204,8 +196,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @param obj An object of the type to be reflect or its class.
      */
-    public void setObjClass( Object obj )
-    {
+    public void setObjClass(Object obj) {
         objClass = ReflectUtil.getClass(obj);
     }
 
@@ -217,8 +208,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @return a copy of the list of field names to reflect.
      */
-    public Set<String> getFieldNames()
-    {
+    public Set<String> getFieldNames() {
         return fieldNames == null ? null : new LinkedHashSet<>(fieldNames);
     }
 
@@ -233,8 +223,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @return the list of field names to reflect.
      */
-    Set<String> getFieldNamesRaw()
-    {
+    Set<String> getFieldNamesRaw() {
         return fieldNames;
     }
 
@@ -245,21 +234,20 @@ public class JSONReflectedClass implements Cloneable
      * by using this method.
      *
      * @param fieldNames The field names to include in reflected JSON output. If
-     *            the {@link Collection} that you send to this method has a set
-     *            iteration order, that order will be preserved.
+     *                   the {@link Collection} that you send to this method has a set
+     *                   iteration order, that order will be preserved.
      */
-    public void setFieldNames( Collection<String> fieldNames )
-    {
-        if ( fieldNames == null || fieldNames.size() < 1 ){
+    public void setFieldNames(Collection<String> fieldNames) {
+        if (fieldNames == null || fieldNames.size() < 1) {
             this.fieldNames = null;
-        }else{
+        } else {
             // the LinkedHashSet preserves order and removes dups.
             int tableSize = tableSizeFor(fieldNames.size());
             Set<String> ids = new LinkedHashSet<>(tableSize);
-            for ( String id : fieldNames ){
-                if ( id != null ){
+            for (String id : fieldNames) {
+                if (id != null) {
                     String tid = id.trim();     // ignore whitespace, if any.
-                    if ( isValidJavaIdentifier(tid) ){
+                    if (isValidJavaIdentifier(tid)) {
                         ids.add(tid);
                     }
                     // else invalid identifiers are silently discarded.
@@ -267,11 +255,11 @@ public class JSONReflectedClass implements Cloneable
                 // else null is silently discarded.
             }
             int size = ids.size();
-            if ( size < 1 ){
+            if (size < 1) {
                 this.fieldNames = null;
-            }else if ( tableSize > tableSizeFor(size) ){
+            } else if (tableSize > tableSizeFor(size)) {
                 this.fieldNames = new LinkedHashSet<>(ids);
-            }else{
+            } else {
                 this.fieldNames = ids;
             }
         }
@@ -282,8 +270,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @return the fieldAliases
      */
-    public Map<String,String> getFieldAliases()
-    {
+    public Map<String, String> getFieldAliases() {
         return fieldAliases;
     }
 
@@ -292,8 +279,7 @@ public class JSONReflectedClass implements Cloneable
      *
      * @return the fieldAliases
      */
-    TreeMap<String,String> getFieldAliasesTreeMap()
-    {
+    TreeMap<String, String> getFieldAliasesTreeMap() {
         return fieldAliases;
     }
 
@@ -311,29 +297,28 @@ public class JSONReflectedClass implements Cloneable
      *
      * @param fieldAliases the fieldAliases to set
      */
-    public void setFieldAliases( Map<String,String> fieldAliases )
-    {
-        if ( fieldAliases == null || fieldAliases.size() < 1 ){
+    public void setFieldAliases(Map<String, String> fieldAliases) {
+        if (fieldAliases == null || fieldAliases.size() < 1) {
             this.fieldAliases = null;
-        }else{
+        } else {
             /*
              * TreeMap will iterate according to the sort order of its keys
              * which allows uniform hashCode results even if the map is
              * modified later.
              */
             this.fieldAliases = new TreeMap<>();
-            for ( Entry<String,String> entry : fieldAliases.entrySet() ){
+            for (Entry<String, String> entry : fieldAliases.entrySet()) {
                 String key = entry.getKey();
                 String fieldName = key == null ? "" : key.trim();
-                if ( isValidJavaIdentifier(fieldName) ){
+                if (isValidJavaIdentifier(fieldName)) {
                     String value = entry.getValue();
                     String alias = value == null ? "" : value.trim();
-                    if ( alias.length() > 0 ){
+                    if (alias.length() > 0) {
                         this.fieldAliases.put(fieldName, alias);
                     }
                 }
             }
-            if ( this.fieldAliases.size() < 1 ){
+            if (this.fieldAliases.size() < 1) {
                 this.fieldAliases = null;
             }
         }
@@ -345,9 +330,8 @@ public class JSONReflectedClass implements Cloneable
      * @param fieldName The name to look up.
      * @return The custom version of the name.
      */
-    String getFieldAlias( String fieldName )
-    {
-        if ( fieldAliases == null ){
+    String getFieldAlias(String fieldName) {
+        if (fieldAliases == null) {
             return fieldName;
         }
         String result = fieldAliases.get(fieldName);
@@ -360,17 +344,16 @@ public class JSONReflectedClass implements Cloneable
      * @param id The identifier.
      * @return true if the given string is a valid Java identifier.
      */
-    static boolean isValidJavaIdentifier( String id )
-    {
+    static boolean isValidJavaIdentifier(String id) {
         int i = 0;
         int len = id.length();
-        while ( i < len ){
+        while (i < len) {
             int codePoint = id.codePointAt(i);
-            if ( i > 0 && Character.isJavaIdentifierPart(codePoint) ){
+            if (i > 0 && Character.isJavaIdentifierPart(codePoint)) {
                 // OK
-            }else if ( i == 0 && Character.isJavaIdentifierStart(codePoint) ){
+            } else if (i == 0 && Character.isJavaIdentifierStart(codePoint)) {
                 // OK
-            }else{
+            } else {
                 return false;
             }
             i += Character.charCount(codePoint);
@@ -384,8 +367,7 @@ public class JSONReflectedClass implements Cloneable
      * @see java.lang.Object#clone()
      */
     @Override
-    public synchronized JSONReflectedClass clone()
-    {
+    public synchronized JSONReflectedClass clone() {
         JSONReflectedClass result = new JSONReflectedClass();
         result.objClass = objClass;
         result.fieldNames = fieldNames;
@@ -399,8 +381,7 @@ public class JSONReflectedClass implements Cloneable
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + objClass.hashCode();
@@ -413,16 +394,15 @@ public class JSONReflectedClass implements Cloneable
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals( Object obj )
-    {
-        if ( this == obj )
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        if ( obj == null )
+        if (obj == null)
             return false;
-        if ( getClass() != obj.getClass() )
+        if (getClass() != obj.getClass())
             return false;
-        JSONReflectedClass other = (JSONReflectedClass)obj;
-        if ( objClass != other.objClass )
+        JSONReflectedClass other = (JSONReflectedClass) obj;
+        if (objClass != other.objClass)
             return false;
         return true;
     }

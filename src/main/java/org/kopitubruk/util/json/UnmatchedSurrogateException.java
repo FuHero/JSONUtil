@@ -25,8 +25,7 @@ import java.util.ResourceBundle;
  *
  * @author Bill Davidson
  */
-public class UnmatchedSurrogateException extends JSONException
-{
+public class UnmatchedSurrogateException extends JSONException {
     private String strValue;
     private int position;
     private char unmatchedSurrogate;
@@ -34,13 +33,12 @@ public class UnmatchedSurrogateException extends JSONException
     /**
      * Make a UnmatchedSurrogateException
      *
-     * @param cfg the config object.
-     * @param strValue the string that contains the unmatched surrogate.
-     * @param position the position within the string value of the unmatched surrogate.
+     * @param cfg                the config object.
+     * @param strValue           the string that contains the unmatched surrogate.
+     * @param position           the position within the string value of the unmatched surrogate.
      * @param unmatchedSurrogate the unmatched surrogate.
      */
-    UnmatchedSurrogateException( JSONConfig cfg, String strValue, int position, char unmatchedSurrogate )
-    {
+    UnmatchedSurrogateException(JSONConfig cfg, String strValue, int position, char unmatchedSurrogate) {
         super(cfg);
         this.strValue = strValue;
         this.position = position;
@@ -52,8 +50,7 @@ public class UnmatchedSurrogateException extends JSONException
      *
      * @return the string value that contained this unmatched surrogate.
      */
-    public String getStrValue()
-    {
+    public String getStrValue() {
         return strValue;
     }
 
@@ -62,8 +59,7 @@ public class UnmatchedSurrogateException extends JSONException
      *
      * @return the position within the string of the unmatched surrogate that caused this exception.
      */
-    public int getPosition()
-    {
+    public int getPosition() {
         return position;
     }
 
@@ -72,8 +68,7 @@ public class UnmatchedSurrogateException extends JSONException
      *
      * @return the unmatched surrogate that caused this exception.
      */
-    public char getUnmatchedSurrogate()
-    {
+    public char getUnmatchedSurrogate() {
         return unmatchedSurrogate;
     }
 
@@ -81,11 +76,10 @@ public class UnmatchedSurrogateException extends JSONException
      * @see org.kopitubruk.util.json.JSONException#internalGetMessage(java.util.Locale)
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
-        return String.format(bundle.getString("unmatchedSurrogate"), (int)unmatchedSurrogate, position);
+        return String.format(bundle.getString("unmatchedSurrogate"), (int) unmatchedSurrogate, position);
     }
 
     private static final long serialVersionUID = 1L;

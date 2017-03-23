@@ -24,8 +24,7 @@ import java.util.ResourceBundle;
  *
  * @author Bill Davidson
  */
-public class LoopDetectionFailureException extends JSONException
-{
+public class LoopDetectionFailureException extends JSONException {
     private int stackIndex;
 
     /**
@@ -37,10 +36,9 @@ public class LoopDetectionFailureException extends JSONException
      * Create a LoopDetectionFailureException
      *
      * @param stackIndex The index that the propertyValue was supposed to be.
-     * @param cfg The config object for locale and object stack.
+     * @param cfg        The config object for locale and object stack.
      */
-    LoopDetectionFailureException( int stackIndex, JSONConfig cfg )
-    {
+    LoopDetectionFailureException(int stackIndex, JSONConfig cfg) {
         super(cfg);
         this.stackIndex = stackIndex;
         // stack must be non-null or this exception would not be thrown.
@@ -54,8 +52,7 @@ public class LoopDetectionFailureException extends JSONException
      * @return The message.
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
         /*
@@ -64,9 +61,9 @@ public class LoopDetectionFailureException extends JSONException
          * end up in logs, which would be bad.
          */
 
-        if ( (stackIndex+1) != objStackLength ){
-            return String.format(bundle.getString("wrongStackSize"), objStackLength, stackIndex+1);
-        }else{
+        if ((stackIndex + 1) != objStackLength) {
+            return String.format(bundle.getString("wrongStackSize"), objStackLength, stackIndex + 1);
+        } else {
             // wrong reference on stack.
             return String.format(bundle.getString("wrongReferenceOnStack"), stackIndex);
         }

@@ -34,34 +34,32 @@ import java.util.Set;
  *
  * @author Bill Davidson
  */
-class JSONConfigUtil
-{
+class JSONConfigUtil {
     /**
      * Add the source collection of formats to the destination list of formats.
      *
      * @param dest The destination list.
-     * @param src The source list.
+     * @param src  The source list.
      * @return The new list of formats.
      */
-    static List<DateFormat> addDateParseFormats( List<DateFormat> dest, Collection<? extends DateFormat> src )
-    {
+    static List<DateFormat> addDateParseFormats(List<DateFormat> dest, Collection<? extends DateFormat> src) {
         List<DateFormat> result = dest;
 
-        if ( src != null ){
+        if (src != null) {
             ArrayList<DateFormat> cloneSrc = new ArrayList<>(src.size());
-            for ( DateFormat fmt : src ){
-                if ( fmt != null ){
+            for (DateFormat fmt : src) {
+                if (fmt != null) {
                     // clone because DateFormat's are not thread safe.
-                    cloneSrc.add((DateFormat)fmt.clone());
+                    cloneSrc.add((DateFormat) fmt.clone());
                 }
             }
 
-            if ( cloneSrc.size() > 0 ){
-                if ( result == null ){
+            if (cloneSrc.size() > 0) {
+                if (result == null) {
                     // adjust size if there were nulls.
                     cloneSrc.trimToSize();
                     result = cloneSrc;
-                }else{
+                } else {
                     List<DateFormat> tmp = new ArrayList<>(result.size() + cloneSrc.size());
                     tmp.addAll(result);
                     tmp.addAll(cloneSrc);
@@ -78,48 +76,47 @@ class JSONConfigUtil
      * as they are merged into the destination map.
      *
      * @param dest The destination map to be added to.
-     * @param src The source map to add.
+     * @param src  The source map to add.
      * @return The merged map.
      */
-    static Map<Class<? extends Number>,NumberFormat> mergeFormatMaps(
-                                Map<Class<? extends Number>,NumberFormat> dest,
-                                Map<Class<? extends Number>,NumberFormat> src )
-    {
-        Map<Class<? extends Number>,NumberFormat> result = dest;
+    static Map<Class<? extends Number>, NumberFormat> mergeFormatMaps(
+            Map<Class<? extends Number>, NumberFormat> dest,
+            Map<Class<? extends Number>, NumberFormat> src) {
+        Map<Class<? extends Number>, NumberFormat> result = dest;
 
-        if ( src != null ){
-            if ( result == null ){
+        if (src != null) {
+            if (result == null) {
                 result = new HashMap<>(src);
                 int tableSize = tableSizeFor(result.size());
                 List<Class<? extends Number>> badKeys = null;
                 // clone the formats.
-                for ( Entry<Class<? extends Number>,NumberFormat> entry : result.entrySet() ){
-                    if ( entry.getKey() != null && entry.getValue() != null ){
-                        entry.setValue((NumberFormat)entry.getValue().clone());
-                    }else{
+                for (Entry<Class<? extends Number>, NumberFormat> entry : result.entrySet()) {
+                    if (entry.getKey() != null && entry.getValue() != null) {
+                        entry.setValue((NumberFormat) entry.getValue().clone());
+                    } else {
                         // a pox on anyone who causes this to happen.
-                        if ( badKeys == null ){
+                        if (badKeys == null) {
                             badKeys = new ArrayList<>();
                         }
                         badKeys.add(entry.getKey());
                     }
                 }
-                if ( badKeys != null ){
+                if (badKeys != null) {
                     // clean out the bad keys.
-                    for ( Class<? extends Number> numericClass : badKeys ){
+                    for (Class<? extends Number> numericClass : badKeys) {
                         result.remove(numericClass);
                     }
-                    if ( result.size() < 1 ){
+                    if (result.size() < 1) {
                         result = null;
-                    }else if ( tableSize > tableSizeFor(result.size()) ){
+                    } else if (tableSize > tableSizeFor(result.size())) {
                         result = new HashMap<>(result);
                     }
                 }
-            }else{
-                for ( Entry<Class<? extends Number>,NumberFormat> entry : src.entrySet() ){
+            } else {
+                for (Entry<Class<? extends Number>, NumberFormat> entry : src.entrySet()) {
                     // only use good entries.
-                    if ( entry.getKey() != null && entry.getValue() != null ){
-                        result.put(entry.getKey(), (NumberFormat)entry.getValue().clone());
+                    if (entry.getKey() != null && entry.getValue() != null) {
+                        result.put(entry.getKey(), (NumberFormat) entry.getValue().clone());
                     }
                 }
             }
@@ -134,12 +131,11 @@ class JSONConfigUtil
      * then the classes represented by the elements in it will be added.
      *
      * @param refClasses The current set of reflected classes.
-     * @param obj An object of the types to be added from the reflect set.
+     * @param obj        An object of the types to be added from the reflect set.
      * @return The modified set of reflect classes or null if there are none.
      * @since 1.9
      */
-    static Map<Class<?>,JSONReflectedClass> addReflectClass( Map<Class<?>,JSONReflectedClass> refClasses, Object obj )
-    {
+    static Map<Class<?>, JSONReflectedClass> addReflectClass(Map<Class<?>, JSONReflectedClass> refClasses, Object obj) {
         return addReflectClassesSafe(refClasses, getReflectClassCollection(obj));
     }
 
@@ -147,12 +143,11 @@ class JSONConfigUtil
      * Add the given classes to the given list of automatically reflected classes.
      *
      * @param refClasses The current set of reflected classes.
-     * @param classes A collection of objects of the types to be added from the reflect set.
+     * @param classes    A collection of objects of the types to be added from the reflect set.
      * @return The modified set of reflect classes or null if there are none.
      * @since 1.9
      */
-    static Map<Class<?>,JSONReflectedClass> addReflectClasses( Map<Class<?>,JSONReflectedClass> refClasses, Collection<?> classes )
-    {
+    static Map<Class<?>, JSONReflectedClass> addReflectClasses(Map<Class<?>, JSONReflectedClass> refClasses, Collection<?> classes) {
         return addReflectClassesSafe(refClasses, getReflectClassCollection(classes));
     }
 
@@ -160,30 +155,29 @@ class JSONConfigUtil
      * Add the given classes to the given list of automatically reflected classes.
      *
      * @param refClasses The current set of reflected classes.
-     * @param classes A collection of objects of the types to be added from the reflect set.
+     * @param classes    A collection of objects of the types to be added from the reflect set.
      * @return The modified set of reflect classes or null if there are none.
      * @since 1.9
      */
-    private static Map<Class<?>,JSONReflectedClass> addReflectClassesSafe( Map<Class<?>,JSONReflectedClass> refClasses, Collection<?> classes )
-    {
-        if ( classes.size() < 1 ){
+    private static Map<Class<?>, JSONReflectedClass> addReflectClassesSafe(Map<Class<?>, JSONReflectedClass> refClasses, Collection<?> classes) {
+        if (classes.size() < 1) {
             return refClasses;
         }
 
         int tableSize;
-        if ( refClasses == null ){
+        if (refClasses == null) {
             refClasses = new HashMap<>();
             tableSize = DEFAULT_INITIAL_CAPACITY;
-        }else{
+        } else {
             tableSize = tableSizeFor(refClasses.size());
         }
 
-        for ( Object obj : classes ){
+        for (Object obj : classes) {
             JSONReflectedClass refClass = ReflectUtil.ensureReflectedClass(obj);
             refClasses.put(refClass.getObjClass(), refClass);
         }
 
-        if ( tableSize > tableSizeFor(refClasses.size()) ){
+        if (tableSize > tableSizeFor(refClasses.size())) {
             refClasses = trimClasses(refClasses);
         }
 
@@ -196,11 +190,10 @@ class JSONConfigUtil
      * then the classes represented by the elements in it will be removed.
      *
      * @param refClasses The current set of reflected classes.
-     * @param obj An object of the type to be removed from the reflect set.
+     * @param obj        An object of the type to be removed from the reflect set.
      * @return The modified set of reflect classes or null if there are none left.
      */
-    static Map<Class<?>,JSONReflectedClass> removeReflectClass( Map<Class<?>,JSONReflectedClass> refClasses, Object obj )
-    {
+    static Map<Class<?>, JSONReflectedClass> removeReflectClass(Map<Class<?>, JSONReflectedClass> refClasses, Object obj) {
         return removeReflectClassesSafe(refClasses, getReflectClassCollection(obj));
     }
 
@@ -209,12 +202,11 @@ class JSONConfigUtil
      * classes.
      *
      * @param refClasses The current set of reflected classes.
-     * @param classes A collection objects of the types to be removed from the reflect set.
+     * @param classes    A collection objects of the types to be removed from the reflect set.
      * @return The modified set of reflect classes or null if there are none left.
      * @since 1.9
      */
-    static Map<Class<?>,JSONReflectedClass> removeReflectClasses( Map<Class<?>,JSONReflectedClass> refClasses, Collection<?> classes )
-    {
+    static Map<Class<?>, JSONReflectedClass> removeReflectClasses(Map<Class<?>, JSONReflectedClass> refClasses, Collection<?> classes) {
         return removeReflectClassesSafe(refClasses, getReflectClassCollection(classes));
     }
 
@@ -223,21 +215,20 @@ class JSONConfigUtil
      * classes.
      *
      * @param refClasses The current set of reflected classes.
-     * @param classes A collection objects of the types to be removed from the reflect set.
+     * @param classes    A collection objects of the types to be removed from the reflect set.
      * @return The modified set of reflect classes or null if there are none left.
      */
-    private static Map<Class<?>,JSONReflectedClass> removeReflectClassesSafe( Map<Class<?>,JSONReflectedClass> refClasses, Collection<?> classes )
-    {
-        if ( refClasses == null || classes.size() < 1 || refClasses.size() < 1 ){
+    private static Map<Class<?>, JSONReflectedClass> removeReflectClassesSafe(Map<Class<?>, JSONReflectedClass> refClasses, Collection<?> classes) {
+        if (refClasses == null || classes.size() < 1 || refClasses.size() < 1) {
             return refClasses;
         }
 
         int tableSize = tableSizeFor(refClasses.size());
-        for ( Object obj : classes ){
+        for (Object obj : classes) {
             refClasses.remove(ReflectUtil.getClass(obj));
         }
 
-        if ( tableSize > tableSizeFor(refClasses.size()) ){
+        if (tableSize > tableSizeFor(refClasses.size())) {
             refClasses = trimClasses(refClasses);
         }
 
@@ -251,8 +242,7 @@ class JSONConfigUtil
      * @return The trimmed set or null if empty.
      * @since 1.9
      */
-    private static Map<Class<?>,JSONReflectedClass> trimClasses( Map<Class<?>,JSONReflectedClass> refClasses )
-    {
+    private static Map<Class<?>, JSONReflectedClass> trimClasses(Map<Class<?>, JSONReflectedClass> refClasses) {
         return refClasses.size() > 0 ? new HashMap<>(refClasses) : null;
     }
 
@@ -265,27 +255,26 @@ class JSONConfigUtil
      * @param obj the object.
      * @return the list.
      */
-    private static Collection<?> getReflectClassCollection( Object obj )
-    {
-        if ( obj == null ){
+    private static Collection<?> getReflectClassCollection(Object obj) {
+        if (obj == null) {
             return new ArrayList<Object>(0);
-        }else if ( obj instanceof Class || obj instanceof JSONReflectedClass ){
+        } else if (obj instanceof Class || obj instanceof JSONReflectedClass) {
             return Arrays.asList(obj);
-        }else if ( isArrayType(obj) ){
+        } else if (isArrayType(obj)) {
             Set<Object> objs = new LinkedHashSet<>();
-            for ( Object element : new JSONArrayData(obj) ){
-                if ( element != null ){
-                    if ( element instanceof Class || element instanceof JSONReflectedClass ){
+            for (Object element : new JSONArrayData(obj)) {
+                if (element != null) {
+                    if (element instanceof Class || element instanceof JSONReflectedClass) {
                         objs.add(element);
-                    }else if ( isArrayType(element) ){
+                    } else if (isArrayType(element)) {
                         objs.addAll(getReflectClassCollection(element));
-                    }else{
+                    } else {
                         objs.add(ReflectUtil.getClass(element));
                     }
                 }
             }
             return objs;
-        }else{
+        } else {
             return Arrays.asList(ReflectUtil.getClass(obj));
         }
     }
@@ -296,8 +285,7 @@ class JSONConfigUtil
      * @param obj the object to check
      * @return true if it's an array type.
      */
-    private static boolean isArrayType( Object obj )
-    {
+    private static boolean isArrayType(Object obj) {
         return obj instanceof Iterable || obj instanceof Enumeration || obj.getClass().isArray();
     }
 
@@ -307,15 +295,14 @@ class JSONConfigUtil
      * @param size the map size.
      * @return the size of the table it needs.
      */
-    static int tableSizeFor( int size )
-    {
-        if ( size > 0 ){
+    static int tableSizeFor(int size) {
+        if (size > 0) {
             int tableSize = 1;
-            while ( tableSize < size ){
+            while (tableSize < size) {
                 tableSize <<= 1;
             }
             return tableSize;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -328,7 +315,6 @@ class JSONConfigUtil
     /**
      * This class should never be instantiated.
      */
-    private JSONConfigUtil()
-    {
+    private JSONConfigUtil() {
     }
 }

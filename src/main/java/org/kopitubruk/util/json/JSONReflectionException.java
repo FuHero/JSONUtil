@@ -24,8 +24,7 @@ import java.util.ResourceBundle;
  * @author Bill Davidson
  * @since 1.9
  */
-public final class JSONReflectionException extends JSONException
-{
+public final class JSONReflectionException extends JSONException {
     private Object offender = null;
     private String field = null;
     private int level;
@@ -35,12 +34,11 @@ public final class JSONReflectionException extends JSONException
      * Wraps another exception.
      *
      * @param offender The offending object.
-     * @param field The field name for which access caused the exception.
-     * @param e The exception that this is wrapping.
-     * @param cfg the config object
+     * @param field    The field name for which access caused the exception.
+     * @param e        The exception that this is wrapping.
+     * @param cfg      the config object
      */
-    JSONReflectionException( Object offender, String field, Exception e, JSONConfig cfg )
-    {
+    JSONReflectionException(Object offender, String field, Exception e, JSONConfig cfg) {
         super(e, cfg);
         this.offender = offender;
         this.field = field;
@@ -50,10 +48,9 @@ public final class JSONReflectionException extends JSONException
      * Exception for bad privacy levels.
      *
      * @param level the bad level
-     * @param cfg the config object
+     * @param cfg   the config object
      */
-    JSONReflectionException( int level, JSONConfig cfg )
-    {
+    JSONReflectionException(int level, JSONConfig cfg) {
         super(cfg);
         this.level = level;
     }
@@ -61,8 +58,7 @@ public final class JSONReflectionException extends JSONException
     /**
      * Recursive reflection exception.
      */
-    JSONReflectionException()
-    {
+    JSONReflectionException() {
         super(new JSONConfig());
         badObject = true;
     }
@@ -71,11 +67,10 @@ public final class JSONReflectionException extends JSONException
      * No such field.
      *
      * @param offender The offending object.
-     * @param field The field name for which access caused the exception.
-     * @param cfg the config object
+     * @param field    The field name for which access caused the exception.
+     * @param cfg      the config object
      */
-    JSONReflectionException( Object offender, String field, JSONConfig cfg )
-    {
+    JSONReflectionException(Object offender, String field, JSONConfig cfg) {
         super(cfg);
         this.offender = offender;
         this.field = field;
@@ -88,21 +83,20 @@ public final class JSONReflectionException extends JSONException
      * @return The message.
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
-        if ( offender != null ){
-            if ( this.getCause() != null ){
+        if (offender != null) {
+            if (this.getCause() != null) {
                 String fmt = bundle.getString("reflectionException");
                 return String.format(fmt, getClassName(offender), field, getClassName(this.getCause()));
-            }else{
+            } else {
                 String fmt = bundle.getString("noSuchField");
                 return String.format(fmt, getClassName(offender), field);
             }
-        }else if ( badObject ){
+        } else if (badObject) {
             return bundle.getString("recursiveReflection");
-        }else{
+        } else {
             String fmt = bundle.getString("badPrivacyLevel");
             return String.format(fmt, level);
         }

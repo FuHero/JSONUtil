@@ -35,8 +35,7 @@ import java.util.regex.Pattern;
  * @author Bill Davidson
  * @since 1.9
  */
-public class ReflectUtil
-{
+public class ReflectUtil {
     /**
      * This needs to be saved at class load time so that the correct class
      * loader is used if someone tries to load a class via a JMX client.
@@ -100,27 +99,27 @@ public class ReflectUtil
      * wrappers and BigDecimal and BigInteger.
      */
     private static final Class<?>[] NUMBERS =
-            { Number.class, Integer.TYPE, Double.TYPE, Long.TYPE, Float.TYPE, Short.TYPE, Byte.TYPE };
+            {Number.class, Integer.TYPE, Double.TYPE, Long.TYPE, Float.TYPE, Short.TYPE, Byte.TYPE};
 
     /**
      * Boolean types.
      */
-    static final Class<?>[] BOOLEANS = { Boolean.class, Boolean.TYPE };
+    static final Class<?>[] BOOLEANS = {Boolean.class, Boolean.TYPE};
 
     /**
      * String types.
      */
-    private static final Class<?>[] STRINGS = { CharSequence.class, Character.class, Character.TYPE };
+    private static final Class<?>[] STRINGS = {CharSequence.class, Character.class, Character.TYPE};
 
     /**
      * Types that become arrays in JSON.
      */
-    private static final Class<?>[] ARRAY_TYPES = { Iterable.class, Enumeration.class };
+    private static final Class<?>[] ARRAY_TYPES = {Iterable.class, Enumeration.class};
 
     /**
      * Types that become maps/objects in JSON.
      */
-    private static final Class<?>[] MAP_TYPES = { Map.class, ResourceBundle.class, JsonObject.class };
+    private static final Class<?>[] MAP_TYPES = {Map.class, ResourceBundle.class, JsonObject.class};
 
     /**
      * Get the class of the given object or the object if it's a class object.
@@ -129,17 +128,16 @@ public class ReflectUtil
      * @return The object's class.
      * @since 1.9
      */
-    static Class<?> getClass( Object obj )
-    {
-        if ( obj == null ){
+    static Class<?> getClass(Object obj) {
+        if (obj == null) {
             throw new JSONReflectionException();
         }
         Class<?> result;
-        if ( obj instanceof Class ){
-            result = (Class<?>)obj;
-        }else if ( obj instanceof JSONReflectedClass ){
-            result = ((JSONReflectedClass)obj).getObjClass();
-        }else{
+        if (obj instanceof Class) {
+            result = (Class<?>) obj;
+        } else if (obj instanceof JSONReflectedClass) {
+            result = ((JSONReflectedClass) obj).getObjClass();
+        } else {
             result = obj.getClass();
         }
         return result;
@@ -151,13 +149,12 @@ public class ReflectUtil
      * @param obj The object.
      * @return the {@link JSONReflectedClass} version of this object class.
      */
-    static JSONReflectedClass ensureReflectedClass( Object obj )
-    {
-        if ( obj instanceof JSONReflectedClass ){
-             return (JSONReflectedClass)obj;
-        }else if ( obj != null ){
+    static JSONReflectedClass ensureReflectedClass(Object obj) {
+        if (obj instanceof JSONReflectedClass) {
+            return (JSONReflectedClass) obj;
+        } else if (obj != null) {
             return new JSONReflectedClass(getClass(obj));
-        }else{
+        } else {
             return null;
         }
     }
@@ -170,8 +167,7 @@ public class ReflectUtil
      * @throws ClassNotFoundException If there's an error loading the class.
      * @since 1.9
      */
-    static Class<?> getClassByName( String className ) throws ClassNotFoundException
-    {
+    static Class<?> getClassByName(String className) throws ClassNotFoundException {
         return classLoader.loadClass(className);
     }
 
@@ -179,15 +175,14 @@ public class ReflectUtil
      * Check that the given privacy level is valid.
      *
      * @param privacyLevel The privacy level to check.
-     * @param cfg The config for the exception.
+     * @param cfg          The config for the exception.
      * @return The value if valid.
      * @throws JSONReflectionException if the privacyLevel is invalid.
      */
-    static int confirmPrivacyLevel( int privacyLevel, JSONConfig cfg ) throws JSONReflectionException
-    {
-        if ( privacyLevel >= MIN_PRIVACY_LEVEL && privacyLevel <= MAX_PRIVACY_LEVEL ){
+    static int confirmPrivacyLevel(int privacyLevel, JSONConfig cfg) throws JSONReflectionException {
+        if (privacyLevel >= MIN_PRIVACY_LEVEL && privacyLevel <= MAX_PRIVACY_LEVEL) {
             return privacyLevel;
-        }else{
+        } else {
             throw new JSONReflectionException(privacyLevel, cfg);
         }
     }
@@ -198,15 +193,14 @@ public class ReflectUtil
      * @param modifiers The reflection modifiers.
      * @return The privacy level.
      */
-    static int getPrivacyLevel( int modifiers )
-    {
-        if ( Modifier.isPrivate(modifiers) ){
+    static int getPrivacyLevel(int modifiers) {
+        if (Modifier.isPrivate(modifiers)) {
             return PRIVATE;
-        }else if ( Modifier.isProtected(modifiers) ){
+        } else if (Modifier.isProtected(modifiers)) {
             return PROTECTED;
-        }else if ( Modifier.isPublic(modifiers) ){
+        } else if (Modifier.isPublic(modifiers)) {
             return PUBLIC;
-        }else{
+        } else {
             return PACKAGE;
         }
     }
@@ -216,24 +210,23 @@ public class ReflectUtil
      * type.
      *
      * @param clazz The class.
-     * @param type The type to match.
+     * @param type  The type to match.
      * @return The fields.
      */
-    static Map<String,Field> getFields( Class<?> clazz, Class<?> type )
-    {
+    static Map<String, Field> getFields(Class<?> clazz, Class<?> type) {
         // build a map of the object's properties.
-        Map<String,Field> fields = new HashMap<>();
+        Map<String, Field> fields = new HashMap<>();
 
         Class<?> tmpClass = clazz;
-        while ( tmpClass != null ){
-            for ( Field field : tmpClass.getDeclaredFields() ){
+        while (tmpClass != null) {
+            for (Field field : tmpClass.getDeclaredFields()) {
                 int modifiers = field.getModifiers();
-                if ( Modifier.isTransient(modifiers) ){
+                if (Modifier.isTransient(modifiers)) {
                     continue;       // ignore transient fields.
                 }
-                if ( type.equals(field.getType()) ){
+                if (type.equals(field.getType())) {
                     String name = field.getName();
-                    if ( ! fields.containsKey(name) ){
+                    if (!fields.containsKey(name)) {
                         fields.put(name, field);
                     }
                 }
@@ -251,15 +244,14 @@ public class ReflectUtil
      * @param field The field.
      * @return The setter or null if there isn't one.
      */
-    static Method getSetter( Class<?> clazz, Field field )
-    {
+    static Method getSetter(Class<?> clazz, Field field) {
         String fieldName = field.getName();
-        String setterName = makeBeanMethodName(fieldName,"set");
+        String setterName = makeBeanMethodName(fieldName, "set");
 
         Class<?> tmpClass = clazz;
-        while ( tmpClass != null ){
-            for ( Method method : tmpClass.getDeclaredMethods() ){
-                if ( setterName.equals(method.getName()) && method.getParameterTypes().length == 1 ){
+        while (tmpClass != null) {
+            for (Method method : tmpClass.getDeclaredMethods()) {
+                if (setterName.equals(method.getName()) && method.getParameterTypes().length == 1) {
                     return method;
                 }
             }
@@ -273,21 +265,20 @@ public class ReflectUtil
      * Make a bean method name.
      *
      * @param fieldName the name of the field.
-     * @param prefix The prefix for the bean method name.
+     * @param prefix    The prefix for the bean method name.
      * @return The bean method name.
      */
-    static String makeBeanMethodName( String fieldName, String prefix )
-    {
+    static String makeBeanMethodName(String fieldName, String prefix) {
         int len = fieldName.length();
-        StringBuilder buf = new StringBuilder(len+prefix.length());
+        StringBuilder buf = new StringBuilder(len + prefix.length());
         buf.append(prefix);
         int codePoint = fieldName.codePointAt(0);
         int charCount = Character.charCount(codePoint);
-        if ( Character.isLowerCase(codePoint) ){
+        if (Character.isLowerCase(codePoint)) {
             codePoint = Character.toUpperCase(codePoint);
         }
         buf.appendCodePoint(codePoint);
-        if ( len > charCount ){
+        if (len > charCount) {
             buf.append(fieldName.substring(charCount));
         }
         return buf.toString();
@@ -296,19 +287,18 @@ public class ReflectUtil
     /**
      * Return true if the name looks like a getter.
      *
-     * @param name the name
+     * @param name    the name
      * @param retType the return type for checking "is" getters.
      * @return true if it looks like a getter.
      */
-    static boolean isGetterName( String name, Class<?> retType )
-    {
-        if ( GETTER_PAT.matcher(name).matches() ){
-            if ( name.startsWith("is") ){
+    static boolean isGetterName(String name, Class<?> retType) {
+        if (GETTER_PAT.matcher(name).matches()) {
+            if (name.startsWith("is")) {
                 // "is" prefix only valid getter for booleans.
                 return isType(BOOLEANS, retType);
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -319,10 +309,9 @@ public class ReflectUtil
      * @param field the field.
      * @return true if it's OK to serialize this field.
      */
-    static boolean isSerializable( Field field )
-    {
+    static boolean isSerializable(Field field) {
         int modifiers = field.getModifiers();
-        if ( Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers) ){
+        if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
             return false;
         }
         return true;
@@ -333,9 +322,8 @@ public class ReflectUtil
      *
      * @param obj the object
      */
-    static void ensureAccessible( AccessibleObject obj )
-    {
-        if ( ! obj.isAccessible() ){
+    static void ensureAccessible(AccessibleObject obj) {
+        if (!obj.isAccessible()) {
             obj.setAccessible(true);
         }
     }
@@ -344,21 +332,20 @@ public class ReflectUtil
      * Return true if the type returned by the method is compatible in JSON
      * with the type of the field.
      *
-     * @param field The field.
+     * @param field  The field.
      * @param method The method to check the return type of.
      * @return true if they are compatible in JSON.
      */
-    static boolean isCompatibleInJSON( Field field, Method method )
-    {
+    static boolean isCompatibleInJSON(Field field, Method method) {
         Class<?> fieldType = field.getType();
         Class<?> methodType = method.getReturnType();
 
-        if ( fieldType == methodType ){
+        if (fieldType == methodType) {
             return true;    // can't get more compatible than the exact same type.
-        }else{
+        } else {
             Class<?>[] methodTypes = getTypes(methodType);
 
-            if ( isType(methodTypes, fieldType) ){
+            if (isType(methodTypes, fieldType)) {
                 // fieldType is a super class or interface of methodType
                 return true;
             }
@@ -367,17 +354,19 @@ public class ReflectUtil
             Class<?>[] fieldTypes = getTypes(fieldType);
             Class<?>[] t1, t2;
             // check the shorter list first.
-            if ( fieldTypes.length < methodTypes.length ){
-                t1 = fieldTypes;  t2 = methodTypes;
-            }else{
-                t1 = methodTypes; t2 = fieldTypes;
+            if (fieldTypes.length < methodTypes.length) {
+                t1 = fieldTypes;
+                t2 = methodTypes;
+            } else {
+                t1 = methodTypes;
+                t2 = fieldTypes;
             }
 
-            if ( isJSONNumber(t1) )       return isJSONNumber(t2);
-            else if ( isJSONString(t1) )  return isJSONString(t2);
-            else if ( isJSONBoolean(t1) ) return isJSONBoolean(t2);
-            else if ( isJSONArray(t1) )   return isJSONArray(t2);
-            else if ( isJSONMap(t1) )     return isJSONMap(t2);
+            if (isJSONNumber(t1)) return isJSONNumber(t2);
+            else if (isJSONString(t1)) return isJSONString(t2);
+            else if (isJSONBoolean(t1)) return isJSONBoolean(t2);
+            else if (isJSONArray(t1)) return isJSONArray(t2);
+            else if (isJSONMap(t1)) return isJSONMap(t2);
             else return false;
         }
     }
@@ -388,8 +377,7 @@ public class ReflectUtil
      * @param objTypes the type to check.
      * @return true if the given type is a {@link Number} type.
      */
-    private static boolean isJSONNumber( Class<?>[] objTypes )
-    {
+    private static boolean isJSONNumber(Class<?>[] objTypes) {
         return isType(objTypes, NUMBERS);
     }
 
@@ -399,8 +387,7 @@ public class ReflectUtil
      * @param objTypes the type to check.
      * @return true if the given type is a {@link Boolean} type.
      */
-    private static boolean isJSONBoolean( Class<?>[] objTypes )
-    {
+    private static boolean isJSONBoolean(Class<?>[] objTypes) {
         return isType(objTypes, BOOLEANS);
     }
 
@@ -410,8 +397,7 @@ public class ReflectUtil
      * @param objTypes the type to check.
      * @return true if the given type is a {@link CharSequence} type.
      */
-    private static boolean isJSONString( Class<?>[] objTypes )
-    {
+    private static boolean isJSONString(Class<?>[] objTypes) {
         return isType(objTypes, STRINGS);
     }
 
@@ -421,9 +407,8 @@ public class ReflectUtil
      * @param objTypes the type to check.
      * @return true if the given type is a JSON array type.
      */
-    private static boolean isJSONArray( Class<?>[] objTypes )
-    {
-        if ( objTypes[0].isArray() ){
+    private static boolean isJSONArray(Class<?>[] objTypes) {
+        if (objTypes[0].isArray()) {
             return true;
         }
         return isType(objTypes, ARRAY_TYPES);
@@ -435,8 +420,7 @@ public class ReflectUtil
      * @param objTypes the type to check.
      * @return true if the given type is a JSON map type.
      */
-    private static boolean isJSONMap( Class<?>[] objTypes )
-    {
+    private static boolean isJSONMap(Class<?>[] objTypes) {
         return isType(objTypes, MAP_TYPES);
     }
 
@@ -445,13 +429,12 @@ public class ReflectUtil
      * the same as the given type.
      *
      * @param objTypes The type to check.
-     * @param type The type to check against.
+     * @param type     The type to check against.
      * @return true if there's a match.
      */
-    private static boolean isType( Class<?>[] objTypes, Class<?> type )
-    {
-        for ( Class<?> objType : objTypes ){
-            if ( objType == type ){
+    private static boolean isType(Class<?>[] objTypes, Class<?> type) {
+        for (Class<?> objType : objTypes) {
+            if (objType == type) {
                 return true;
             }
         }
@@ -468,14 +451,13 @@ public class ReflectUtil
      * thing as calling .equals(Object) only it's faster.
      *
      * @param objType The type to check.
-     * @param type The type to check against.
+     * @param type    The type to check against.
      * @return true if there's a match.
      */
-    private static boolean isType( Class<?>[] objTypes, Class<?>[] types )
-    {
-        for ( Class<?> type : types ){
-            for ( Class<?> objType : objTypes ){
-                if ( objType == type ){
+    private static boolean isType(Class<?>[] objTypes, Class<?>[] types) {
+        for (Class<?> type : types) {
+            for (Class<?> objType : objTypes) {
+                if (objType == type) {
                     return true;
                 }
             }
@@ -490,12 +472,11 @@ public class ReflectUtil
      * @param objType the original type.
      * @return the type and all its super types and interfaces.
      */
-    private static Class<?>[] getTypes( Class<?> objType )
-    {
+    private static Class<?>[] getTypes(Class<?> objType) {
         Set<Class<?>> types = new LinkedHashSet<>();
         Class<?> tmpClass = objType;
-        while ( tmpClass != null ){
-            if ( ! "java.lang.Object".equals(tmpClass.getCanonicalName()) ){
+        while (tmpClass != null) {
+            if (!"java.lang.Object".equals(tmpClass.getCanonicalName())) {
                 types.add(tmpClass);
             }
             tmpClass = tmpClass.getSuperclass();
@@ -509,14 +490,13 @@ public class ReflectUtil
      * all super interfaces.
      *
      * @param clazz The class.
-     * @param The set of interfaces.
+     * @param The   set of interfaces.
      */
-    private static void getInterfaces( Class<?> clazz, Set<Class<?>> interfaces )
-    {
+    private static void getInterfaces(Class<?> clazz, Set<Class<?>> interfaces) {
         Class<?> tmpClass = clazz;
-        while ( tmpClass != null ){
-            for ( Class<?> itfc : clazz.getInterfaces() ){
-                if ( interfaces.add(itfc) ){
+        while (tmpClass != null) {
+            for (Class<?> itfc : clazz.getInterfaces()) {
+                if (interfaces.add(itfc)) {
                     getInterfaces(itfc, interfaces);
                 }
             }
@@ -527,7 +507,6 @@ public class ReflectUtil
     /**
      * This class should never be instantiated.
      */
-    private ReflectUtil()
-    {
+    private ReflectUtil() {
     }
 }

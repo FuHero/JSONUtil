@@ -26,8 +26,7 @@ import java.util.ResourceBundle;
  * @author Bill Davidson
  * @since 1.9
  */
-class JSONType
-{
+class JSONType {
     private boolean isJSONAble;
     private boolean isMapType;
     private boolean isResourceBundle;
@@ -38,23 +37,22 @@ class JSONType
      * Create the JSONType.
      *
      * @param propertyValue The value to check.
-     * @param cfg The config object (used to find reflected object types).
+     * @param cfg           The config object (used to find reflected object types).
      */
-    JSONType( Object propertyValue, JSONConfig cfg )
-    {
+    JSONType(Object propertyValue, JSONConfig cfg) {
         isJSONAble = propertyValue instanceof JSONAble;
-        if ( isJSONAble ){
+        if (isJSONAble) {
             isMapType = isResourceBundle = isArrayType = isReflectType = false;
-        }else{
+        } else {
             isResourceBundle = propertyValue instanceof ResourceBundle;
             isMapType = isResourceBundle || propertyValue instanceof Map;
-            if ( isMapType ){
+            if (isMapType) {
                 isArrayType = isReflectType = false;
-            }else{
+            } else {
                 Class<?> clazz = null;
                 isArrayType = propertyValue instanceof Iterable ||
-                              propertyValue instanceof Enumeration ||
-                              (clazz = propertyValue.getClass()).isArray();
+                        propertyValue instanceof Enumeration ||
+                        (clazz = propertyValue.getClass()).isArray();
                 isReflectType = isArrayType ? false : cfg.isReflectClass(clazz);
             }
         }
@@ -65,8 +63,7 @@ class JSONType
      *
      * @return true if the type is {@link JSONAble}
      */
-    boolean isJSONAble()
-    {
+    boolean isJSONAble() {
         return isJSONAble;
     }
 
@@ -75,8 +72,7 @@ class JSONType
      *
      * @return true if the type is {@link ResourceBundle}
      */
-    boolean isResourceBundle()
-    {
+    boolean isResourceBundle() {
         return isResourceBundle;
     }
 
@@ -86,8 +82,7 @@ class JSONType
      *
      * @return true if the type is {@link Iterable}, {@link Enumeration} or an array.
      */
-    boolean isArrayType()
-    {
+    boolean isArrayType() {
         return isArrayType;
     }
 
@@ -96,8 +91,7 @@ class JSONType
      *
      * @return true if the type is {@link ResourceBundle} or {@link Map}.
      */
-    boolean isMapType()
-    {
+    boolean isMapType() {
         return isMapType;
     }
 
@@ -107,17 +101,15 @@ class JSONType
      *
      * @return true if {@link JSONConfig#isReflectClass(Object)} returns true on this value.
      */
-    boolean isReflectType()
-    {
+    boolean isReflectType() {
         return isReflectType;
     }
 
     /**
      * Force isReflectType to true unless it's another recurisble type.
      */
-    void forceReflectType()
-    {
-        isReflectType = ! (isJSONAble || isMapType || isArrayType);
+    void forceReflectType() {
+        isReflectType = !(isJSONAble || isMapType || isArrayType);
     }
 
     /**
@@ -125,8 +117,7 @@ class JSONType
      *
      * @return true if the value is any recursible type.
      */
-    boolean isRecursible()
-    {
+    boolean isRecursible() {
         return isJSONAble || isMapType || isArrayType || isReflectType;
     }
 }

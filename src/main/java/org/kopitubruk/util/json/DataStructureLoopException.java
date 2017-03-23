@@ -25,8 +25,7 @@ import java.util.ResourceBundle;
  *
  * @author Bill Davidson
  */
-public final class DataStructureLoopException extends JSONException
-{
+public final class DataStructureLoopException extends JSONException {
     /**
      * toString() of the offending object.
      */
@@ -41,10 +40,9 @@ public final class DataStructureLoopException extends JSONException
      * Constructor.
      *
      * @param offender The offending object.
-     * @param cfg the config object
+     * @param cfg      the config object
      */
-    DataStructureLoopException( Object offender, JSONConfig cfg )
-    {
+    DataStructureLoopException(Object offender, JSONConfig cfg) {
         super(cfg);
         this.offender = offender;
         List<Object> stk = cfg.getObjStack();
@@ -58,19 +56,18 @@ public final class DataStructureLoopException extends JSONException
      * @return The message.
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
         StringBuilder message = new StringBuilder();
 
         message.append(String.format(bundle.getString("dataStructureLoop"), getClassName(offender)));
 
         // show the stack and indicate which object is duplicated.
-        for ( int i = 0; i < objStack.length; i++ ){
+        for (int i = 0; i < objStack.length; i++) {
             Object currentObject = objStack[i];
             message.append("\n\t").append(i).append(' ')
-                   .append(getClassName(currentObject));
-            if ( offender == currentObject ){
+                    .append(getClassName(currentObject));
+            if (offender == currentObject) {
                 message.append(" <<<");
             }
         }

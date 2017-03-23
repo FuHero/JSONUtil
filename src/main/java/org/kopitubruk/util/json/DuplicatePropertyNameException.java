@@ -25,8 +25,7 @@ import java.util.ResourceBundle;
  *
  * @author Bill Davidson
  */
-public final class DuplicatePropertyNameException extends JSONException
-{
+public final class DuplicatePropertyNameException extends JSONException {
     /**
      * The duplicate property name.
      */
@@ -36,10 +35,9 @@ public final class DuplicatePropertyNameException extends JSONException
      * Constructor.
      *
      * @param duplicateName The duplicated property name.
-     * @param cfg Used to get Locale for {@link #getLocalizedMessage()}.
+     * @param cfg           Used to get Locale for {@link #getLocalizedMessage()}.
      */
-    DuplicatePropertyNameException( String duplicateName, JSONConfig cfg )
-    {
+    DuplicatePropertyNameException(String duplicateName, JSONConfig cfg) {
         super(cfg);
         this.duplicateName = duplicateName;
     }
@@ -51,8 +49,7 @@ public final class DuplicatePropertyNameException extends JSONException
      * @return The message.
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
         return String.format(bundle.getString("duplicateName"), duplicateName);

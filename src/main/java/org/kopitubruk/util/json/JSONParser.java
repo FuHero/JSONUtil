@@ -100,8 +100,7 @@ import java.util.regex.Pattern;
  * @author Bill Davidson
  * @since 1.2
  */
-public class JSONParser
-{
+public class JSONParser {
     /**
      * Recognize literals
      */
@@ -153,8 +152,7 @@ public class JSONParser
     /**
      * Types of tokens in a JSON input string.
      */
-    enum TokenType
-    {
+    enum TokenType {
         START_OBJECT,
         END_OBJECT,
         START_ARRAY,
@@ -172,19 +170,17 @@ public class JSONParser
     /**
      * Trivial class to hold a token from the JSON input string.
      */
-    static class Token
-    {
+    static class Token {
         TokenType tokenType;
         String value;
 
         /**
          * Make a token.
          *
-         * @param tt the token type
+         * @param tt  the token type
          * @param val the value
          */
-        Token( TokenType tt, String val )
-        {
+        Token(TokenType tt, String val) {
             tokenType = tt;
             value = val;
         }
@@ -196,8 +192,7 @@ public class JSONParser
      * @param json the string of JSON data.
      * @return The object containing the parsed data.
      */
-    public static Object parseJSON( String json )
-    {
+    public static Object parseJSON(String json) {
         return parseJSON(json, null);
     }
 
@@ -205,14 +200,13 @@ public class JSONParser
      * Parse a string of JSON data.
      *
      * @param json the string of JSON data.
-     * @param cfg The config object.
+     * @param cfg  The config object.
      * @return The object containing the parsed data.
      */
-    public static Object parseJSON( String json, JSONConfig cfg )
-    {
-        try{
+    public static Object parseJSON(String json, JSONConfig cfg) {
+        try {
             return parseJSON(new StringReader(json), cfg);
-        }catch ( IOException e ){
+        } catch (IOException e) {
             // will not happen.
             return null;
         }
@@ -226,8 +220,7 @@ public class JSONParser
      * @throws IOException If there's a problem with I/O.
      * @since 1.7
      */
-    public static Object parseJSON( Reader json ) throws IOException
-    {
+    public static Object parseJSON(Reader json) throws IOException {
         return parseJSON(json, null);
     }
 
@@ -235,21 +228,20 @@ public class JSONParser
      * Parse JSON from an input stream.
      *
      * @param json The input stream.
-     * @param cfg The config object.
+     * @param cfg  The config object.
      * @return The object containing the parsed data.
      * @throws IOException If there's a problem with I/O.
      * @since 1.7
      */
-    public static Object parseJSON( Reader json, JSONConfig cfg ) throws IOException
-    {
+    public static Object parseJSON(Reader json, JSONConfig cfg) throws IOException {
         JSONConfig jcfg = cfg == null ? new JSONConfig() : cfg;
 
         JSONTokenReader tokens = new JSONTokenReader(json, jcfg);
         try {
             return parseTokens(tokens.nextToken(), tokens);
-        }catch ( JSONException|IOException e ){
+        } catch (JSONException | IOException e) {
             throw e;
-        }catch ( Exception e ){
+        } catch (Exception e) {
             throw new JSONParserException(e, jcfg);
         }
     }
@@ -258,18 +250,17 @@ public class JSONParser
      * Parse the tokens from the input stream.  This method is recursive
      * via the {@link #getValue(Token, JSONTokenReader)} method.
      *
-     * @param token The current token to work on.
+     * @param token  The current token to work on.
      * @param tokens The token reader.
      * @return the object that results from parsing.
-     * @throws IOException If there's a problem with I/O.
+     * @throws IOException    If there's a problem with I/O.
      * @throws ParseException If there's a problem parsing dates.
      */
-    private static Object parseTokens( Token token, JSONTokenReader tokens ) throws IOException, ParseException
-    {
-        if ( token == null ){
+    private static Object parseTokens(Token token, JSONTokenReader tokens) throws IOException, ParseException {
+        if (token == null) {
             return null;
         }
-        switch ( token.tokenType ){
+        switch (token.tokenType) {
             case START_OBJECT:
                 return parseObject(tokens);
             case START_ARRAY:
@@ -285,39 +276,38 @@ public class JSONParser
      *
      * @param tokens The token reader.
      * @return the object that results from parsing.
-     * @throws IOException If there's a problem with I/O.
+     * @throws IOException    If there's a problem with I/O.
      * @throws ParseException If there's a problem parsing dates.
      */
-    private static Map<?,?> parseObject( JSONTokenReader tokens ) throws IOException, ParseException
-    {
-        Map<String,Object> map = new LinkedHashMap<>();
+    private static Map<?, ?> parseObject(JSONTokenReader tokens) throws IOException, ParseException {
+        Map<String, Object> map = new LinkedHashMap<>();
         JSONConfig cfg = tokens.getJSONConfig();
         Token token = tokens.nextToken();
-        while ( token != null ){
+        while (token != null) {
             // need an identifier
-            if ( token.tokenType == TokenType.STRING || token.tokenType == TokenType.UNQUOTED_ID ){
+            if (token.tokenType == TokenType.STRING || token.tokenType == TokenType.UNQUOTED_ID) {
                 // got an identifier.
                 String key = StringProcessor.unEscape(token.value, cfg);
                 // need a colon
                 token = tokens.nextToken();
-                if ( token.tokenType == TokenType.COLON ){
+                if (token.tokenType == TokenType.COLON) {
                     // got a colon.  get the value.
                     token = tokens.nextToken();
                     map.put(key, getValue(token, tokens));
-                }else{
+                } else {
                     throw new JSONParserException(TokenType.COLON, token.tokenType, cfg);
                 }
-            }else if ( token.tokenType == TokenType.END_OBJECT ){
+            } else if (token.tokenType == TokenType.END_OBJECT) {
                 break;                                  // empty object; break out of loop.
-            }else{
+            } else {
                 throw new JSONParserException(TokenType.END_OBJECT, token.tokenType, cfg);
             }
             token = tokens.nextToken();
-            if ( token.tokenType == TokenType.END_OBJECT ){
+            if (token.tokenType == TokenType.END_OBJECT) {
                 break;                                  // end of object; break out of loop.
-            }else if ( token.tokenType == TokenType.COMMA ){
+            } else if (token.tokenType == TokenType.COMMA) {
                 token = tokens.nextToken();             // next field.
-            }else{
+            } else {
                 throw new JSONParserException(TokenType.END_OBJECT, token.tokenType, cfg);
             }
         }
@@ -331,32 +321,31 @@ public class JSONParser
      *
      * @param tokens The token reader.
      * @return the object that results from parsing.
-     * @throws IOException If there's a problem with I/O.
+     * @throws IOException    If there's a problem with I/O.
      * @throws ParseException If there's a problem parsing dates.
      */
-    private static Object parseArray( JSONTokenReader tokens ) throws IOException, ParseException
-    {
+    private static Object parseArray(JSONTokenReader tokens) throws IOException, ParseException {
         ArrayList<Object> list = new ArrayList<>();
         JSONConfig cfg = tokens.getJSONConfig();
         Token token = tokens.nextToken();
-        while ( token != null && token.tokenType != TokenType.END_ARRAY ){
+        while (token != null && token.tokenType != TokenType.END_ARRAY) {
             list.add(getValue(token, tokens));
             token = tokens.nextToken();
-            if ( token.tokenType == TokenType.END_ARRAY ){
+            if (token.tokenType == TokenType.END_ARRAY) {
                 break;                                  // end of array.
-            }else if ( token.tokenType == TokenType.COMMA ){
+            } else if (token.tokenType == TokenType.COMMA) {
                 token = tokens.nextToken();             // next item.
-            }else{
+            } else {
                 throw new JSONParserException(TokenType.END_ARRAY, token.tokenType, cfg);
             }
         }
         // minimize memory usage.
         list.trimToSize();
 
-        if ( cfg.isUsePrimitiveArrays() ){
+        if (cfg.isUsePrimitiveArrays()) {
             // try to make it an array of primitives if possible.
             Object array = getArrayOfPrimitives(list, cfg.isSmallNumbers());
-            if ( array != null ){
+            if (array != null) {
                 return array;
             }
         }
@@ -367,31 +356,30 @@ public class JSONParser
     /**
      * The the value of the given token.
      *
-     * @param token the token to get the value of.
+     * @param token  the token to get the value of.
      * @param tokens the token reader.
      * @return A JSON value in Java form.
      * @throws ParseException if there's a problem with date parsing.
-     * @throws IOException If there's an IO problem.
+     * @throws IOException    If there's an IO problem.
      */
-    private static Object getValue( Token token, JSONTokenReader tokens ) throws ParseException, IOException
-    {
+    private static Object getValue(Token token, JSONTokenReader tokens) throws ParseException, IOException {
         JSONConfig cfg = tokens.getJSONConfig();
-        switch ( token.tokenType ){
+        switch (token.tokenType) {
             case STRING:
                 String unesc = StringProcessor.unEscape(token.value, cfg);
-                if ( cfg.isFormatDates() ){
-                    try{
+                if (cfg.isFormatDates()) {
+                    try {
                         return parseDate(unesc, cfg);
-                    }catch ( ParseException e ){
+                    } catch (ParseException e) {
                     }
                 }
-                if ( cfg.isEncodeNumericStringsAsNumbers() ){
+                if (cfg.isEncodeNumericStringsAsNumbers()) {
                     Matcher matcher = JAVASCRIPT_FLOATING_POINT_PAT.matcher(unesc);
-                    if ( matcher.matches() ){
+                    if (matcher.matches()) {
                         return getDecimal(matcher.group(1), cfg.isSmallNumbers());
                     }
                     matcher = JAVASCRIPT_INTEGER_PAT.matcher(unesc);
-                    if ( matcher.matches() ){
+                    if (matcher.matches()) {
                         return getInteger(matcher.group(1), cfg.isSmallNumbers());
                     }
                 }
@@ -401,9 +389,9 @@ public class JSONParser
             case INTEGER_NUMBER:
                 return getInteger(token.value, cfg.isSmallNumbers());
             case LITERAL:
-                if ( token.value.equals("null") ){
+                if (token.value.equals("null")) {
                     return null;
-                }else{
+                } else {
                     return Boolean.valueOf(token.value);
                 }
             case DATE:
@@ -433,15 +421,14 @@ public class JSONParser
      * to its own internal array for up to 16 bytes of additional space required
      * by an ArrayList than an array.
      *
-     * @param list The list.
+     * @param list         The list.
      * @param smallNumbers if true, then try to use the smallest number size
-     *            that doesn't lose information.
+     *                     that doesn't lose information.
      * @return The array or null if one could not be made.
      * @since 1.9
      */
-    private static Object getArrayOfPrimitives( ArrayList<Object> list, boolean smallNumbers )
-    {
-        if ( list.size() < 1 ){
+    private static Object getArrayOfPrimitives(ArrayList<Object> list, boolean smallNumbers) {
+        if (list.size() < 1) {
             return null;
         }
 
@@ -449,42 +436,42 @@ public class JSONParser
         boolean haveBoolean = false;
         boolean haveChar = false;
 
-        for ( Object obj : list ){
-            if ( obj instanceof Number ){
-                if ( obj instanceof BigInteger || obj instanceof BigDecimal ){
+        for (Object obj : list) {
+            if (obj instanceof Number) {
+                if (obj instanceof BigInteger || obj instanceof BigDecimal) {
                     return null;
                 }
                 haveNumber = true;
-            }else if ( obj instanceof Boolean ){
+            } else if (obj instanceof Boolean) {
                 haveBoolean = true;
-            }else if ( obj instanceof String && ((String)obj).length() == 1 ){
+            } else if (obj instanceof String && ((String) obj).length() == 1) {
                 haveChar = true;
-            }else{
+            } else {
                 // null or not a primitive -- no compatibility.
                 return null;
             }
         }
 
-        if ( haveBoolean ){
-            if ( haveNumber || haveChar ){
+        if (haveBoolean) {
+            if (haveNumber || haveChar) {
                 // boolean is not compatible with other types.
                 return null;
             }
             boolean[] booleans = new boolean[list.size()];
-            for ( int i = 0; i < booleans.length; i++ ){
-                booleans[i] = (Boolean)list.get(i);
+            for (int i = 0; i < booleans.length; i++) {
+                booleans[i] = (Boolean) list.get(i);
             }
             return booleans;
         }
 
-        if ( haveChar ){
-            if ( haveNumber ){
+        if (haveChar) {
+            if (haveNumber) {
                 // char is not compatible with other types.
                 return null;
             }
             char[] chars = new char[list.size()];
-            for ( int i = 0; i < chars.length; i++ ){
-                chars[i] = ((String)list.get(i)).charAt(0);
+            for (int i = 0; i < chars.length; i++) {
+                chars[i] = ((String) list.get(i)).charAt(0);
             }
             return chars;
         }
@@ -497,88 +484,88 @@ public class JSONParser
         boolean haveInt = false;
         boolean haveShort = false;
         List<Number> workList = new ArrayList<>(list.size());
-        for ( Object num : list ){
-            workList.add((Number)num);
+        for (Object num : list) {
+            workList.add((Number) num);
         }
 
-        if ( smallNumbers ){
+        if (smallNumbers) {
             // numbers are already reduced in size.  find out what's there.
-            for ( Number num : workList ){
+            for (Number num : workList) {
                 haveDouble = haveDouble || num instanceof Double;
-                haveFloat  = haveFloat  || num instanceof Float;
-                haveLong   = haveLong   || num instanceof Long;
-                haveInt    = haveInt    || num instanceof Integer;
-                haveShort  = haveShort  || num instanceof Short;
+                haveFloat = haveFloat || num instanceof Float;
+                haveLong = haveLong || num instanceof Long;
+                haveInt = haveInt || num instanceof Integer;
+                haveShort = haveShort || num instanceof Short;
             }
-        }else{
+        } else {
             // make everything as small as possible without losing information.
             smallNumbers = true;
-            for ( int i = 0, len = workList.size(); i < len; i++ ){
+            for (int i = 0, len = workList.size(); i < len; i++) {
                 Number num = workList.get(i);
                 Number x = getDecimal(num.toString(), smallNumbers);
-                if ( ! num.getClass().equals(x.getClass()) && !(x instanceof BigDecimal || x instanceof BigInteger) ){
+                if (!num.getClass().equals(x.getClass()) && !(x instanceof BigDecimal || x instanceof BigInteger)) {
                     num = x;
                     workList.set(i, num);
                 }
                 haveDouble = haveDouble || num instanceof Double;
-                haveFloat  = haveFloat  || num instanceof Float;
-                haveLong   = haveLong   || num instanceof Long;
-                haveInt    = haveInt    || num instanceof Integer;
-                haveShort  = haveShort  || num instanceof Short;
+                haveFloat = haveFloat || num instanceof Float;
+                haveLong = haveLong || num instanceof Long;
+                haveInt = haveInt || num instanceof Integer;
+                haveShort = haveShort || num instanceof Short;
             }
         }
 
-        if ( haveLong && (haveFloat || haveDouble) ){
+        if (haveLong && (haveFloat || haveDouble)) {
             haveFloat = false;
             haveDouble = false;
             // try to convert to long
-            for ( int i = 0, len = workList.size(); i < len && ! haveDouble; i++ ){
+            for (int i = 0, len = workList.size(); i < len && !haveDouble; i++) {
                 Number num = workList.get(i);
-                if ( num instanceof Float ){
-                    float f = (Float)num;
-                    long x = (long)f;
-                    float y = (float)x;
-                    if ( f == y ){
+                if (num instanceof Float) {
+                    float f = (Float) num;
+                    long x = (long) f;
+                    float y = (float) x;
+                    if (f == y) {
                         workList.set(i, x);
-                    }else{
+                    } else {
                         haveDouble = true;
                     }
-                }else if ( num instanceof Double ){
-                    double d = (Double)num;
-                    long x = (long)d;
-                    double y = (double)x;
-                    if ( d == y ){
+                } else if (num instanceof Double) {
+                    double d = (Double) num;
+                    long x = (long) d;
+                    double y = (double) x;
+                    if (d == y) {
                         workList.set(i, x);
-                    }else{
+                    } else {
                         haveDouble = true;
                     }
                 }
             }
-            if ( haveDouble ){
+            if (haveDouble) {
                 // conversion to long failed.  try conversion to double.
-                for ( int i = 0, len = workList.size(); i < len; i++ ){
+                for (int i = 0, len = workList.size(); i < len; i++) {
                     Number num = workList.get(i);
-                    if ( num instanceof Long ){
-                        long x = (Long)num;
+                    if (num instanceof Long) {
+                        long x = (Long) num;
                         double d = x;
-                        long y = (long)d;
-                        if ( x == y ){
+                        long y = (long) d;
+                        if (x == y) {
                             workList.set(i, d);
-                        }else{
+                        } else {
                             return null;    // data loss.  abort.
                         }
                     }
                 }
             }
         }
-        if ( haveInt && haveFloat && ! haveDouble ){
+        if (haveInt && haveFloat && !haveDouble) {
             // if floats would hurt int precision then go double.
-            for ( int i = 0, len = workList.size(); i < len && ! haveDouble; i++ ){
+            for (int i = 0, len = workList.size(); i < len && !haveDouble; i++) {
                 Number num = workList.get(i);
-                if ( num instanceof Integer ){
-                    int x = (Integer)num;
+                if (num instanceof Integer) {
+                    int x = (Integer) num;
                     float f = x;
-                    int y = (int)f;
+                    int y = (int) f;
                     haveDouble = x != y;
                 }
             }
@@ -586,44 +573,44 @@ public class JSONParser
 
         // make an array of the most complex type in the workList and return it.
 
-        if ( haveDouble ){
+        if (haveDouble) {
             double[] doubles = new double[workList.size()];
-            for ( int i = 0; i < doubles.length; i++ ){
+            for (int i = 0; i < doubles.length; i++) {
                 Number num = workList.get(i);
-                if ( num instanceof Float ){
+                if (num instanceof Float) {
                     doubles[i] = Double.parseDouble(num.toString());    // avoid cast rounding errors.
-                }else{
+                } else {
                     doubles[i] = num.doubleValue();
                 }
             }
             return doubles;
-        }else if ( haveFloat ){
+        } else if (haveFloat) {
             float[] floats = new float[workList.size()];
-            for ( int i = 0; i < floats.length; i++ ){
+            for (int i = 0; i < floats.length; i++) {
                 floats[i] = workList.get(i).floatValue();
             }
             return floats;
-        }else if ( haveLong ){
+        } else if (haveLong) {
             long[] longs = new long[workList.size()];
-            for ( int i = 0; i < longs.length; i++ ){
+            for (int i = 0; i < longs.length; i++) {
                 longs[i] = workList.get(i).longValue();
             }
             return longs;
-        }else if ( haveInt ){
+        } else if (haveInt) {
             int[] ints = new int[workList.size()];
-            for ( int i = 0; i < ints.length; i++ ){
+            for (int i = 0; i < ints.length; i++) {
                 ints[i] = workList.get(i).intValue();
             }
             return ints;
-        }else if ( haveShort ){
+        } else if (haveShort) {
             short[] shorts = new short[workList.size()];
-            for ( int i = 0; i < shorts.length; i++ ){
+            for (int i = 0; i < shorts.length; i++) {
                 shorts[i] = workList.get(i).shortValue();
             }
             return shorts;
-        }else{
+        } else {
             byte[] bytes = new byte[workList.size()];
-            for ( int i = 0; i < bytes.length; i++ ){
+            for (int i = 0; i < bytes.length; i++) {
                 bytes[i] = workList.get(i).byteValue();
             }
             return bytes;
@@ -638,48 +625,47 @@ public class JSONParser
      * a {@link Long}.
      *
      * @param decimalString A string representing a decimal/floating point number.
-     * @param smallNumbers if true, then try to use the smallest number size
-     *            that doesn't lose information.
+     * @param smallNumbers  if true, then try to use the smallest number size
+     *                      that doesn't lose information.
      * @return A {@link Number} needed to accurately represent the number.
      * @since 1.9
      */
-    private static Number getDecimal( String decimalString, boolean smallNumbers )
-    {
-        try{
+    private static Number getDecimal(String decimalString, boolean smallNumbers) {
+        try {
             // this will work except for NaN and Infinity
             BigDecimal bigDec = new BigDecimal(decimalString);
             int scale = bigDec.scale();
             int precision = bigDec.precision();
-            if ( smallNumbers && scale <= 0 && (precision-scale) <= MAX_PRECISION_FOR_LONG ){
-                try{
+            if (smallNumbers && scale <= 0 && (precision - scale) <= MAX_PRECISION_FOR_LONG) {
+                try {
                     return getInteger(Long.toString(bigDec.longValueExact()), smallNumbers);
-                }catch ( ArithmeticException e ){
+                } catch (ArithmeticException e) {
                 }
             }
-            if ( smallNumbers && precision <= MAX_PRECISION_FOR_FLOAT ){
+            if (smallNumbers && precision <= MAX_PRECISION_FOR_FLOAT) {
                 Float f = bigDec.floatValue();
-                if ( !Float.isInfinite(f) && bigDec.compareTo(new BigDecimal(f.toString())) == 0 ){
+                if (!Float.isInfinite(f) && bigDec.compareTo(new BigDecimal(f.toString())) == 0) {
                     return f;                // no precision loss going to float
                 }
             }
-            if ( precision <= MAX_PRECISION_FOR_DOUBLE ){
+            if (precision <= MAX_PRECISION_FOR_DOUBLE) {
                 Double d = bigDec.doubleValue();
-                if ( !Double.isInfinite(d) && bigDec.compareTo(new BigDecimal(d.toString())) == 0 ){
+                if (!Double.isInfinite(d) && bigDec.compareTo(new BigDecimal(d.toString())) == 0) {
                     return d;                    // no precision loss going to double
                 }
             }
             // precision loss, maintain precision
-            if ( !smallNumbers && scale <= 0 && (precision-scale) <= MAX_PRECISION_FOR_LONG ){
-                try{
+            if (!smallNumbers && scale <= 0 && (precision - scale) <= MAX_PRECISION_FOR_LONG) {
+                try {
                     return Long.valueOf(bigDec.longValueExact());   // long too much for double
-                }catch ( ArithmeticException e ){
+                } catch (ArithmeticException e) {
                 }
             }
-            if ( smallNumbers && scale == 0 ){
+            if (smallNumbers && scale == 0) {
                 return bigDec.toBigIntegerExact();
             }
             return bigDec;
-        }catch ( NumberFormatException e ){
+        } catch (NumberFormatException e) {
             // BigDecimal doesn't do NaN or Infinity
             return smallNumbers ? Float.valueOf(decimalString) : Double.valueOf(decimalString);
         }
@@ -691,44 +677,43 @@ public class JSONParser
      * {@link BigInteger}.
      *
      * @param integerString A string representing an integer number.
-     * @param smallNumbers if true, then try to use the smallest number size
-     *            that doesn't lose information.
+     * @param smallNumbers  if true, then try to use the smallest number size
+     *                      that doesn't lose information.
      * @return A {@link Long} or {@link BigInteger} as needed to accurately
-     *         represent the number.
+     * represent the number.
      * @since 1.9
      */
-    private static Number getInteger( String integerString, boolean smallNumbers )
-    {
+    private static Number getInteger(String integerString, boolean smallNumbers) {
         // parse with BigInteger because that will always work at this point.
         BigInteger bigInt;
-        if ( integerString.startsWith("0x") || integerString.startsWith("0X") ){
+        if (integerString.startsWith("0x") || integerString.startsWith("0X")) {
             bigInt = new BigInteger(integerString.substring(2), 16);
-        }else if ( OCTAL_PAT.matcher(integerString).matches() ){
+        } else if (OCTAL_PAT.matcher(integerString).matches()) {
             bigInt = new BigInteger(integerString, 8);
-        }else{
+        } else {
             bigInt = new BigInteger(integerString);
         }
         BigDecimal bigDec = new BigDecimal(bigInt);
 
-        if ( smallNumbers ){
+        if (smallNumbers) {
             // try for smaller types.
-            try{
+            try {
                 return Byte.valueOf(bigDec.byteValueExact());
-            }catch ( ArithmeticException e ){
+            } catch (ArithmeticException e) {
             }
-            try{
+            try {
                 return Short.valueOf(bigDec.shortValueExact());
-            }catch ( ArithmeticException e ){
+            } catch (ArithmeticException e) {
             }
-            try{
+            try {
                 return Integer.valueOf(bigDec.intValueExact());
-            }catch ( ArithmeticException e ){
+            } catch (ArithmeticException e) {
             }
         }
 
-        try{
+        try {
             return Long.valueOf(bigDec.longValueExact());
-        }catch ( ArithmeticException e ){
+        } catch (ArithmeticException e) {
             // too big to fit in a long.
             return bigInt;
         }
@@ -741,20 +726,19 @@ public class JSONParser
      * cannot be parsed then a ParseException will be thrown.
      *
      * @param dateStr The date string.
-     * @param cfg the config object.
+     * @param cfg     the config object.
      * @return The date.
      * @throws ParseException If DateFormat.parse() fails.
      * @since 1.3
      */
-    private static Date parseDate( String inputStr, JSONConfig cfg ) throws ParseException
-    {
+    private static Date parseDate(String inputStr, JSONConfig cfg) throws ParseException {
         ParseException ex = null;
 
         // try custom formatters, if any, followed by ISO 8601 formatters.
-        for ( DateFormat fmt : cfg.getDateParseFormats() ){
-            try{
+        for (DateFormat fmt : cfg.getDateParseFormats()) {
+            try {
                 return fmt.parse(inputStr);
-            }catch ( ParseException e ){
+            } catch (ParseException e) {
                 ex = e;
             }
         }
@@ -766,7 +750,6 @@ public class JSONParser
     /**
      * This class should never be instantiated.
      */
-    private JSONParser()
-    {
+    private JSONParser() {
     }
 }

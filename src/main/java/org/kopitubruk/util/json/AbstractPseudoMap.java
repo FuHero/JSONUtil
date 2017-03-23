@@ -28,16 +28,15 @@ import java.util.Set;
  *
  * @author Bill Davidson
  */
-abstract class AbstractPseudoMap implements Map<Object,Object>
-{
+abstract class AbstractPseudoMap implements Map<Object, Object> {
     @Override
     public abstract int size();
 
     @Override
-    public abstract Object put( Object key, Object value );
+    public abstract Object put(Object key, Object value);
 
     @Override
-    public abstract Set<java.util.Map.Entry<Object,Object>> entrySet();
+    public abstract Set<java.util.Map.Entry<Object, Object>> entrySet();
 
     @Override
     public abstract void clear();
@@ -46,32 +45,27 @@ abstract class AbstractPseudoMap implements Map<Object,Object>
      * An Entry for this Map.  Hides the type parameters which is nice
      * when creating arrays of these things.
      */
-    protected class Entry implements Map.Entry<Object,Object>
-    {
+    protected class Entry implements Map.Entry<Object, Object> {
         private Object key;
         private Object value;
 
-        protected Entry( Object key, Object value )
-        {
+        protected Entry(Object key, Object value) {
             this.key = key;
             this.value = value;
         }
 
         @Override
-        public Object getKey()
-        {
+        public Object getKey() {
             return key;
         }
 
         @Override
-        public Object getValue()
-        {
+        public Object getValue() {
             return value;
         }
 
         @Override
-        public Object setValue( Object value )
-        {
+        public Object setValue(Object value) {
             throw new UnsupportedOperationException();
         }
     }
@@ -79,129 +73,108 @@ abstract class AbstractPseudoMap implements Map<Object,Object>
     /**
      * Entry set that only needs an iterator method.
      */
-    protected abstract class EntrySet implements Set<Map.Entry<Object,Object>>
-    {
+    protected abstract class EntrySet implements Set<Map.Entry<Object, Object>> {
         @Override
-        public abstract Iterator<java.util.Map.Entry<Object,Object>> iterator();
+        public abstract Iterator<java.util.Map.Entry<Object, Object>> iterator();
 
         @Override
-        public int size()
-        {
+        public int size() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean isEmpty()
-        {
+        public boolean isEmpty() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean contains( Object o )
-        {
+        public boolean contains(Object o) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Object[] toArray()
-        {
+        public Object[] toArray() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public <T> T[] toArray( T[] a )
-        {
+        public <T> T[] toArray(T[] a) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean add( java.util.Map.Entry<Object,Object> e )
-        {
+        public boolean add(java.util.Map.Entry<Object, Object> e) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean remove( Object o )
-        {
+        public boolean remove(Object o) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean containsAll( Collection<?> c )
-        {
+        public boolean containsAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean addAll( Collection<? extends java.util.Map.Entry<Object,Object>> c )
-        {
+        public boolean addAll(Collection<? extends java.util.Map.Entry<Object, Object>> c) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean retainAll( Collection<?> c )
-        {
+        public boolean retainAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean removeAll( Collection<?> c )
-        {
+        public boolean removeAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void clear()
-        {
+        public void clear() {
             throw new UnsupportedOperationException();
         }
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean containsKey( Object key )
-    {
+    public boolean containsKey(Object key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean containsValue( Object value )
-    {
+    public boolean containsValue(Object value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object get( Object key )
-    {
+    public Object get(Object key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object remove( Object key )
-    {
+    public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void putAll( Map<? extends Object,? extends Object> m )
-    {
+    public void putAll(Map<? extends Object, ? extends Object> m) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Set<Object> keySet()
-    {
+    public Set<Object> keySet() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Collection<Object> values()
-    {
+    public Collection<Object> values() {
         throw new UnsupportedOperationException();
     }
 }

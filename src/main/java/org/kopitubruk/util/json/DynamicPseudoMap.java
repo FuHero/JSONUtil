@@ -31,28 +31,25 @@ import java.util.Set;
  *
  * @author Bill Davidson
  */
-class DynamicPseudoMap extends AbstractPseudoMap
-{
-    private ArrayList<Map.Entry<Object,Object>> entries;
+class DynamicPseudoMap extends AbstractPseudoMap {
+    private ArrayList<Map.Entry<Object, Object>> entries;
 
     /**
      * Make a dynamically sized pseudo map
      */
-    DynamicPseudoMap()
-    {
+    DynamicPseudoMap() {
         entries = new ArrayList<>();
     }
 
     /**
      * Create an entry for this key-value pair and add it to the list.
      *
-     * @param key The key
+     * @param key   The key
      * @param value The value
      * @return null because this isn't a real map.
      */
     @Override
-    public Object put( Object key, Object value )
-    {
+    public Object put(Object key, Object value) {
         entries.add(new Entry(key, value));
         return null;
     }
@@ -63,8 +60,7 @@ class DynamicPseudoMap extends AbstractPseudoMap
      * @return The entry set.
      */
     @Override
-    public Set<Map.Entry<Object,Object>> entrySet()
-    {
+    public Set<Map.Entry<Object, Object>> entrySet() {
         return new EntrySet();
     }
 
@@ -74,8 +70,7 @@ class DynamicPseudoMap extends AbstractPseudoMap
      * @return the number of entries in this pseudo map.
      */
     @Override
-    public int size()
-    {
+    public int size() {
         return entries.size();
     }
 
@@ -83,27 +78,23 @@ class DynamicPseudoMap extends AbstractPseudoMap
      * Empty the list.
      */
     @Override
-    public void clear()
-    {
+    public void clear() {
         entries.clear();
     }
 
     /**
      * Call the ArrayList's trimToSize() method.
      */
-    void trimToSize()
-    {
+    void trimToSize() {
         entries.trimToSize();
     }
 
     /**
      * An entry set for this pseudo map.
      */
-    private class EntrySet extends AbstractPseudoMap.EntrySet
-    {
+    private class EntrySet extends AbstractPseudoMap.EntrySet {
         @Override
-        public Iterator<Map.Entry<Object,Object>> iterator()
-        {
+        public Iterator<Map.Entry<Object, Object>> iterator() {
             return entries.iterator();
         }
     }

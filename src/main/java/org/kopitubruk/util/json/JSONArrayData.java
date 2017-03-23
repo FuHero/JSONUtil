@@ -26,8 +26,7 @@ import java.util.Iterator;
  * @author Bill Davidson
  * @since 1.7.1
  */
-class JSONArrayData implements Iterable<Object>
-{
+class JSONArrayData implements Iterable<Object> {
     private Object obj;
 
     /**
@@ -37,8 +36,7 @@ class JSONArrayData implements Iterable<Object>
      * @param obj The source object for the array to be created. This must be an
      *            {@link Iterable}, {@link Enumeration} or an array.
      */
-    JSONArrayData( Object obj )
-    {
+    JSONArrayData(Object obj) {
         this.obj = obj;
     }
 
@@ -46,56 +44,49 @@ class JSONArrayData implements Iterable<Object>
      * @see java.lang.Iterable#iterator()
      */
     @Override
-    public Iterator<Object> iterator()
-    {
-        if ( obj instanceof Iterable ){
+    public Iterator<Object> iterator() {
+        if (obj instanceof Iterable) {
             @SuppressWarnings("unchecked")
-            Iterable<Object> iterable = (Iterable<Object>)obj;  // gag.
+            Iterable<Object> iterable = (Iterable<Object>) obj;  // gag.
             return iterable.iterator();
-        }else if ( obj instanceof Enumeration ){
+        } else if (obj instanceof Enumeration) {
             return new Iterator<Object>() {
-                private Enumeration<?> enumeration = (Enumeration<?>)obj;
+                private Enumeration<?> enumeration = (Enumeration<?>) obj;
 
                 @Override
-                public boolean hasNext()
-                {
+                public boolean hasNext() {
                     return enumeration.hasMoreElements();
                 }
 
                 @Override
-                public Object next()
-                {
+                public Object next() {
                     return enumeration.nextElement();
                 }
 
                 @Override
-                public void remove()
-                {
+                public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
-        }else{          // obj.getClass().isArray() == true
+        } else {          // obj.getClass().isArray() == true
             return new Iterator<Object>() {
                 private Object array = obj;
                 private int i = 0;
                 private int len = Array.getLength(array);
 
                 @Override
-                public boolean hasNext()
-                {
+                public boolean hasNext() {
                     return i < len;
                 }
 
                 @Override
-                public Object next()
-                {
+                public Object next() {
                     // With array of primitives, this will box the primitive.
                     return Array.get(array, i++);
                 }
 
                 @Override
-                public void remove()
-                {
+                public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };

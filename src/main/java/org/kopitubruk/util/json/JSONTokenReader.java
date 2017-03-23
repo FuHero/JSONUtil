@@ -14,13 +14,12 @@ import org.kopitubruk.util.json.JSONParser.TokenType;
  *
  * @since 1.7
  */
-class JSONTokenReader
-{
+class JSONTokenReader {
     // simple tokens that can be safely shared by all threads.
-    private static final Map<Character,Token> SIMPLE_TOKENS;
+    private static final Map<Character, Token> SIMPLE_TOKENS;
 
     static {
-        Map<Character,Token> simpleTokens = new HashMap<>();
+        Map<Character, Token> simpleTokens = new HashMap<>();
         simpleTokens.put('{', new Token(TokenType.START_OBJECT, null));
         simpleTokens.put('}', new Token(TokenType.END_OBJECT, null));
         simpleTokens.put('[', new Token(TokenType.START_ARRAY, null));
@@ -46,10 +45,9 @@ class JSONTokenReader
      * Create a TokenReader.
      *
      * @param json The reader to get the JSON data from.
-     * @param cfg the config object.
+     * @param cfg  the config object.
      */
-    JSONTokenReader( Reader json, JSONConfig cfg )
-    {
+    JSONTokenReader(Reader json, JSONConfig cfg) {
         this.json = json;
         this.cfg = cfg;
     }
@@ -59,8 +57,7 @@ class JSONTokenReader
      *
      * @return the cfg
      */
-    JSONConfig getJSONConfig()
-    {
+    JSONConfig getJSONConfig() {
         return cfg;
     }
 
@@ -70,9 +67,8 @@ class JSONTokenReader
      * @return The next token.
      * @throws IOException If there's a problem with I/O.
      */
-    Token nextToken() throws IOException
-    {
-        if ( extraToken != null ){
+    Token nextToken() throws IOException {
+        if (extraToken != null) {
             // read the next token already.
             Token result = extraToken;
             extraToken = null;
@@ -81,16 +77,16 @@ class JSONTokenReader
 
         // get to the first non space code point.
         int codePoint = nextCodePoint();
-        while ( codePoint >= 0 && Character.isWhitespace(codePoint) ){
+        while (codePoint >= 0 && Character.isWhitespace(codePoint)) {
             codePoint = nextCodePoint();
         }
-        if ( codePoint < 0 ){
+        if (codePoint < 0) {
             return null;                // end of input.
         }
-        char ch = codePoint <= 0xFFFF ? (char)codePoint : 0;
+        char ch = codePoint <= 0xFFFF ? (char) codePoint : 0;
 
         // look for the token.
-        switch ( ch ){
+        switch (ch) {
             case '{':
             case '}':
             case '[':
@@ -116,31 +112,30 @@ class JSONTokenReader
      * @return The token
      * @throws IOException If there's an I/O error.
      */
-    private String getOtherTokenString( int codePoint ) throws IOException
-    {
+    private String getOtherTokenString(int codePoint) throws IOException {
         StringBuilder buf = new StringBuilder();
         int escapeCount = 0;
-        do{
-            char ch  = codePoint <= 0xFFFF ? (char)codePoint : 0;
-            if ( ch == '\\' ){
+        do {
+            char ch = codePoint <= 0xFFFF ? (char) codePoint : 0;
+            if (ch == '\\') {
                 ++escapeCount;          // track escapes.
                 buf.append(ch);
-            }else if ( (ch == '\'' || ch == '"') && escapeCount % 2 == 0 ){
+            } else if ((ch == '\'' || ch == '"') && escapeCount % 2 == 0) {
                 buf.append(ch)
-                   .append(getQuotedString(ch))
-                   .append(ch);
+                        .append(getQuotedString(ch))
+                        .append(ch);
                 escapeCount = 0;
-            }else{
+            } else {
                 extraToken = SIMPLE_TOKENS.get(ch);
-                if ( extraToken != null ){
+                if (extraToken != null) {
                     break;              // ran into next token.  stop.
-                }else{
+                } else {
                     buf.appendCodePoint(codePoint);
                     escapeCount = 0;
                 }
             }
             codePoint = nextCodePoint();
-        }while ( codePoint >= 0 );
+        } while (codePoint >= 0);
 
         // remove trailing whitespace.
         return buf.toString().trim();
@@ -152,31 +147,30 @@ class JSONTokenReader
      * @param str the string to match.
      * @return the token.
      */
-    private Token matchOthers( String str )
-    {
+    private Token matchOthers(String str) {
         // check for new Date(), numbers, literals and unquoted ids.
         Matcher matcher = JSONParser.NEW_DATE_PAT.matcher(str);
-        if ( matcher.matches() ){
+        if (matcher.matches()) {
             String qs = matcher.group(2);
-            return new Token(TokenType.DATE, qs.substring(1, qs.length()-1));
+            return new Token(TokenType.DATE, qs.substring(1, qs.length() - 1));
         }
         matcher = JSONParser.JAVASCRIPT_FLOATING_POINT_PAT.matcher(str);
-        if ( matcher.matches() ){
+        if (matcher.matches()) {
             String number = matcher.group(1);
             return new Token(TokenType.FLOATING_POINT_NUMBER, number);
         }
         matcher = JSONParser.JAVASCRIPT_INTEGER_PAT.matcher(str);
-        if ( matcher.matches() ){
+        if (matcher.matches()) {
             String number = matcher.group(1);
             return new Token(TokenType.INTEGER_NUMBER, number);
         }
         matcher = JSONParser.LITERAL_PAT.matcher(str);
-        if ( matcher.matches() ){
+        if (matcher.matches()) {
             String literal = matcher.group(1);
             return new Token(TokenType.LITERAL, literal);
         }
         matcher = JSONParser.UNQUOTED_ID_PAT.matcher(str);
-        if ( matcher.matches() ){
+        if (matcher.matches()) {
             String id = matcher.group(0);
             return new Token(TokenType.UNQUOTED_ID, id);
         }
@@ -191,31 +185,30 @@ class JSONTokenReader
      * @return The string (without quotes).
      * @throws IOException If there's a problem with I/O.
      */
-    private String getQuotedString( char q ) throws IOException
-    {
+    private String getQuotedString(char q) throws IOException {
         StringBuilder str = new StringBuilder();
         int escapeCount = 0;
 
-        while ( true ){
+        while (true) {
             int nextChar = json.read();
-            if ( nextChar < 0 ){
+            if (nextChar < 0) {
                 throw new JSONParserException(q, cfg);  // missing close quote.
-            }else{
+            } else {
                 ++charCount;
-                char ch = (char)nextChar;
-                if ( ch == '\\' ){
+                char ch = (char) nextChar;
+                if (ch == '\\') {
                     ++escapeCount;
                     str.append(ch);
-                }else if ( ch == q ){
-                    if ( escapeCount % 2 == 0 ){
+                } else if (ch == q) {
+                    if (escapeCount % 2 == 0) {
                         // even number of slashes -- string is done.
                         break;
-                    }else{
+                    } else {
                         // odd number of slashes -- quote is escaped.  keep going.
                         str.append(ch);
                         escapeCount = 0;
                     }
-                }else{
+                } else {
                     str.append(ch);
                     escapeCount = 0;
                 }
@@ -232,16 +225,15 @@ class JSONTokenReader
      * @return the code point.
      * @throws IOException If there's a problem with I/O.
      */
-    private int nextCodePoint() throws IOException
-    {
+    private int nextCodePoint() throws IOException {
         int codePoint = json.read();
 
-        if ( codePoint >= 0 ){
-            if ( Character.isHighSurrogate((char)codePoint) ){
+        if (codePoint >= 0) {
+            if (Character.isHighSurrogate((char) codePoint)) {
                 int ch = json.read();
-                if ( ch >= 0 && Character.isLowSurrogate((char)ch) ){
-                    codePoint = Character.toCodePoint((char)codePoint, (char)ch);
-                }else{
+                if (ch >= 0 && Character.isLowSurrogate((char) ch)) {
+                    codePoint = Character.toCodePoint((char) codePoint, (char) ch);
+                } else {
                     throw new JSONParserException(codePoint, ch, charCount, cfg);
                 }
             }

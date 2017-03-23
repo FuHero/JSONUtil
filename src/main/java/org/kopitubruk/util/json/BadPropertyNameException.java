@@ -35,8 +35,7 @@ import java.util.regex.Pattern;
  *
  * @author Bill Davidson
  */
-public final class BadPropertyNameException extends JSONException
-{
+public final class BadPropertyNameException extends JSONException {
     /**
      * The bad property name.
      */
@@ -47,10 +46,9 @@ public final class BadPropertyNameException extends JSONException
      * Create a new BadIdentifierCharacterException
      *
      * @param propertyName The offending property name.
-     * @param cfg the config object.
+     * @param cfg          the config object.
      */
-    BadPropertyNameException( String propertyName, JSONConfig cfg)
-    {
+    BadPropertyNameException(String propertyName, JSONConfig cfg) {
         super(cfg);
         this.propertyName = propertyName;
         this.cfg = cfg.clone();
@@ -65,15 +63,14 @@ public final class BadPropertyNameException extends JSONException
      * @return The message.
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = getBundle(locale);
 
-        if ( propertyName == null || propertyName.length() < 1 ){
+        if (propertyName == null || propertyName.length() < 1) {
             return bundle.getString("zeroLengthPropertyName");
         }
 
-        if ( JSONUtil.isReservedWord(propertyName) ){
+        if (JSONUtil.isReservedWord(propertyName)) {
             return String.format(bundle.getString("reservedWord"), propertyName);
         }
 
@@ -90,31 +87,31 @@ public final class BadPropertyNameException extends JSONException
          */
         StringBuilder codePointList = new StringBuilder();
         StringProcessor cp = new StringProcessor(propertyName, cfg);
-        while ( cp.nextReady() ){
-            if ( cp.getCodePoint() == '\\' ){
+        while (cp.nextReady()) {
+            if (cp.getCodePoint() == '\\') {
                 // check for valid escapes.
-                if ( gotMatch(passThroughMatcher, cp.getIndex(), cp.end(passThroughRegionLength)) ){
+                if (gotMatch(passThroughMatcher, cp.getIndex(), cp.end(passThroughRegionLength))) {
                     // Skip the escape.
                     cp.setIndex(passThroughMatcher.group(1).length());
-                }else{
+                } else {
                     // bad backslash.
                     badCodePoints.add(cp.getCodePoint());
-                    if ( cp.getIndex() == 0 ){
+                    if (cp.getIndex() == 0) {
                         badStart = true;
                     }
                 }
-            }else if ( cp.getIndex() == 0 && isValidIdentifierStart(cp.getCodePoint(), cfg) ){
+            } else if (cp.getIndex() == 0 && isValidIdentifierStart(cp.getCodePoint(), cfg)) {
                 // OK for start character.
-            }else if ( cp.getIndex() > 0 && isValidIdentifierPart(cp.getCodePoint(), cfg) ){
+            } else if (cp.getIndex() > 0 && isValidIdentifierPart(cp.getCodePoint(), cfg)) {
                 // OK.
-            }else{
+            } else {
                 // bad character.
                 badCodePoints.add(cp.getCodePoint());
-                if ( cp.getIndex() == 0 ){
+                if (cp.getIndex() == 0) {
                     badStart = true;
                 }
             }
-            if ( cp.getIndex() > 0 ){
+            if (cp.getIndex() > 0) {
                 codePointList.append(' ');
             }
             codePointList.append(String.format("%04X", cp.getCodePoint()));
@@ -123,20 +120,20 @@ public final class BadPropertyNameException extends JSONException
         StringBuilder message = new StringBuilder();
 
         message.append(String.format(bundle.getString("invalidPropertyName"),
-                                     propertyName.replaceAll("[\\p{Cntrl}\\p{Co}\\p{Cn}]", "."),
-                                     codePointList.toString()));
+                propertyName.replaceAll("[\\p{Cntrl}\\p{Co}\\p{Cn}]", "."),
+                codePointList.toString()));
         codePointList = null;
 
-        if ( badCodePoints.size() > 0 ){
+        if (badCodePoints.size() > 0) {
             // list the bad code points.
             String mfmt = bundle.getString("badCodePoint");
             boolean firstCodePoint = badStart;
-            for ( int badCodePoint : badCodePoints ){
+            for (int badCodePoint : badCodePoints) {
                 String fmt;
-                if ( firstCodePoint ){
+                if (firstCodePoint) {
                     fmt = bundle.getString("badStart");
                     firstCodePoint = false;
-                }else{
+                } else {
                     fmt = mfmt;
                 }
                 message.append(String.format(fmt, badCodePoint, Character.getName(badCodePoint)));

@@ -45,42 +45,42 @@ import java.util.TimeZone;
  * do.
  * <h3>Validation related options.</h3>
  * <ul>
- *   <li>validatePropertyNames = true</li>
- *   <li>detectDataStructureLoops = true</li>
- *   <li>escapeBadIdentifierCodePoints = false</li>
- *   <li>fullJSONIdentifierCodePoints = false</li>
- *   <li>fastStrings = false</li>
+ * <li>validatePropertyNames = true</li>
+ * <li>detectDataStructureLoops = true</li>
+ * <li>escapeBadIdentifierCodePoints = false</li>
+ * <li>fullJSONIdentifierCodePoints = false</li>
+ * <li>fastStrings = false</li>
  * </ul>
  * <h3>Safe alternate encoding options.</h3>
  * <ul>
- *   <li>encodeNumericStringsAsNumbers = false</li>
- *   <li>escapeNonAscii = false</li>
- *   <li>unEscapeWherePossible = false</li>
- *   <li>escapeSurrogates = false</li>
- *   <li>passThroughEscapes = false</li>
- *   <li>encodeDatesAsStrings = false</li>
- *   <li>reflectUnknownObjects = false</li>
- *   <li>preciseNumbers = false</li>
- *   <li>smallNumbers = false</li>
- *   <li>usePrimitiveArrays = false</li>
- *   <li>cacheReflectionData = false</li>
+ * <li>encodeNumericStringsAsNumbers = false</li>
+ * <li>escapeNonAscii = false</li>
+ * <li>unEscapeWherePossible = false</li>
+ * <li>escapeSurrogates = false</li>
+ * <li>passThroughEscapes = false</li>
+ * <li>encodeDatesAsStrings = false</li>
+ * <li>reflectUnknownObjects = false</li>
+ * <li>preciseNumbers = false</li>
+ * <li>smallNumbers = false</li>
+ * <li>usePrimitiveArrays = false</li>
+ * <li>cacheReflectionData = false</li>
  * </ul>
  * <h3>
- *   Allow generation of certain types of non-standard JSON.
+ * Allow generation of certain types of non-standard JSON.
  * </h3>
  * <p>
- *   These could cause problems for some things that take JSON.  Defaults
- *   are for standard JSON.  Be careful about changing these.  They should
- *   work fine if the JSON is interpreted by a standard Javascript
- *   eval(), except ECMAScript 6 code points if your interpreter doesn't
- *   support those.  Going non-default on any of these tends not to
- *   work in strict JSON parsers such as JQuery.
+ * These could cause problems for some things that take JSON.  Defaults
+ * are for standard JSON.  Be careful about changing these.  They should
+ * work fine if the JSON is interpreted by a standard Javascript
+ * eval(), except ECMAScript 6 code points if your interpreter doesn't
+ * support those.  Going non-default on any of these tends not to
+ * work in strict JSON parsers such as JQuery.
  * </p>
  * <ul>
- *   <li>quoteIdentifier = true</li>
- *   <li>useECMA6 = false</li>
- *   <li>allowReservedWordsInIdentifiers = false</li>
- *   <li>encodeDatesAsObjects = false</li>
+ * <li>quoteIdentifier = true</li>
+ * <li>useECMA6 = false</li>
+ * <li>allowReservedWordsInIdentifiers = false</li>
+ * <li>encodeDatesAsObjects = false</li>
  * </ul>
  * <p>
  * You can change the locale being used for error messages and
@@ -100,11 +100,10 @@ import java.util.TimeZone;
  * detection logic and any custom number or date formats used.  Never
  * share objects of this class between threads.
  *
- * @see JSONConfigDefaults
  * @author Bill Davidson
+ * @see JSONConfigDefaults
  */
-public class JSONConfig implements Serializable, Cloneable
-{
+public class JSONConfig implements Serializable, Cloneable {
     private static TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
     /**
@@ -186,7 +185,7 @@ public class JSONConfig implements Serializable, Cloneable
     /**
      * Optional number formats mapped from different number types.
      */
-    private Map<Class<? extends Number>,NumberFormat> numberFormatMap = null;
+    private Map<Class<? extends Number>, NumberFormat> numberFormatMap = null;
 
     /**
      * A date formatter when encoding Dates.
@@ -206,7 +205,7 @@ public class JSONConfig implements Serializable, Cloneable
     /**
      * The set of classes that reflection should be used for.
      */
-    private Map<Class<?>,JSONReflectedClass> reflectClasses = null;
+    private Map<Class<?>, JSONReflectedClass> reflectClasses = null;
 
     /**
      * Indent padding object.
@@ -255,8 +254,7 @@ public class JSONConfig implements Serializable, Cloneable
     /**
      * Create a JSONConfig
      */
-    public JSONConfig()
-    {
+    public JSONConfig() {
         this(null);
     }
 
@@ -265,8 +263,7 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param locale the locale to set.
      */
-    public JSONConfig( Locale locale )
-    {
+    public JSONConfig(Locale locale) {
         JSONConfigDefaults.initJSONConfig(this, locale);
 
         objStack = detectDataStructureLoops ? new ArrayList<>() : null;
@@ -280,8 +277,7 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param placeHolder dummy argument to get a different signature.
      */
-    private JSONConfig( boolean placeHolder )
-    {
+    private JSONConfig(boolean placeHolder) {
     }
 
     /**
@@ -292,8 +288,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return a clone of this object.
      */
     @Override
-    public JSONConfig clone()
-    {
+    public JSONConfig clone() {
         JSONConfig result = new JSONConfig(true);
 
         result.objStack = objStack == null ? null : new ArrayList<>();
@@ -301,31 +296,31 @@ public class JSONConfig implements Serializable, Cloneable
 
         // NumberFormat and DateFormat are not thread safe so clone them.
 
-        if ( numberFormatMap != null ){
+        if (numberFormatMap != null) {
             result.numberFormatMap = new HashMap<>(numberFormatMap.size());
-            for ( Entry<Class<? extends Number>,NumberFormat> entry : numberFormatMap.entrySet() ){
-                result.numberFormatMap.put(entry.getKey(), (NumberFormat)entry.getValue().clone());
+            for (Entry<Class<? extends Number>, NumberFormat> entry : numberFormatMap.entrySet()) {
+                result.numberFormatMap.put(entry.getKey(), (NumberFormat) entry.getValue().clone());
             }
-        }else{
+        } else {
             result.numberFormatMap = null;
         }
 
-        result.dateGenFormat = dateGenFormat == null ? null : (DateFormat)dateGenFormat.clone();
+        result.dateGenFormat = dateGenFormat == null ? null : (DateFormat) dateGenFormat.clone();
 
-        if ( customDateParseFormats != null ){
+        if (customDateParseFormats != null) {
             result.customDateParseFormats = new ArrayList<>(customDateParseFormats.size());
-            for ( DateFormat fmt : customDateParseFormats ){
-                result.customDateParseFormats.add((DateFormat)fmt.clone());
+            for (DateFormat fmt : customDateParseFormats) {
+                result.customDateParseFormats.add((DateFormat) fmt.clone());
             }
-        }else{
+        } else {
             result.customDateParseFormats = null;
         }
 
-        if ( reflectClasses == null ){
+        if (reflectClasses == null) {
             result.reflectClasses = null;
-        }else{
+        } else {
             result.reflectClasses = new HashMap<>(reflectClasses.size());
-            for ( Entry<Class<?>,JSONReflectedClass> entry : reflectClasses.entrySet() ){
+            for (Entry<Class<?>, JSONReflectedClass> entry : reflectClasses.entrySet()) {
                 result.reflectClasses.put(entry.getKey(), entry.getValue().clone());
             }
         }
@@ -374,17 +369,15 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return the objStack
      */
-    List<Object> getObjStack()
-    {
+    List<Object> getObjStack() {
         return objStack;
     }
 
     /**
      * Clear the object stack.
      */
-    void clearObjStack()
-    {
-        if ( objStack != null ){
+    void clearObjStack() {
+        if (objStack != null) {
             objStack.clear();
         }
     }
@@ -394,9 +387,8 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return the propertyName validation pattern appropriate to the current flags.
      */
-    Pattern getPropertyNameValidationPattern()
-    {
-        if ( validationPat == null ){
+    Pattern getPropertyNameValidationPattern() {
+        if (validationPat == null) {
             validationPat = JSONUtil.getPropertyNameValidationPattern(this);
         }
         return validationPat;
@@ -408,8 +400,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the locale
      * @see JSONConfigDefaults#getLocale()
      */
-    public Locale getLocale()
-    {
+    public Locale getLocale() {
         return locale;
     }
 
@@ -421,8 +412,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setLocale(Locale)
      */
-    public JSONConfig setLocale( Locale locale )
-    {
+    public JSONConfig setLocale(Locale locale) {
         this.locale = locale != null ? locale : JSONConfigDefaults.getLocale();
         return this;
     }
@@ -432,8 +422,7 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return A copy of the number format map.
      */
-    Map<Class<? extends Number>,NumberFormat> getNumberFormats()
-    {
+    Map<Class<? extends Number>, NumberFormat> getNumberFormats() {
         return numberFormatMap;
     }
 
@@ -444,8 +433,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return A number format or null if one has not been set.
      * @see JSONConfigDefaults#getNumberFormat(Class)
      */
-    public NumberFormat getNumberFormat( Class<? extends Number> numericClass )
-    {
+    public NumberFormat getNumberFormat(Class<? extends Number> numericClass) {
         return numberFormatMap != null ? numberFormatMap.get(numericClass) : null;
     }
 
@@ -456,8 +444,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return A number format or null if one has not been set.
      * @see JSONConfigDefaults#getNumberFormat(Number)
      */
-    public NumberFormat getNumberFormat( Number num )
-    {
+    public NumberFormat getNumberFormat(Number num) {
         return num != null ? getNumberFormat(num.getClass()) : null;
     }
 
@@ -472,17 +459,16 @@ public class JSONConfig implements Serializable, Cloneable
      * problems in floating point numbers.
      *
      * @param numericClass The class.
-     * @param fmt The number format.
+     * @param fmt          The number format.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#addNumberFormat(Class, NumberFormat)
      */
-    public JSONConfig addNumberFormat( Class<? extends Number> numericClass, NumberFormat fmt )
-    {
-        if ( numericClass != null ){
-            if ( fmt == null ){
+    public JSONConfig addNumberFormat(Class<? extends Number> numericClass, NumberFormat fmt) {
+        if (numericClass != null) {
+            if (fmt == null) {
                 removeNumberFormat(numericClass);
-            }else{
-                Map<Class<? extends Number>,NumberFormat> numFmtMap = new HashMap<>(2);
+            } else {
+                Map<Class<? extends Number>, NumberFormat> numFmtMap = new HashMap<>(2);
                 numFmtMap.put(numericClass, fmt);
                 // handles null checking and cloning.
                 addNumberFormats(numFmtMap);
@@ -502,13 +488,12 @@ public class JSONConfig implements Serializable, Cloneable
      * problems in floating point numbers.
      *
      * @param numericType The object.
-     * @param fmt The number format.
+     * @param fmt         The number format.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#addNumberFormat(Number, NumberFormat)
      */
-    public JSONConfig addNumberFormat( Number numericType, NumberFormat fmt )
-    {
-        if ( numericType != null ){
+    public JSONConfig addNumberFormat(Number numericType, NumberFormat fmt) {
+        if (numericType != null) {
             addNumberFormat(numericType.getClass(), fmt);
         }
         return this;
@@ -519,11 +504,10 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param numFmtMap The input map.
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#addNumberFormats(Map)
+     * @since 1.4
      */
-    public JSONConfig addNumberFormats( Map<Class<? extends Number>,NumberFormat> numFmtMap )
-    {
+    public JSONConfig addNumberFormats(Map<Class<? extends Number>, NumberFormat> numFmtMap) {
         numberFormatMap = JSONConfigUtil.mergeFormatMaps(numberFormatMap, numFmtMap);
         return this;
     }
@@ -536,14 +520,13 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#removeNumberFormat(Class)
      */
-    public JSONConfig removeNumberFormat( Class<? extends Number> numericClass )
-    {
-        if ( numberFormatMap != null && numericClass != null ){
+    public JSONConfig removeNumberFormat(Class<? extends Number> numericClass) {
+        if (numberFormatMap != null && numericClass != null) {
             int size = numberFormatMap.size();
             numberFormatMap.remove(numericClass);
-            if ( numberFormatMap.size() < 1 ){
+            if (numberFormatMap.size() < 1) {
                 numberFormatMap = null;
-            }else if ( tableSizeFor(size) > tableSizeFor(numberFormatMap.size()) ){
+            } else if (tableSizeFor(size) > tableSizeFor(numberFormatMap.size())) {
                 // minimize memory usage.
                 numberFormatMap = new HashMap<>(numberFormatMap);
             }
@@ -559,9 +542,8 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#removeNumberFormat(Number)
      */
-    public JSONConfig removeNumberFormat( Number num )
-    {
-        if ( num != null ){
+    public JSONConfig removeNumberFormat(Number num) {
+        if (num != null) {
             removeNumberFormat(num.getClass());
         }
         return this;
@@ -573,8 +555,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#clearNumberFormats()
      */
-    public JSONConfig clearNumberFormats()
-    {
+    public JSONConfig clearNumberFormats() {
         numberFormatMap = null;
         return this;
     }
@@ -588,9 +569,8 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return The formatter.
      */
-    DateFormat getDateGenFormat()
-    {
-        if ( dateGenFormat == null ){
+    DateFormat getDateGenFormat() {
+        if (dateGenFormat == null) {
             // don't create it until it's needed.
             dateGenFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
             dateGenFormat.setTimeZone(UTC_TIME_ZONE);
@@ -606,12 +586,11 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param fmt the dateFormat to set
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#setDateGenFormat(DateFormat)
+     * @since 1.4
      */
-    public JSONConfig setDateGenFormat( DateFormat fmt )
-    {
-        dateGenFormat = fmt == null ? null : (DateFormat)fmt.clone();
+    public JSONConfig setDateGenFormat(DateFormat fmt) {
+        dateGenFormat = fmt == null ? null : (DateFormat) fmt.clone();
         return this;
     }
 
@@ -619,19 +598,18 @@ public class JSONConfig implements Serializable, Cloneable
      * Set the date string generation format.
      *
      * @param fmtStr passed to the constructor
-     * {@link SimpleDateFormat#SimpleDateFormat(String,Locale)}
-     * using the locale from this config object.
+     *               {@link SimpleDateFormat#SimpleDateFormat(String, Locale)}
+     *               using the locale from this config object.
      * @return The format that was created.
-     * @since 1.4
      * @see JSONConfigDefaults#setDateGenFormat(String)
+     * @since 1.4
      */
-    public DateFormat setDateGenFormat( String fmtStr )
-    {
+    public DateFormat setDateGenFormat(String fmtStr) {
         DateFormat fmt = null;
-        if ( fmtStr != null ){
+        if (fmtStr != null) {
             fmt = new SimpleDateFormat(fmtStr, locale);
             setDateGenFormat(fmt);
-        }else{
+        } else {
             dateGenFormat = null;
         }
         return fmt;
@@ -641,11 +619,10 @@ public class JSONConfig implements Serializable, Cloneable
      * Clear date generation format.
      *
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#clearDateGenFormat()
+     * @since 1.4
      */
-    public JSONConfig clearDateGenFormat()
-    {
+    public JSONConfig clearDateGenFormat() {
         dateGenFormat = null;
         return this;
     }
@@ -657,9 +634,8 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return The list of date parse formats.
      */
-    List<DateFormat> getDateParseFormats()
-    {
-        if ( dateParseFormats == null ){
+    List<DateFormat> getDateParseFormats() {
+        if (dateParseFormats == null) {
             // don't create it until it's needed.
             String dateTime = "yyyy-MM-dd'T'HH:mm:ss";
             String offset = "XXX";
@@ -667,20 +643,20 @@ public class JSONConfig implements Serializable, Cloneable
 
             // The ISO 8601 formats.
             List<SimpleDateFormat> isoFmts = Arrays.asList(
-                    new SimpleDateFormat(dateTime+millis+offset),
-                    new SimpleDateFormat(dateTime+millis),
-                    new SimpleDateFormat(dateTime+offset),
+                    new SimpleDateFormat(dateTime + millis + offset),
+                    new SimpleDateFormat(dateTime + millis),
+                    new SimpleDateFormat(dateTime + offset),
                     new SimpleDateFormat(dateTime));
 
-            for ( DateFormat fmt : isoFmts ){
+            for (DateFormat fmt : isoFmts) {
                 fmt.setTimeZone(UTC_TIME_ZONE);
             }
 
-            if ( customDateParseFormats == null ){
+            if (customDateParseFormats == null) {
                 // It's just the ISO 8601 formats.
                 dateParseFormats = new ArrayList<>(isoFmts.size());
                 dateParseFormats.addAll(isoFmts);
-            }else{
+            } else {
                 // Custom formats followed by ISO 8601 formats.
                 dateParseFormats = new ArrayList<>(customDateParseFormats.size() + isoFmts.size());
                 dateParseFormats.addAll(customDateParseFormats);
@@ -697,12 +673,11 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param fmt A date parsing format.
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#addDateParseFormat(DateFormat)
+     * @since 1.4
      */
-    public JSONConfig addDateParseFormat( DateFormat fmt )
-    {
-        if ( fmt != null ){
+    public JSONConfig addDateParseFormat(DateFormat fmt) {
+        if (fmt != null) {
             addDateParseFormats(Arrays.asList(fmt));
         }
         return this;
@@ -713,14 +688,13 @@ public class JSONConfig implements Serializable, Cloneable
      * parsing date strings, they will be tried in the same order that
      * they were added until one works.
      *
-     * @param fmtStr Passed to {@link SimpleDateFormat#SimpleDateFormat(String,Locale)}
-     * using the locale from this config object to create a DateFormat.
+     * @param fmtStr Passed to {@link SimpleDateFormat#SimpleDateFormat(String, Locale)}
+     *               using the locale from this config object to create a DateFormat.
      * @return The format that gets created.
-     * @since 1.4
      * @see JSONConfigDefaults#addDateParseFormat(String)
+     * @since 1.4
      */
-    public DateFormat addDateParseFormat( String fmtStr )
-    {
+    public DateFormat addDateParseFormat(String fmtStr) {
         DateFormat fmt = new SimpleDateFormat(fmtStr, locale);
         addDateParseFormat(fmt);
         return fmt;
@@ -732,11 +706,10 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param fmts A collection of date parsing formats.
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#addDateParseFormats(Collection)
+     * @since 1.4
      */
-    public JSONConfig addDateParseFormats( Collection<? extends DateFormat> fmts )
-    {
+    public JSONConfig addDateParseFormats(Collection<? extends DateFormat> fmts) {
         customDateParseFormats = JSONConfigUtil.addDateParseFormats(customDateParseFormats, fmts);
 
         // make sure that custom formats get included in the future.
@@ -748,11 +721,10 @@ public class JSONConfig implements Serializable, Cloneable
      * Clear any date parse formats.
      *
      * @return this JSONConfig object.
-     * @since 1.4
      * @see JSONConfigDefaults#clearDateParseFormats()
+     * @since 1.4
      */
-    public JSONConfig clearDateParseFormats()
-    {
+    public JSONConfig clearDateParseFormats() {
         customDateParseFormats = null;
         dateParseFormats = null;
         return this;
@@ -762,11 +734,10 @@ public class JSONConfig implements Serializable, Cloneable
      * Get the padding object.
      *
      * @return the padding object.
-     * @since 1.7
      * @see JSONConfigDefaults#getIndentPadding()
+     * @since 1.7
      */
-    public IndentPadding getIndentPadding()
-    {
+    public IndentPadding getIndentPadding() {
         return indentPadding;
     }
 
@@ -775,11 +746,10 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param indentPadding the padding object.
      * @return this JSONConfig object.
-     * @since 1.7
      * @see JSONConfigDefaults#setIndentPadding(IndentPadding)
+     * @since 1.7
      */
-    public JSONConfig setIndentPadding( IndentPadding indentPadding )
-    {
+    public JSONConfig setIndentPadding(IndentPadding indentPadding) {
         this.indentPadding = indentPadding;
         return this;
     }
@@ -788,15 +758,14 @@ public class JSONConfig implements Serializable, Cloneable
      * Get the reflection privacy level.
      *
      * @return the reflection privacy level.
-     * @since 1.9
      * @see ReflectUtil#PRIVATE
      * @see ReflectUtil#PACKAGE
      * @see ReflectUtil#PROTECTED
      * @see ReflectUtil#PUBLIC
      * @see JSONConfigDefaults#getReflectionPrivacy()
+     * @since 1.9
      */
-    public int getReflectionPrivacy()
-    {
+    public int getReflectionPrivacy() {
         return reflectionPrivacy;
     }
 
@@ -813,8 +782,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#setReflectionPrivacy(int)
      * @since 1.9
      */
-    public JSONConfig setReflectionPrivacy( int reflectionPrivacy )
-    {
+    public JSONConfig setReflectionPrivacy(int reflectionPrivacy) {
         this.reflectionPrivacy = ReflectUtil.confirmPrivacyLevel(reflectionPrivacy, this);
         return this;
     }
@@ -825,11 +793,10 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param obj An object to check
      * @return true if objects of the given type are reflected.
-     * @since 1.9
      * @see JSONConfigDefaults#isReflectClass(Object)
+     * @since 1.9
      */
-    public boolean isReflectClass( Object obj )
-    {
+    public boolean isReflectClass(Object obj) {
         return getReflectedClass(obj) != null;
     }
 
@@ -841,14 +808,13 @@ public class JSONConfig implements Serializable, Cloneable
      * @param obj The class to look up.
      * @return the reflected class object.
      */
-    JSONReflectedClass ensureReflectedClass( Object obj )
-    {
+    JSONReflectedClass ensureReflectedClass(Object obj) {
         JSONReflectedClass result = null;
-        if ( obj instanceof JSONReflectedClass ){
-            result = (JSONReflectedClass)obj;
-        }else{
+        if (obj instanceof JSONReflectedClass) {
+            result = (JSONReflectedClass) obj;
+        } else {
             result = getReflectedClass(obj);
-            if ( result == null ){
+            if (result == null) {
                 result = ReflectUtil.ensureReflectedClass(obj);
             }
         }
@@ -864,8 +830,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return The JSONReflectedClass object or null if one is not stored.
      * @see JSONConfigDefaults#getReflectedClass(Object)
      */
-    public JSONReflectedClass getReflectedClass( Object obj )
-    {
+    public JSONReflectedClass getReflectedClass(Object obj) {
         return reflectClasses == null || obj == null ? null : reflectClasses.get(ReflectUtil.getClass(obj));
     }
 
@@ -883,8 +848,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#addReflectClass(Object)
      * @since 1.9
      */
-    public JSONConfig addReflectClass( Object obj )
-    {
+    public JSONConfig addReflectClass(Object obj) {
         reflectClasses = JSONConfigUtil.addReflectClass(reflectClasses, obj);
         return this;
     }
@@ -907,8 +871,8 @@ public class JSONConfig implements Serializable, Cloneable
      * can pass "org.example.Widget,foo=bar" to this method.
      *
      * @param className The name of the class suitable for
-     *            {@link ClassLoader#loadClass(String)} followed optionally by a
-     *            comma separated list of field names and/or field aliases.
+     *                  {@link ClassLoader#loadClass(String)} followed optionally by a
+     *                  comma separated list of field names and/or field aliases.
      * @return this JSONConfig object.
      * @throws ClassNotFoundException If the class cannot be loaded.
      * @see #addReflectClass(Object)
@@ -917,8 +881,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#addReflectClassByName(String)
      * @since 1.9.2
      */
-    public JSONConfig addReflectClassByName( String className ) throws ClassNotFoundException
-    {
+    public JSONConfig addReflectClassByName(String className) throws ClassNotFoundException {
         addReflectClass(new JSONReflectedClass(className));
         return this;
     }
@@ -936,8 +899,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#addReflectClasses(Collection)
      * @since 1.9
      */
-    public JSONConfig addReflectClasses( Collection<?> classes )
-    {
+    public JSONConfig addReflectClasses(Collection<?> classes) {
         reflectClasses = JSONConfigUtil.addReflectClasses(reflectClasses, classes);
         return this;
     }
@@ -952,8 +914,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#removeReflectClass(Object)
      * @since 1.9
      */
-    public JSONConfig removeReflectClass( Object obj )
-    {
+    public JSONConfig removeReflectClass(Object obj) {
         reflectClasses = JSONConfigUtil.removeReflectClass(reflectClasses, obj);
         return this;
     }
@@ -963,13 +924,12 @@ public class JSONConfig implements Serializable, Cloneable
      * classes.
      *
      * @param classes A collection objects of the types to be removed from
-     * the reflect list.
+     *                the reflect list.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#removeReflectClasses(Collection)
      * @since 1.9
      */
-    public JSONConfig removeReflectClasses( Collection<?> classes )
-    {
+    public JSONConfig removeReflectClasses(Collection<?> classes) {
         reflectClasses = JSONConfigUtil.removeReflectClasses(reflectClasses, classes);
         return this;
     }
@@ -981,8 +941,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#clearReflectClasses()
      * @since 1.9
      */
-    public JSONConfig clearReflectClasses()
-    {
+    public JSONConfig clearReflectClasses() {
         reflectClasses = null;
         return this;
     }
@@ -992,8 +951,7 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @param refClasses The reflectClasses map.
      */
-    void setReflectClasses( Map<Class<?>,JSONReflectedClass> refClasses )
-    {
+    void setReflectClasses(Map<Class<?>, JSONReflectedClass> refClasses) {
         reflectClasses = refClasses;
     }
 
@@ -1008,8 +966,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see #PASS
      * @see JSONConfigDefaults#getUnmatchedSurrogatePolicy()
      */
-    public int getUnmatchedSurrogatePolicy()
-    {
+    public int getUnmatchedSurrogatePolicy() {
         return unmatchedSurrogatePolicy;
     }
 
@@ -1017,11 +974,11 @@ public class JSONConfig implements Serializable, Cloneable
      * Tell JSONUtil what to do when it encounters unmatched surrogates in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link #REPLACE} - Replace with the Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link #DISCARD} - Discard them.</li>
-     *   <li>{@link #EXCEPTION} - Throw an {@link UnmatchedSurrogateException}</li>
-     *   <li>{@link #ESCAPE} - Include them but escape them</li>
-     *   <li>{@link #PASS} - Pass them through unmodified.</li>
+     * <li>{@link #REPLACE} - Replace with the Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link #DISCARD} - Discard them.</li>
+     * <li>{@link #EXCEPTION} - Throw an {@link UnmatchedSurrogateException}</li>
+     * <li>{@link #ESCAPE} - Include them but escape them</li>
+     * <li>{@link #PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      *
@@ -1029,10 +986,8 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setUnmatchedSurrogatePolicy(int)
      */
-    public JSONConfig setUnmatchedSurrogatePolicy( int unmatchedSurrogatePolicy )
-    {
-        switch ( unmatchedSurrogatePolicy )
-        {
+    public JSONConfig setUnmatchedSurrogatePolicy(int unmatchedSurrogatePolicy) {
+        switch (unmatchedSurrogatePolicy) {
             case REPLACE:
             case DISCARD:
             case EXCEPTION:
@@ -1055,8 +1010,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see #PASS
      * @see JSONConfigDefaults#getUndefinedCodePointPolicy()
      */
-    public int getUndefinedCodePointPolicy()
-    {
+    public int getUndefinedCodePointPolicy() {
         return undefinedCodePointPolicy;
     }
 
@@ -1064,11 +1018,11 @@ public class JSONConfig implements Serializable, Cloneable
      * Tell JSONUtil what to do when it encounters undefined code points in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link #REPLACE} - Replace with the Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link #DISCARD} - Discard them.</li>
-     *   <li>{@link #EXCEPTION} - Throw an {@link UndefinedCodePointException}</li>
-     *   <li>{@link #ESCAPE} - Include them but escape them</li>
-     *   <li>{@link #PASS} - Pass them through unmodified.</li>
+     * <li>{@link #REPLACE} - Replace with the Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link #DISCARD} - Discard them.</li>
+     * <li>{@link #EXCEPTION} - Throw an {@link UndefinedCodePointException}</li>
+     * <li>{@link #ESCAPE} - Include them but escape them</li>
+     * <li>{@link #PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      * <p>
@@ -1082,10 +1036,8 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setUndefinedCodePointPolicy(int)
      */
-    public JSONConfig setUndefinedCodePointPolicy( int undefinedCodePointPolicy )
-    {
-        switch ( undefinedCodePointPolicy )
-        {
+    public JSONConfig setUndefinedCodePointPolicy(int undefinedCodePointPolicy) {
+        switch (undefinedCodePointPolicy) {
             case REPLACE:
             case DISCARD:
             case EXCEPTION:
@@ -1110,8 +1062,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see #PASS
      * @see JSONConfigDefaults#setBadCharacterPolicy(int)
      */
-    public JSONConfig setBadCharacterPolicy( int badCharacterPolicy )
-    {
+    public JSONConfig setBadCharacterPolicy(int badCharacterPolicy) {
         setUnmatchedSurrogatePolicy(badCharacterPolicy);
         setUndefinedCodePointPolicy(badCharacterPolicy);
         return this;
@@ -1123,8 +1074,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return true if property names are set to be validated.
      * @see JSONConfigDefaults#isValidatePropertyNames()
      */
-    public boolean isValidatePropertyNames()
-    {
+    public boolean isValidatePropertyNames() {
         return validatePropertyNames;
     }
 
@@ -1152,8 +1102,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setValidatePropertyNames(boolean)
      */
-    public JSONConfig setValidatePropertyNames( boolean validatePropertyNames )
-    {
+    public JSONConfig setValidatePropertyNames(boolean validatePropertyNames) {
         this.validatePropertyNames = validatePropertyNames;
         return this;
     }
@@ -1164,8 +1113,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return true if data structure loops will be detected.
      * @see JSONConfigDefaults#isDetectDataStructureLoops()
      */
-    public boolean isDetectDataStructureLoops()
-    {
+    public boolean isDetectDataStructureLoops() {
         return detectDataStructureLoops;
     }
 
@@ -1180,8 +1128,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setDetectDataStructureLoops(boolean)
      */
-    public JSONConfig setDetectDataStructureLoops( boolean detectDataStructureLoops )
-    {
+    public JSONConfig setDetectDataStructureLoops(boolean detectDataStructureLoops) {
         this.detectDataStructureLoops = detectDataStructureLoops;
         return this;
     }
@@ -1192,8 +1139,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the the identifier escape policy.
      * @see JSONConfigDefaults#isEscapeBadIdentifierCodePoints()
      */
-    public boolean isEscapeBadIdentifierCodePoints()
-    {
+    public boolean isEscapeBadIdentifierCodePoints() {
         return escapeBadIdentifierCodePoints;
     }
 
@@ -1205,8 +1151,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEscapeBadIdentifierCodePoints(boolean)
      */
-    public JSONConfig setEscapeBadIdentifierCodePoints( boolean escapeBadIdentifierCodePoints )
-    {
+    public JSONConfig setEscapeBadIdentifierCodePoints(boolean escapeBadIdentifierCodePoints) {
         this.escapeBadIdentifierCodePoints = escapeBadIdentifierCodePoints;
         return this;
     }
@@ -1217,8 +1162,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the fullJSONIdentifierCodePoints
      * @see JSONConfigDefaults#isFullJSONIdentifierCodePoints()
      */
-    public boolean isFullJSONIdentifierCodePoints()
-    {
+    public boolean isFullJSONIdentifierCodePoints() {
         return fullJSONIdentifierCodePoints;
     }
 
@@ -1233,10 +1177,9 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setFullJSONIdentifierCodePoints(boolean)
      */
-    public JSONConfig setFullJSONIdentifierCodePoints( boolean fullJSONIdentifierCodePoints )
-    {
+    public JSONConfig setFullJSONIdentifierCodePoints(boolean fullJSONIdentifierCodePoints) {
         this.fullJSONIdentifierCodePoints = fullJSONIdentifierCodePoints;
-        if ( fullJSONIdentifierCodePoints ){
+        if (fullJSONIdentifierCodePoints) {
             quoteIdentifier = true;
         }
         validationPat = null;
@@ -1249,8 +1192,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the fastStrings policy
      * @see JSONConfigDefaults#isFastStrings()
      */
-    public boolean isFastStrings()
-    {
+    public boolean isFastStrings() {
         return fastStrings;
     }
 
@@ -1269,12 +1211,11 @@ public class JSONConfig implements Serializable, Cloneable
      * escaped.
      *
      * @param fastStrings If true, then string values will be copied as is with
-     *            no escaping or validation.
+     *                    no escaping or validation.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setFastStrings(boolean)
      */
-    public JSONConfig setFastStrings( boolean fastStrings )
-    {
+    public JSONConfig setFastStrings(boolean fastStrings) {
         this.fastStrings = fastStrings;
         return this;
     }
@@ -1286,8 +1227,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the isEncodeNumericStringsAsNumbers
      * @see JSONConfigDefaults#isEncodeNumericStringsAsNumbers()
      */
-    public boolean isEncodeNumericStringsAsNumbers()
-    {
+    public boolean isEncodeNumericStringsAsNumbers() {
         return encodeNumericStringsAsNumbers;
     }
 
@@ -1301,8 +1241,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEncodeNumericStringsAsNumbers(boolean)
      */
-    public JSONConfig setEncodeNumericStringsAsNumbers( boolean encodeNumericStringsAsNumbers )
-    {
+    public JSONConfig setEncodeNumericStringsAsNumbers(boolean encodeNumericStringsAsNumbers) {
         this.encodeNumericStringsAsNumbers = encodeNumericStringsAsNumbers;
         return this;
     }
@@ -1314,8 +1253,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return true if non-ascii characters should be encoded with Unicode escapes.
      * @see JSONConfigDefaults#isEscapeNonAscii()
      */
-    public boolean isEscapeNonAscii()
-    {
+    public boolean isEscapeNonAscii() {
         return escapeNonAscii;
     }
 
@@ -1331,10 +1269,9 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEscapeNonAscii(boolean)
      */
-    public JSONConfig setEscapeNonAscii( boolean escapeNonAscii )
-    {
+    public JSONConfig setEscapeNonAscii(boolean escapeNonAscii) {
         this.escapeNonAscii = escapeNonAscii;
-        if ( escapeNonAscii ){
+        if (escapeNonAscii) {
             escapeSurrogates = false;
         }
         return this;
@@ -1346,8 +1283,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the escape surrogates policy.
      * @see JSONConfigDefaults#isEscapeSurrogates()
      */
-    public boolean isEscapeSurrogates()
-    {
+    public boolean isEscapeSurrogates() {
         return escapeSurrogates;
     }
 
@@ -1359,10 +1295,9 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEscapeSurrogates(boolean)
      */
-    public JSONConfig setEscapeSurrogates( boolean escapeSurrogates )
-    {
+    public JSONConfig setEscapeSurrogates(boolean escapeSurrogates) {
         this.escapeSurrogates = escapeSurrogates;
-        if ( escapeSurrogates ){
+        if (escapeSurrogates) {
             this.escapeNonAscii = false;
         }
         return this;
@@ -1374,8 +1309,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the unEscape policy.
      * @see JSONConfigDefaults#isUnEscapeWherePossible()
      */
-    public boolean isUnEscapeWherePossible()
-    {
+    public boolean isUnEscapeWherePossible() {
         return unEscapeWherePossible;
     }
 
@@ -1393,12 +1327,11 @@ public class JSONConfig implements Serializable, Cloneable
      * string values.
      *
      * @param unEscapeWherePossible If true then where possible, undo inline
-     *            escapes in strings.
+     *                              escapes in strings.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setUnEscapeWherePossible(boolean)
      */
-    public JSONConfig setUnEscapeWherePossible( boolean unEscapeWherePossible )
-    {
+    public JSONConfig setUnEscapeWherePossible(boolean unEscapeWherePossible) {
         this.unEscapeWherePossible = unEscapeWherePossible;
         return this;
     }
@@ -1409,8 +1342,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return The pass through escapes policy.
      * @see JSONConfigDefaults#isPassThroughEscapes()
      */
-    public boolean isPassThroughEscapes()
-    {
+    public boolean isPassThroughEscapes() {
         return passThroughEscapes;
     }
 
@@ -1423,8 +1355,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setPassThroughEscapes(boolean)
      */
-    public JSONConfig setPassThroughEscapes( boolean passThroughEscapes )
-    {
+    public JSONConfig setPassThroughEscapes(boolean passThroughEscapes) {
         this.passThroughEscapes = passThroughEscapes;
         return this;
     }
@@ -1435,8 +1366,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the encodeDatesAsStrings policy.
      * @see JSONConfigDefaults#isEncodeDatesAsStrings()
      */
-    public boolean isEncodeDatesAsStrings()
-    {
+    public boolean isEncodeDatesAsStrings() {
         return encodeDatesAsStrings;
     }
 
@@ -1450,10 +1380,9 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEncodeDatesAsStrings(boolean)
      */
-    public JSONConfig setEncodeDatesAsStrings( boolean encodeDatesAsStrings )
-    {
+    public JSONConfig setEncodeDatesAsStrings(boolean encodeDatesAsStrings) {
         this.encodeDatesAsStrings = encodeDatesAsStrings;
-        if ( encodeDatesAsStrings ){
+        if (encodeDatesAsStrings) {
             encodeDatesAsObjects = false;
         }
         return this;
@@ -1465,8 +1394,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the reflectUnknownObjects policy.
      * @see JSONConfigDefaults#isReflectUnknownObjects()
      */
-    public boolean isReflectUnknownObjects()
-    {
+    public boolean isReflectUnknownObjects() {
         return reflectUnknownObjects;
     }
 
@@ -1478,7 +1406,7 @@ public class JSONConfig implements Serializable, Cloneable
      * been added to the list of classes to be reflected.
      *
      * @param reflectUnknownObjects If true, then attempt to use reflection to
-     *            encode objects which are otherwise unknown.
+     *                              encode objects which are otherwise unknown.
      * @return this JSONConfig object.
      * @see #addReflectClass(Object)
      * @see #addReflectClasses(Collection)
@@ -1486,8 +1414,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#setReflectUnknownObjects(boolean)
      * @since 1.9
      */
-    public JSONConfig setReflectUnknownObjects( boolean reflectUnknownObjects )
-    {
+    public JSONConfig setReflectUnknownObjects(boolean reflectUnknownObjects) {
         this.reflectUnknownObjects = reflectUnknownObjects;
         return this;
     }
@@ -1499,8 +1426,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#isPreciseNumbers()
      * @since 1.9
      */
-    public boolean isPreciseNumbers()
-    {
+    public boolean isPreciseNumbers() {
         return preciseNumbers;
     }
 
@@ -1515,8 +1441,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#setPreciseNumbers(boolean)
      * @since 1.9
      */
-    public JSONConfig setPreciseNumbers( boolean preciseNumbers )
-    {
+    public JSONConfig setPreciseNumbers(boolean preciseNumbers) {
         this.preciseNumbers = preciseNumbers;
         return this;
     }
@@ -1528,8 +1453,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#isSmallNumbers()
      * @since 1.9
      */
-    public boolean isSmallNumbers()
-    {
+    public boolean isSmallNumbers() {
         return smallNumbers;
     }
 
@@ -1545,8 +1469,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#setSmallNumbers(boolean)
      * @since 1.9
      */
-    public JSONConfig setSmallNumbers( boolean smallNumbers )
-    {
+    public JSONConfig setSmallNumbers(boolean smallNumbers) {
         this.smallNumbers = smallNumbers;
         return this;
     }
@@ -1558,8 +1481,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#isUsePrimitiveArrays()
      * @since 1.9
      */
-    public boolean isUsePrimitiveArrays()
-    {
+    public boolean isUsePrimitiveArrays() {
         return usePrimitiveArrays;
     }
 
@@ -1578,13 +1500,12 @@ public class JSONConfig implements Serializable, Cloneable
      * memory as possible.
      *
      * @param usePrimitiveArrays if true, then the parser will create arrays of
-     *            primitives as applicable.
+     *                           primitives as applicable.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setUsePrimitiveArrays(boolean)
      * @since 1.9
      */
-    public JSONConfig setUsePrimitiveArrays( boolean usePrimitiveArrays )
-    {
+    public JSONConfig setUsePrimitiveArrays(boolean usePrimitiveArrays) {
         this.usePrimitiveArrays = usePrimitiveArrays;
         return this;
     }
@@ -1596,8 +1517,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#isCacheReflectionData()
      * @since 1.9
      */
-    public boolean isCacheReflectionData()
-    {
+    public boolean isCacheReflectionData() {
         return cacheReflectionData;
     }
 
@@ -1611,8 +1531,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @see JSONConfigDefaults#setCacheReflectionData(boolean)
      * @since 1.9
      */
-    public JSONConfig setCacheReflectionData( boolean cacheReflectionData )
-    {
+    public JSONConfig setCacheReflectionData(boolean cacheReflectionData) {
         this.cacheReflectionData = cacheReflectionData;
         return this;
     }
@@ -1623,8 +1542,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return If true, then all identifiers will be quoted.
      * @see JSONConfigDefaults#isQuoteIdentifier()
      */
-    public boolean isQuoteIdentifier()
-    {
+    public boolean isQuoteIdentifier() {
         return quoteIdentifier;
     }
 
@@ -1642,12 +1560,11 @@ public class JSONConfig implements Serializable, Cloneable
      * that will also force quotes.
      *
      * @param quoteIdentifier If true, then all identifiers will be quoted. If
-     *        false, then only those that really need quotes will be quoted.
+     *                        false, then only those that really need quotes will be quoted.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setQuoteIdentifier(boolean)
      */
-    public JSONConfig setQuoteIdentifier( boolean quoteIdentifier )
-    {
+    public JSONConfig setQuoteIdentifier(boolean quoteIdentifier) {
         this.quoteIdentifier = fullJSONIdentifierCodePoints || quoteIdentifier;
         return this;
     }
@@ -1658,8 +1575,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return The ECMAScript 6 policy.
      * @see JSONConfigDefaults#isUseECMA6()
      */
-    public boolean isUseECMA6()
-    {
+    public boolean isUseECMA6() {
         return useECMA6;
     }
 
@@ -1671,12 +1587,11 @@ public class JSONConfig implements Serializable, Cloneable
      * letter numbers in addition to other letters.  Default is false.
      *
      * @param useECMA6 If true, use EMCAScript 6 code point escapes and allow
-     * ECMAScript 6 identifier character set.
+     *                 ECMAScript 6 identifier character set.
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setUseECMA6(boolean)
      */
-    public JSONConfig setUseECMA6( boolean useECMA6 )
-    {
+    public JSONConfig setUseECMA6(boolean useECMA6) {
         this.useECMA6 = useECMA6;
         validationPat = null;
         return this;
@@ -1688,8 +1603,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the allowReservedWordsInIdentifiers policy.
      * @see JSONConfigDefaults#isAllowReservedWordsInIdentifiers()
      */
-    public boolean isAllowReservedWordsInIdentifiers()
-    {
+    public boolean isAllowReservedWordsInIdentifiers() {
         return allowReservedWordsInIdentifiers;
     }
 
@@ -1701,8 +1615,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setAllowReservedWordsInIdentifiers(boolean)
      */
-    public JSONConfig setAllowReservedWordsInIdentifiers( boolean allowReservedWordsInIdentifiers )
-    {
+    public JSONConfig setAllowReservedWordsInIdentifiers(boolean allowReservedWordsInIdentifiers) {
         this.allowReservedWordsInIdentifiers = allowReservedWordsInIdentifiers;
         return this;
     }
@@ -1713,8 +1626,7 @@ public class JSONConfig implements Serializable, Cloneable
      * @return the encodeDates policy.
      * @see JSONConfigDefaults#isEncodeDatesAsObjects()
      */
-    public boolean isEncodeDatesAsObjects()
-    {
+    public boolean isEncodeDatesAsObjects() {
         return encodeDatesAsObjects;
     }
 
@@ -1728,10 +1640,9 @@ public class JSONConfig implements Serializable, Cloneable
      * @return this JSONConfig object.
      * @see JSONConfigDefaults#setEncodeDatesAsObjects(boolean)
      */
-    public JSONConfig setEncodeDatesAsObjects( boolean encodeDatesAsObjects )
-    {
+    public JSONConfig setEncodeDatesAsObjects(boolean encodeDatesAsObjects) {
         this.encodeDatesAsObjects = encodeDatesAsObjects;
-        if ( encodeDatesAsObjects ){
+        if (encodeDatesAsObjects) {
             encodeDatesAsStrings = false;
         }
         return this;
@@ -1742,8 +1653,7 @@ public class JSONConfig implements Serializable, Cloneable
      *
      * @return true if encodeDatesAsObjects or encodeDatesAsStrings is true.
      */
-    public boolean isFormatDates()
-    {
+    public boolean isFormatDates() {
         return encodeDatesAsStrings || encodeDatesAsObjects;
     }
 

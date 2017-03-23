@@ -25,8 +25,7 @@ import java.util.Locale;
  *
  * @author Bill Davidson
  */
-public abstract class JSONException extends IllegalArgumentException
-{
+public abstract class JSONException extends IllegalArgumentException {
     private Locale locale;
 
     /**
@@ -34,8 +33,7 @@ public abstract class JSONException extends IllegalArgumentException
      *
      * @param cfg the config object.
      */
-    JSONException( JSONConfig cfg )
-    {
+    JSONException(JSONConfig cfg) {
         super();
         setLocale(cfg.getLocale());
     }
@@ -43,11 +41,10 @@ public abstract class JSONException extends IllegalArgumentException
     /**
      * Wrapper for other RuntimeExceptions thrown by Java API.
      *
-     * @param e the exception
+     * @param e   the exception
      * @param cfg the config object.
      */
-    JSONException( Exception e, JSONConfig cfg )
-    {
+    JSONException(Exception e, JSONConfig cfg) {
         super(e);
         setLocale(cfg.getLocale());
     }
@@ -57,8 +54,7 @@ public abstract class JSONException extends IllegalArgumentException
      *
      * @param locale the locale to set
      */
-    public void setLocale( Locale locale )
-    {
+    public void setLocale(Locale locale) {
         this.locale = locale != null ? locale : JSONConfigDefaults.getLocale();
     }
 
@@ -66,8 +62,7 @@ public abstract class JSONException extends IllegalArgumentException
      * @see java.lang.Throwable#getMessage()
      */
     @Override
-    public String getMessage()
-    {
+    public String getMessage() {
         return internalGetMessage(JSONConfigDefaults.getLocale());
     }
 
@@ -75,8 +70,7 @@ public abstract class JSONException extends IllegalArgumentException
      * @see java.lang.Throwable#getLocalizedMessage()
      */
     @Override
-    public String getLocalizedMessage()
-    {
+    public String getLocalizedMessage() {
         return internalGetMessage(locale);
     }
 
@@ -86,7 +80,7 @@ public abstract class JSONException extends IllegalArgumentException
      * @param locale The locale to use when generating the message.
      * @return The message.
      */
-    abstract String internalGetMessage( Locale locale );
+    abstract String internalGetMessage(Locale locale);
 
     /**
      * Get the name of the class of the object.
@@ -94,10 +88,9 @@ public abstract class JSONException extends IllegalArgumentException
      * @param obj the object
      * @return the class name.
      */
-    protected String getClassName( Object obj )
-    {
+    protected String getClassName(Object obj) {
         String name = obj.getClass().getCanonicalName();
-        if ( name == null ){
+        if (name == null) {
             name = obj.getClass().isArray() ? "[array]" : "[unknown]";
         }
         return name;

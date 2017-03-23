@@ -30,9 +30,8 @@ import java.util.Set;
  *
  * @author Bill Davidson
  */
-class FixedPseudoMap extends AbstractPseudoMap
-{
-    private final Map.Entry<Object,Object>[] entries;
+class FixedPseudoMap extends AbstractPseudoMap {
+    private final Map.Entry<Object, Object>[] entries;
     private int size;
 
     /**
@@ -40,8 +39,7 @@ class FixedPseudoMap extends AbstractPseudoMap
      *
      * @param mapSize the size to make it.
      */
-    FixedPseudoMap( int mapSize )
-    {
+    FixedPseudoMap(int mapSize) {
         entries = new Entry[mapSize];
         size = 0;
     }
@@ -49,13 +47,12 @@ class FixedPseudoMap extends AbstractPseudoMap
     /**
      * Create an entry for this key-value pair and add it to the list.
      *
-     * @param key The key
+     * @param key   The key
      * @param value The value
      * @return null because this isn't a real map.
      */
     @Override
-    public Object put( Object key, Object value )
-    {
+    public Object put(Object key, Object value) {
         entries[size++] = new Entry(key, value);
         return null;
     }
@@ -67,8 +64,7 @@ class FixedPseudoMap extends AbstractPseudoMap
      * @return The entry set.
      */
     @Override
-    public Set<Map.Entry<Object,Object>> entrySet()
-    {
+    public Set<Map.Entry<Object, Object>> entrySet() {
         return new EntrySet();
     }
 
@@ -78,8 +74,7 @@ class FixedPseudoMap extends AbstractPseudoMap
      * @return the number of entries in this pseudo map.
      */
     @Override
-    public int size()
-    {
+    public int size() {
         return size;
     }
 
@@ -87,41 +82,34 @@ class FixedPseudoMap extends AbstractPseudoMap
      * Empty the list.
      */
     @Override
-    public void clear()
-    {
+    public void clear() {
         size = 0;
     }
 
     /**
      * An entry set for this pseudo map.
      */
-    private class EntrySet extends AbstractPseudoMap.EntrySet
-    {
+    private class EntrySet extends AbstractPseudoMap.EntrySet {
         @Override
-        public Iterator<Map.Entry<Object,Object>> iterator()
-        {
-            return new Iterator<Map.Entry<Object,Object>>()
-                       {
-                           private int i = 0;
+        public Iterator<Map.Entry<Object, Object>> iterator() {
+            return new Iterator<Map.Entry<Object, Object>>() {
+                private int i = 0;
 
-                           @Override
-                           public boolean hasNext()
-                           {
-                               return i < size;
-                           }
+                @Override
+                public boolean hasNext() {
+                    return i < size;
+                }
 
-                           @Override
-                           public Map.Entry<Object,Object> next()
-                           {
-                               return entries[i++];
-                           }
+                @Override
+                public Map.Entry<Object, Object> next() {
+                    return entries[i++];
+                }
 
-                           @Override
-                           public void remove()
-                           {
-                               throw new UnsupportedOperationException();
-                           }
-                       };
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
         }
     }
 }

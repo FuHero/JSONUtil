@@ -25,8 +25,7 @@ import java.util.ResourceBundle;
  *
  * @author Bill Davidson
  */
-public class UndefinedCodePointException extends JSONException
-{
+public class UndefinedCodePointException extends JSONException {
     private String strValue;
     private int position;
     private int codePoint;
@@ -34,13 +33,12 @@ public class UndefinedCodePointException extends JSONException
     /**
      * Make a UndefinedCodePointException
      *
-     * @param cfg the config object.
-     * @param strValue the string that contains the undefined code point.
-     * @param position the position within the string value of the undefined code point
+     * @param cfg       the config object.
+     * @param strValue  the string that contains the undefined code point.
+     * @param position  the position within the string value of the undefined code point
      * @param codePoint the undefined code point.
      */
-    UndefinedCodePointException( JSONConfig cfg, String strValue, int position, int codePoint )
-    {
+    UndefinedCodePointException(JSONConfig cfg, String strValue, int position, int codePoint) {
         super(cfg);
         this.strValue = strValue;
         this.position = position;
@@ -50,13 +48,12 @@ public class UndefinedCodePointException extends JSONException
     /**
      * Make a UndefinedCodePointException
      *
-     * @param cfg the config object.
-     * @param strValue the string that contains the undefined code point.
-     * @param position the position within the string value of the undefined code point
+     * @param cfg                the config object.
+     * @param strValue           the string that contains the undefined code point.
+     * @param position           the position within the string value of the undefined code point
      * @param codePointHexString the hex string of the undefined code point.
      */
-    UndefinedCodePointException( JSONConfig cfg, String strValue, int position, String codePointHexString )
-    {
+    UndefinedCodePointException(JSONConfig cfg, String strValue, int position, String codePointHexString) {
         super(cfg);
         this.strValue = strValue;
         this.position = position;
@@ -68,8 +65,7 @@ public class UndefinedCodePointException extends JSONException
      *
      * @return the string value that contained this undefined code point.
      */
-    public String getStrValue()
-    {
+    public String getStrValue() {
         return strValue;
     }
 
@@ -78,8 +74,7 @@ public class UndefinedCodePointException extends JSONException
      *
      * @return the position within the string of the code point that caused this exception.
      */
-    public int getPosition()
-    {
+    public int getPosition() {
         return position;
     }
 
@@ -88,8 +83,7 @@ public class UndefinedCodePointException extends JSONException
      *
      * @return the code point that caused this exception.
      */
-    public int getCodePoint()
-    {
+    public int getCodePoint() {
         return codePoint;
     }
 
@@ -97,8 +91,7 @@ public class UndefinedCodePointException extends JSONException
      * @see org.kopitubruk.util.json.JSONException#internalGetMessage(java.util.Locale)
      */
     @Override
-    String internalGetMessage( Locale locale )
-    {
+    String internalGetMessage(Locale locale) {
         ResourceBundle bundle = JSONUtil.getBundle(locale);
 
         return String.format(bundle.getString("undefinedCodePoint"), codePoint, position);

@@ -36,8 +36,7 @@ import java.io.Writer;
  * @author Bill Davidson
  * @since 1.7
  */
-public class IndentPadding implements Cloneable
-{
+public class IndentPadding implements Cloneable {
     // config data
     private String indent;
     private String newLine;
@@ -50,8 +49,7 @@ public class IndentPadding implements Cloneable
     /**
      * Create an indent padding object using four spaces and a standard newline.
      */
-    public IndentPadding()
-    {
+    public IndentPadding() {
         this("    ", "\n");
     }
 
@@ -59,11 +57,10 @@ public class IndentPadding implements Cloneable
      * Create an indent padding object with the given indent and newLine
      * strings.
      *
-     * @param indent The indent string to use for one level.
+     * @param indent  The indent string to use for one level.
      * @param newLine The new line string.
      */
-    public IndentPadding( String indent, String newLine )
-    {
+    public IndentPadding(String indent, String newLine) {
         this.indent = indent;
         this.newLine = newLine;
 
@@ -76,16 +73,14 @@ public class IndentPadding implements Cloneable
      * @see java.lang.Object#clone()
      */
     @Override
-    public IndentPadding clone()
-    {
+    public IndentPadding clone() {
         return new IndentPadding(indent, newLine);
     }
 
     /**
      * Reset this object's operating data.
      */
-    public void reset()
-    {
+    public void reset() {
         level = 0;
         paddingBuf = new StringBuilder();
         padding = null;
@@ -96,8 +91,7 @@ public class IndentPadding implements Cloneable
      *
      * @return the spacing for one indent level.
      */
-    public String getIndent()
-    {
+    public String getIndent() {
         return indent;
     }
 
@@ -106,9 +100,8 @@ public class IndentPadding implements Cloneable
      *
      * @param indent The spacing for one indent level.
      */
-    public void setIndent( String indent )
-    {
-        if ( !this.indent.equals(indent) ){
+    public void setIndent(String indent) {
+        if (!this.indent.equals(indent)) {
             this.indent = indent;
             paddingBuf.setLength(0);
             padding = null;
@@ -119,17 +112,15 @@ public class IndentPadding implements Cloneable
      * Increment the level of indent. The level is the number of indents
      * currently being used.
      */
-    public void incrementLevel()
-    {
+    public void incrementLevel() {
         ++level;
     }
 
     /**
      * Decrement the level of indent.
      */
-    public void decrementLevel()
-    {
-        if ( level > 0 ){
+    public void decrementLevel() {
+        if (level > 0) {
             --level;
         }
     }
@@ -139,8 +130,7 @@ public class IndentPadding implements Cloneable
      *
      * @return the string to use for a new line (default \n)
      */
-    public String getNewLine()
-    {
+    public String getNewLine() {
         return newLine;
     }
 
@@ -157,8 +147,7 @@ public class IndentPadding implements Cloneable
      *
      * @param newLine The string to use for a new line (default \n)
      */
-    public void setNewLine( String newLine )
-    {
+    public void setNewLine(String newLine) {
         this.newLine = newLine;
         paddingBuf.setLength(0);
         padding = null;
@@ -169,12 +158,11 @@ public class IndentPadding implements Cloneable
      *
      * @return The padding for the current indent level.
      */
-    public String getPadding()
-    {
+    public String getPadding() {
         int needLen = level * indent.length();
-        if ( needLen == 0 ){
+        if (needLen == 0) {
             paddingBuf.setLength(0);
-            if ( padding == null ){
+            if (padding == null) {
                 // first thing.
                 padding = paddingBuf.toString();
                 return padding;
@@ -182,14 +170,14 @@ public class IndentPadding implements Cloneable
             padding = null;
         }
         needLen += newLine.length();
-        if ( padding == null || padding.length() != needLen ){
-            if ( paddingBuf.length() == 0 ){
+        if (padding == null || padding.length() != needLen) {
+            if (paddingBuf.length() == 0) {
                 paddingBuf.append(newLine);
             }
-            if ( paddingBuf.length() > needLen ){
+            if (paddingBuf.length() > needLen) {
                 paddingBuf.setLength(needLen);
             }
-            while ( paddingBuf.length() < needLen ){
+            while (paddingBuf.length() < needLen) {
                 paddingBuf.append(indent);
             }
             padding = paddingBuf.toString();
@@ -200,14 +188,13 @@ public class IndentPadding implements Cloneable
     /**
      * Write the padding,
      *
-     * @param cfg The config object.
+     * @param cfg  The config object.
      * @param json The writer.
      * @throws IOException if there's an I/O error.
      */
-    static void appendPadding( JSONConfig cfg, Writer json ) throws IOException
-    {
+    static void appendPadding(JSONConfig cfg, Writer json) throws IOException {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             json.write(pad.getPadding());
         }
     }
@@ -217,10 +204,9 @@ public class IndentPadding implements Cloneable
      *
      * @param cfg The config object.
      */
-    static void incPadding( JSONConfig cfg )
-    {
+    static void incPadding(JSONConfig cfg) {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             pad.incrementLevel();
         }
     }
@@ -228,14 +214,13 @@ public class IndentPadding implements Cloneable
     /**
      * Increment the padding and write it out.
      *
-     * @param cfg The config object.
+     * @param cfg  The config object.
      * @param json The writer.
      * @throws IOException if there's an I/O error.
      */
-    static void incAppendPadding( JSONConfig cfg, Writer json ) throws IOException
-    {
+    static void incAppendPadding(JSONConfig cfg, Writer json) throws IOException {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             pad.incrementLevel();
             json.write(pad.getPadding());
         }
@@ -244,14 +229,13 @@ public class IndentPadding implements Cloneable
     /**
      * Increment padding and write padding if option is true.
      *
-     * @param cfg The config object.
-     * @param json The writer.
+     * @param cfg    The config object.
+     * @param json   The writer.
      * @param option flag that controls whether to do the operation or not.
      * @throws IOException if there's an I/O error.
      */
-    static void incAppendPadding( JSONConfig cfg, Writer json, boolean option ) throws IOException
-    {
-        if ( option ){
+    static void incAppendPadding(JSONConfig cfg, Writer json, boolean option) throws IOException {
+        if (option) {
             incAppendPadding(cfg, json);
         }
     }
@@ -259,14 +243,13 @@ public class IndentPadding implements Cloneable
     /**
      * Decrement padding and write padding if option is true.
      *
-     * @param cfg The config object.
-     * @param json The writer.
+     * @param cfg    The config object.
+     * @param json   The writer.
      * @param option flag that controls whether to do the operation or not.
      * @throws IOException if there's an I/O error.
      */
-    static void decAppendPadding( JSONConfig cfg, Writer json, boolean option ) throws IOException
-    {
-        if ( option ){
+    static void decAppendPadding(JSONConfig cfg, Writer json, boolean option) throws IOException {
+        if (option) {
             decAppendPadding(cfg, json);
         }
     }
@@ -274,14 +257,13 @@ public class IndentPadding implements Cloneable
     /**
      * Decrement the padding, and write it out if applicable.
      *
-     * @param cfg The config object.
+     * @param cfg  The config object.
      * @param json The writer.
      * @throws IOException if there's an I/O error.
      */
-    static void decAppendPadding( JSONConfig cfg, Writer json ) throws IOException
-    {
+    static void decAppendPadding(JSONConfig cfg, Writer json) throws IOException {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             pad.decrementLevel();
             json.write(pad.getPadding());
         }
@@ -293,10 +275,9 @@ public class IndentPadding implements Cloneable
      * @param cfg The config object.
      * @throws IOException if there's an I/O error.
      */
-    static void decPadding( JSONConfig cfg ) throws IOException
-    {
+    static void decPadding(JSONConfig cfg) throws IOException {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             pad.decrementLevel();
         }
     }
@@ -306,10 +287,9 @@ public class IndentPadding implements Cloneable
      *
      * @param cfg The config object.
      */
-    static void reset( JSONConfig cfg )
-    {
+    static void reset(JSONConfig cfg) {
         IndentPadding pad = cfg.getIndentPadding();
-        if ( pad != null ){
+        if (pad != null) {
             pad.reset();
         }
     }

@@ -102,38 +102,38 @@ import org.apache.commons.logging.LogFactory;
  * See their setters for these for descriptions of what they do.
  * <h3>Validation related options.</h3>
  * <ul>
- *   <li>validatePropertyNames = true</li>
- *   <li>detectDataStructureLoops = true</li>
- *   <li>escapeBadIdentifierCodePoints = false</li>
- *   <li>fullJSONIdentifierCodePoints = false</li>
- *   <li>fastStrings = false</li>
+ * <li>validatePropertyNames = true</li>
+ * <li>detectDataStructureLoops = true</li>
+ * <li>escapeBadIdentifierCodePoints = false</li>
+ * <li>fullJSONIdentifierCodePoints = false</li>
+ * <li>fastStrings = false</li>
  * </ul>
  * <h3>Safe alternate encoding options.</h3>
  * <ul>
- *   <li>encodeNumericStringsAsNumbers = false</li>
- *   <li>escapeNonAscii = false</li>
- *   <li>unEscapeWherePossible = false</li>
- *   <li>escapeSurrogates = false</li>
- *   <li>passThroughEscapes = false</li>
- *   <li>encodeDatesAsStrings = false</li>
- *   <li>reflectUnknownObjects = false</li>
- *   <li>preciseIntegers = false</li>
- *   <li>smallNumbers = false</li>
- *   <li>usePrimitiveArrays = false</li>
- *   <li>cacheReflectionData = false</li>
+ * <li>encodeNumericStringsAsNumbers = false</li>
+ * <li>escapeNonAscii = false</li>
+ * <li>unEscapeWherePossible = false</li>
+ * <li>escapeSurrogates = false</li>
+ * <li>passThroughEscapes = false</li>
+ * <li>encodeDatesAsStrings = false</li>
+ * <li>reflectUnknownObjects = false</li>
+ * <li>preciseIntegers = false</li>
+ * <li>smallNumbers = false</li>
+ * <li>usePrimitiveArrays = false</li>
+ * <li>cacheReflectionData = false</li>
  * </ul>
  * <h3>
- *   Allow generation of certain types of non-standard JSON.
+ * Allow generation of certain types of non-standard JSON.
  * </h3>
  * <p>
- *   Could cause problems for some things that take JSON.  Defaults are for
- *   standard JSON.  Be careful about changing these.
+ * Could cause problems for some things that take JSON.  Defaults are for
+ * standard JSON.  Be careful about changing these.
  * </p>
  * <ul>
- *   <li>quoteIdentifier = true</li>
- *   <li>useECMA6 = false</li>
- *   <li>allowReservedWordsInIdentifiers = false</li>
- *   <li>encodeDatesAsObjects = false</li>
+ * <li>quoteIdentifier = true</li>
+ * <li>useECMA6 = false</li>
+ * <li>allowReservedWordsInIdentifiers = false</li>
+ * <li>encodeDatesAsObjects = false</li>
  * </ul>
  * <p>
  * It is possible to set the default locale in JNDI using the name "locale" and
@@ -203,11 +203,10 @@ import org.apache.commons.logging.LogFactory;
  * different MBeans for different apps at the same time.  The appName may also
  * be set via JNDI as a String and that's probably a better way to do it.
  *
- * @see JSONConfig
  * @author Bill Davidson
+ * @see JSONConfig
  */
-public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
-{
+public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable {
     // Default flag values.
     private static volatile boolean validatePropertyNames;
     private static volatile boolean detectDataStructureLoops;
@@ -234,11 +233,11 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
 
     // Other defaults.
     private static volatile Locale locale;
-    private static volatile Map<Class<? extends Number>,NumberFormat> numberFormatMap;
+    private static volatile Map<Class<? extends Number>, NumberFormat> numberFormatMap;
     private static volatile DateFormat dateGenFormat;
     private static volatile List<DateFormat> dateParseFormats;
     private static volatile IndentPadding indentPadding = null;
-    private static volatile Map<Class<?>,JSONReflectedClass> reflectClasses = null;
+    private static volatile Map<Class<?>, JSONReflectedClass> reflectClasses = null;
     private static volatile int reflectionPrivacy;
     private static volatile int unmatchedSurrogatePolicy;
     private static volatile int undefinedCodePointPolicy;
@@ -257,9 +256,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
     /**
      * Make sure that the logger is there.
      */
-    private static synchronized void ensureLogger()
-    {
-        if ( log == null ){
+    private static synchronized void ensureLogger() {
+        if (log == null) {
             logFactory = LogFactory.getFactory();
             log = logFactory.getInstance(JSONConfigDefaults.class);
         }
@@ -268,9 +266,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
     /**
      * Release the logger.
      */
-    private static synchronized void releaseLogger()
-    {
-        if ( log != null ){
+    private static synchronized void releaseLogger() {
+        if (log != null) {
             logFactory.release();
             log = null;
             logFactory = null;
@@ -295,22 +292,22 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
         /*
          * System properties.
          */
-        String appName = System.getProperty(pkgName+'.'+"appName", null);
-        boolean useJNDI = Boolean.parseBoolean(System.getProperty(pkgName+".useJNDI", "true"));
-        boolean registerMBean = Boolean.parseBoolean(System.getProperty(pkgName+'.'+"registerMBean", "true"));
+        String appName = System.getProperty(pkgName + '.' + "appName", null);
+        boolean useJNDI = Boolean.parseBoolean(System.getProperty(pkgName + ".useJNDI", "true"));
+        boolean registerMBean = Boolean.parseBoolean(System.getProperty(pkgName + '.' + "registerMBean", "true"));
 
-        String loggingProperty = System.getProperty(pkgName+'.'+"logging");
-        if ( loggingProperty != null ){
+        String loggingProperty = System.getProperty(pkgName + '.' + "logging");
+        if (loggingProperty != null) {
             logging = Boolean.parseBoolean(loggingProperty);
-        }else{
+        } else {
             logging = true;
         }
 
         /*
          * JNDI
          */
-        if ( useJNDI ){
-            Map<String,String> results = new HashMap<>();
+        if (useJNDI) {
+            Map<String, String> results = new HashMap<>();
             results.put("appName", appName);
             registerMBean = initJNDI(loggingProperty, registerMBean, appName, results);
             appName = results.get("appName");
@@ -319,7 +316,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
         /*
          * MBean
          */
-        if ( registerMBean ){
+        if (registerMBean) {
             initMBean(appName);
         }
 
@@ -330,21 +327,20 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Do JNDI Initializations of defaults.
      *
      * @param loggingProperty System property for logging flag.
-     * @param registerMBean boolean system property for registering the mbean.
-     * @param appName the appName if any
-     * @param results a map to hold additional results
+     * @param registerMBean   boolean system property for registering the mbean.
+     * @param appName         the appName if any
+     * @param results         a map to hold additional results
      * @return the value of registerMBean which might have changed during the JNDI lookups.
      */
-    private static boolean initJNDI( String loggingProperty, boolean registerMBean, String appName, Map<String,String> results )
-    {
+    private static boolean initJNDI(String loggingProperty, boolean registerMBean, String appName, Map<String, String> results) {
         JNDIUtil.setLogging(logging);
 
-        try{
+        try {
             Context ctx = JNDIUtil.getEnvContext(jsonConfigDefaults.getClass().getPackage().getName().replaceAll("\\.", "/"));
 
-            Map<String,Object> jndiData = JNDIUtil.getJNDIVariables(ctx);
+            Map<String, Object> jndiData = JNDIUtil.getJNDIVariables(ctx);
 
-            if ( loggingProperty == null ){
+            if (loggingProperty == null) {
                 // logging was not set by a system property. allow JNDI override.
                 logging = JNDIUtil.getBoolean(jndiData, "logging", logging);
                 JNDIUtil.setLogging(logging);
@@ -352,18 +348,18 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
 
             registerMBean = JNDIUtil.getBoolean(jndiData, "registerMBean", registerMBean);
 
-            if ( registerMBean && appName == null ){
+            if (registerMBean && appName == null) {
                 appName = JNDIUtil.getString(jndiData, "appName", null);
                 results.put("appName", appName);
             }
 
             // locale.
             String languageTag = JNDIUtil.getString(jndiData, "locale", null);
-            if ( languageTag != null ){
+            if (languageTag != null) {
                 jsonConfigDefaults.setLocaleLanguageTag(languageTag);
-            }else{
+            } else {
                 languageTag = JNDIUtil.getString(jndiData, "defaultLocale", null);
-                if ( languageTag != null ){
+                if (languageTag != null) {
                     jsonConfigDefaults.setLocaleLanguageTag(languageTag);
                 }
             }
@@ -372,12 +368,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
             loadReflectClassesFromJNDI(jndiData);
             setFlagsFromJNDI(jndiData);
 
-            try{
+            try {
                 jsonConfigDefaults.setReflectionPrivacy(JNDIUtil.getInt(jndiData, "reflectionPrivacy", reflectionPrivacy));
-            }catch ( JSONReflectionException ex ){
-                if ( logging ){
+            } catch (JSONReflectionException ex) {
+                if (logging) {
                     ensureLogger();
-                    if ( log.isDebugEnabled() ){
+                    if (log.isDebugEnabled()) {
                         log.debug(ex.getLocalizedMessage(), ex);
                     }
                 }
@@ -385,16 +381,16 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
             }
 
 
-            if ( jndiData.containsKey("badCharacterPolicy") ){
+            if (jndiData.containsKey("badCharacterPolicy")) {
                 setBadCharacterPolicy(JNDIUtil.getInt(jndiData, "badCharacterPolicy", JSONConfig.REPLACE));
             }
             jsonConfigDefaults.setUndefinedCodePointPolicy(JNDIUtil.getInt(jndiData, "undefinedCodePointPolicy", undefinedCodePointPolicy));
             jsonConfigDefaults.setUnmatchedSurrogatePolicy(JNDIUtil.getInt(jndiData, "unmatchedSurrogatePolicy", unmatchedSurrogatePolicy));
-        }catch ( Exception e ){
+        } catch (Exception e) {
             // Nothing set in JNDI.  Use code defaults.  Not a problem.
-            if ( logging ){
+            if (logging) {
                 ensureLogger();
-                if ( log.isDebugEnabled() ){
+                if (log.isDebugEnabled()) {
                     ResourceBundle bundle = JSONUtil.getBundle(getLocale());
                     log.debug(bundle.getString("badJNDIforConfig"), e);
                 }
@@ -409,38 +405,35 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      *
      * @param jndiData A map of JNDI data.
      */
-    private static void loadDateFormatsFromJNDI( Map<String,Object> jndiData )
-    {
+    private static void loadDateFormatsFromJNDI(Map<String, Object> jndiData) {
         // date generation format.
         String dgf = JNDIUtil.getString(jndiData, "dateGenFormat", null);
-        if ( dgf != null ){
+        if (dgf != null) {
             jsonConfigDefaults.setDateGenFormat(dgf);
         }
 
         // date parse formats.
         List<String> fmtNums = new ArrayList<>();
-        for ( Entry<String,Object> entry : jndiData.entrySet() ){
-            if ( entry.getValue() instanceof String ){
+        for (Entry<String, Object> entry : jndiData.entrySet()) {
+            if (entry.getValue() instanceof String) {
                 Matcher matcher = DATE_PARSE_FORMAT_PAT.matcher(entry.getKey());
-                if ( matcher.matches() ){
+                if (matcher.matches()) {
                     fmtNums.add(matcher.group(1));
                 }
             }
         }
-        if ( fmtNums.size() > 0 ){
+        if (fmtNums.size() > 0) {
             // using the strings so that people can use "001", "002" etc if they wish.
             Collections.sort(fmtNums,
-                             new Comparator<String>()
-                             {
-                                 @Override
-                                 public int compare( String o1, String o2 )
-                                 {
-                                     return new Integer(o1).compareTo(new Integer(o2));
-                                 }
-                             });
-            for ( String num : fmtNums ){
+                    new Comparator<String>() {
+                        @Override
+                        public int compare(String o1, String o2) {
+                            return new Integer(o1).compareTo(new Integer(o2));
+                        }
+                    });
+            for (String num : fmtNums) {
                 String dpf = JNDIUtil.getString(jndiData, "dateParseFormat" + num, null);
-                if ( dpf != null ){
+                if (dpf != null) {
                     jsonConfigDefaults.addDateParseFormat(dpf);
                 }
             }
@@ -452,19 +445,18 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      *
      * @param jndiData A map of JNDI data.
      */
-    private static void loadReflectClassesFromJNDI( Map<String,Object> jndiData )
-    {
+    private static void loadReflectClassesFromJNDI(Map<String, Object> jndiData) {
         List<JSONReflectedClass> classes = new ArrayList<>();
-        for ( Entry<String,Object> entry : jndiData.entrySet() ){
+        for (Entry<String, Object> entry : jndiData.entrySet()) {
             Object value = entry.getValue();
-            if ( value instanceof String && REFLECT_CLASS_PAT.matcher(entry.getKey()).matches() ){
-                String className = (String)value;
-                try{
+            if (value instanceof String && REFLECT_CLASS_PAT.matcher(entry.getKey()).matches()) {
+                String className = (String) value;
+                try {
                     classes.add(new JSONReflectedClass(className));
-                }catch ( ClassNotFoundException e ){
-                    if ( logging ){
+                } catch (ClassNotFoundException e) {
+                    if (logging) {
                         ensureLogger();
-                        if ( log.isDebugEnabled() ){
+                        if (log.isDebugEnabled()) {
                             log.debug(getClassNotFoundExceptionMsg(e, className, false), e);
                         }
                     }
@@ -482,38 +474,37 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * this case.
      *
      * @param jndiData A map of JNDI data.
-     * @throws IllegalAccessException reflection problem.
-     * @throws IllegalArgumentException reflection problem.
+     * @throws IllegalAccessException    reflection problem.
+     * @throws IllegalArgumentException  reflection problem.
      * @throws InvocationTargetException reflection problem.
      */
-    private static void setFlagsFromJNDI( Map<String,Object> jndiData ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
-    {
+    private static void setFlagsFromJNDI(Map<String, Object> jndiData) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         // get list of booleans from JNDI
-        List<Entry<String,Object>> booleans = new ArrayList<>();
-        for ( Entry<String,Object> entry : jndiData.entrySet() ){
-            if ( entry.getValue() instanceof Boolean ){
+        List<Entry<String, Object>> booleans = new ArrayList<>();
+        for (Entry<String, Object> entry : jndiData.entrySet()) {
+            if (entry.getValue() instanceof Boolean) {
                 booleans.add(entry);
             }
         }
-        if ( booleans.size() < 1 ){
+        if (booleans.size() < 1) {
             return;     // nothing to do.
         }
 
         // going to need to check against fields.
         Class<?> clazz = jsonConfigDefaults.getClass();
-        Map<String,Field> fields = ReflectUtil.getFields(clazz, Boolean.TYPE);
+        Map<String, Field> fields = ReflectUtil.getFields(clazz, Boolean.TYPE);
 
-        for ( Entry<String,Object> entry : booleans ){
+        for (Entry<String, Object> entry : booleans) {
             Field field = fields.get(entry.getKey());
-            if ( field != null ){
+            if (field != null) {
                 // it's a field.  check if it changed from default.
                 ReflectUtil.ensureAccessible(field);
                 boolean currentValue = field.getBoolean(jsonConfigDefaults);
-                boolean jndiValue = (Boolean)entry.getValue();
-                if ( jndiValue != currentValue ){
+                boolean jndiValue = (Boolean) entry.getValue();
+                if (jndiValue != currentValue) {
                     // it's changed.  check if there is a setter.
                     Method setter = ReflectUtil.getSetter(clazz, field);
-                    if ( setter != null ){
+                    if (setter != null) {
                         // there's a setter.  use it.
                         ReflectUtil.ensureAccessible(setter);
                         setter.invoke(jsonConfigDefaults, jndiValue);
@@ -529,38 +520,37 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      *
      * @param appName The name of the app.
      */
-    private static void initMBean( String appName )
-    {
-        if ( appName == null ){
+    private static void initMBean(String appName) {
+        if (appName == null) {
             appName = String.format("%X", new Random().nextLong());
         }
 
-        try{
+        try {
             // Register an instance with MBean server if one is available.
             MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
             mBeanName = JMXUtil.getObjectName(jsonConfigDefaults, appName);
-            try{
+            try {
                 ObjectInstance instance = mBeanServer.getObjectInstance(mBeanName);
-                if ( instance != null ){
+                if (instance != null) {
                     mBeanServer.unregisterMBean(mBeanName);
                 }
-            }catch ( Exception ex ){
+            } catch (Exception ex) {
             }
 
             mBeanServer.registerMBean(jsonConfigDefaults, mBeanName);
-            if ( logging ){
+            if (logging) {
                 ensureLogger();
-                if ( log.isDebugEnabled() ){
+                if (log.isDebugEnabled()) {
                     ResourceBundle bundle = JSONUtil.getBundle(getLocale());
                     log.debug(String.format(bundle.getString("registeredMbean"), mBeanName));
                 }
             }
-        }catch ( Exception e ){
+        } catch (Exception e) {
             // Probably no MBean server.  Not a problem.
-            if ( logging ){
+            if (logging) {
                 ensureLogger();
-                if ( log.isDebugEnabled() ){
+                if (log.isDebugEnabled()) {
                     ResourceBundle bundle = JSONUtil.getBundle(getLocale());
                     log.debug(bundle.getString("couldntRegisterMBean"), e);
                 }
@@ -569,7 +559,6 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
     }
 
     /**
-
      * <p>
      * When this package is used by a webapp, and you have an MBean server in your
      * environment, then you should create a ServletContextListener and call this
@@ -596,28 +585,27 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Note that the logging from this method may not work if the logging is
      * removed/disabled before this method is called.
      */
-    public static synchronized void clearMBean()
-    {
-        if ( mBeanName != null ){
-            try{
+    public static synchronized void clearMBean() {
+        if (mBeanName != null) {
+            try {
                 MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
                 mBeanServer.unregisterMBean(mBeanName);
-                if ( logging ){
+                if (logging) {
                     ensureLogger();
-                    if ( log.isDebugEnabled() ){
+                    if (log.isDebugEnabled()) {
                         ResourceBundle bundle = JSONUtil.getBundle(getLocale());
                         log.debug(String.format(bundle.getString("unregistered"), mBeanName));
                     }
                 }
-            }catch ( Exception e ){
-                if ( logging ){
+            } catch (Exception e) {
+                if (logging) {
                     ensureLogger();
-                    if ( log.isErrorEnabled() ){
+                    if (log.isErrorEnabled()) {
                         ResourceBundle bundle = JSONUtil.getBundle(getLocale());
                         log.error(String.format(bundle.getString("couldntUnregister"), mBeanName), e);
                     }
                 }
-            }finally{
+            } finally {
                 // don't try again.
                 mBeanName = null;
             }
@@ -630,8 +618,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      *
      * @return the JSONConfigDefaults singleton instance.
      */
-    public static JSONConfigDefaults getInstance()
-    {
+    public static JSONConfigDefaults getInstance() {
         return jsonConfigDefaults;
     }
 
@@ -639,8 +626,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * This class should only be instantiated by the static block.  All others
      * should use {@link #getInstance()} to get that instance.
      */
-    private JSONConfigDefaults()
-    {
+    private JSONConfigDefaults() {
         setCodeDefaults();
     }
 
@@ -651,9 +637,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      */
     @Override
-    public void setCodeDefaults()
-    {
-        synchronized ( getClass() ){
+    public void setCodeDefaults() {
+        synchronized (getClass()) {
             validatePropertyNames = true;
             detectDataStructureLoops = true;
             escapeBadIdentifierCodePoints = false;
@@ -696,8 +681,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @param loc The locale.
      * @since 1.5
      */
-    static synchronized void initJSONConfig( JSONConfig cfg, Locale loc )
-    {
+    static synchronized void initJSONConfig(JSONConfig cfg, Locale loc) {
         cfg.setLocale(loc);
 
         // formats
@@ -710,12 +694,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
         cfg.setUndefinedCodePointPolicy(undefinedCodePointPolicy);
         cfg.setUnmatchedSurrogatePolicy(unmatchedSurrogatePolicy);
 
-        Map<Class<?>,JSONReflectedClass> refClasses = null;
-        if ( reflectClasses != null ){
+        Map<Class<?>, JSONReflectedClass> refClasses = null;
+        if (reflectClasses != null) {
             refClasses = new HashMap<>(reflectClasses.size());
         }
-        if ( refClasses != null ){
-            for ( Entry<Class<?>,JSONReflectedClass> entry : reflectClasses.entrySet() ){
+        if (refClasses != null) {
+            for (Entry<Class<?>, JSONReflectedClass> entry : reflectClasses.entrySet()) {
                 refClasses.put(entry.getKey(), entry.getValue().clone());
             }
         }
@@ -748,9 +732,9 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
         cfg.setEncodeDatesAsObjects(encodeDatesAsObjects);
 
         // indent padding, if any.
-        if ( indentPadding == null ){
+        if (indentPadding == null) {
             cfg.setIndentPadding(indentPadding);
-        }else{
+        } else {
             cfg.setIndentPadding(indentPadding.clone());
         }
     }
@@ -764,8 +748,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return The string form of the default locale.
      */
     @Override
-    public String getLocaleLanguageTag()
-    {
+    public String getLocaleLanguageTag() {
         return getLocale().toLanguageTag();
     }
 
@@ -779,12 +762,11 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @param languageTag A IETF BCP 47 language tag suitable for use by {@link Locale#forLanguageTag(String)}.
      */
     @Override
-    public void setLocaleLanguageTag( String languageTag )
-    {
-        if ( languageTag != null ){
+    public void setLocaleLanguageTag(String languageTag) {
+        if (languageTag != null) {
             setLocale(Locale.forLanguageTag(languageTag.replaceAll("_", "-")));
-        }else{
-            setLocale((Locale)null);
+        } else {
+            setLocale((Locale) null);
         }
     }
 
@@ -795,8 +777,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @deprecated Use {@link #setLocaleLanguageTag(String)} instead.
      */
     @Deprecated
-    public void setLocale( String languageTag )
-    {
+    public void setLocale(String languageTag) {
         setLocaleLanguageTag(languageTag);
     }
 
@@ -808,8 +789,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return the default locale.
      * @see JSONConfig#getLocale()
      */
-    public static synchronized Locale getLocale()
-    {
+    public static synchronized Locale getLocale() {
         return locale != null ? locale : Locale.getDefault();
     }
 
@@ -819,8 +799,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @param loc the default locale.
      * @see JSONConfig#setLocale(Locale)
      */
-    public static synchronized void setLocale( Locale loc )
-    {
+    public static synchronized void setLocale(Locale loc) {
         locale = loc;
     }
 
@@ -829,8 +808,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      *
      * @return the number format map.
      */
-    static Map<Class<? extends Number>,NumberFormat> getNumberFormatMap()
-    {
+    static Map<Class<? extends Number>, NumberFormat> getNumberFormatMap() {
         return numberFormatMap;
     }
 
@@ -841,8 +819,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return A number format or null if one has not been set.
      * @see JSONConfig#getNumberFormat(Class)
      */
-    public static synchronized NumberFormat getNumberFormat( Class<? extends Number> numericClass )
-    {
+    public static synchronized NumberFormat getNumberFormat(Class<? extends Number> numericClass) {
         return numberFormatMap != null ? numberFormatMap.get(numericClass) : null;
     }
 
@@ -853,8 +830,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return A number format or null if one has not been set.
      * @see JSONConfig#getNumberFormat(Number)
      */
-    public static NumberFormat getNumberFormat( Number num )
-    {
+    public static NumberFormat getNumberFormat(Number num) {
         return num != null ? getNumberFormat(num.getClass()) : null;
     }
 
@@ -864,16 +840,15 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * this in the same class loader.  The format is cloned for thread safety.
      *
      * @param numericClass The class.
-     * @param fmt The number format.
+     * @param fmt          The number format.
      * @see JSONConfig#addNumberFormat(Class, NumberFormat)
      */
-    public static void addNumberFormat( Class<? extends Number> numericClass, NumberFormat fmt )
-    {
-        if ( numericClass != null ){
-            if ( fmt == null ){
+    public static void addNumberFormat(Class<? extends Number> numericClass, NumberFormat fmt) {
+        if (numericClass != null) {
+            if (fmt == null) {
                 removeNumberFormat(numericClass);
-            }else{
-                Map<Class<? extends Number>,NumberFormat> numFmtMap = new HashMap<>(2);
+            } else {
+                Map<Class<? extends Number>, NumberFormat> numFmtMap = new HashMap<>(2);
                 numFmtMap.put(numericClass, fmt);
                 // handles null checking and cloning.
                 addNumberFormats(numFmtMap);
@@ -887,12 +862,11 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * this in the same class loader.  The format is cloned for thread safety.
      *
      * @param numericType The object.
-     * @param fmt The number format.
+     * @param fmt         The number format.
      * @see JSONConfig#addNumberFormat(Number, NumberFormat)
      */
-    public static void addNumberFormat( Number numericType, NumberFormat fmt )
-    {
-        if ( numericType != null ){
+    public static void addNumberFormat(Number numericType, NumberFormat fmt) {
+        if (numericType != null) {
             addNumberFormat(numericType.getClass(), fmt);
         }
     }
@@ -905,8 +879,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#addNumberFormats(Map)
      * @since 1.4
      */
-    public static synchronized void addNumberFormats( Map<Class<? extends Number>,NumberFormat> numFmtMap )
-    {
+    public static synchronized void addNumberFormats(Map<Class<? extends Number>, NumberFormat> numFmtMap) {
         numberFormatMap = JSONConfigUtil.mergeFormatMaps(numberFormatMap, numFmtMap);
     }
 
@@ -916,14 +889,13 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @param numericClass The class.
      * @see JSONConfig#removeNumberFormat(Class)
      */
-    public static synchronized void removeNumberFormat( Class<? extends Number> numericClass )
-    {
-        if ( numberFormatMap != null && numericClass != null ){
+    public static synchronized void removeNumberFormat(Class<? extends Number> numericClass) {
+        if (numberFormatMap != null && numericClass != null) {
             int size = numberFormatMap.size();
             numberFormatMap.remove(numericClass);
-            if ( numberFormatMap.size() < 1 ){
+            if (numberFormatMap.size() < 1) {
                 numberFormatMap = null;
-            }else if ( tableSizeFor(size) > tableSizeFor(numberFormatMap.size()) ){
+            } else if (tableSizeFor(size) > tableSizeFor(numberFormatMap.size())) {
                 numberFormatMap = new HashMap<>(numberFormatMap);
             }
         }
@@ -935,9 +907,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @param num An object that implements {@link Number}.
      * @see JSONConfig#removeNumberFormat(Number)
      */
-    public static void removeNumberFormat( Number num )
-    {
-        if ( num != null ){
+    public static void removeNumberFormat(Number num) {
+        if (num != null) {
             removeNumberFormat(num.getClass());
         }
     }
@@ -951,9 +922,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.4
      */
     @Override
-    public void clearNumberFormats()
-    {
-        synchronized ( getClass() ){
+    public void clearNumberFormats() {
+        synchronized (getClass()) {
             numberFormatMap = null;
         }
     }
@@ -964,8 +934,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return the dateFormat
      * @since 1.4
      */
-    static DateFormat getDateGenFormat()
-    {
+    static DateFormat getDateGenFormat() {
         return dateGenFormat;
     }
 
@@ -976,21 +945,20 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param fmtStr passed to the constructor for
-     * {@link SimpleDateFormat#SimpleDateFormat(String,Locale)} using
-     * the result of {@link #getLocale()}.
+     *               {@link SimpleDateFormat#SimpleDateFormat(String, Locale)} using
+     *               the result of {@link #getLocale()}.
      * @return the format that is created so that it can be modified.
      * @see JSONConfig#setDateGenFormat(String)
      * @since 1.4
      */
     @Override
-    public DateFormat setDateGenFormat( String fmtStr )
-    {
+    public DateFormat setDateGenFormat(String fmtStr) {
         DateFormat fmt = null;
-        if ( fmtStr != null ){
+        if (fmtStr != null) {
             fmt = new SimpleDateFormat(fmtStr, getLocale());
             setDateGenFormat(fmt);
-        }else{
-            setDateGenFormat((DateFormat)null);
+        } else {
+            setDateGenFormat((DateFormat) null);
         }
         return fmt;
     }
@@ -1003,8 +971,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setDateGenFormat(DateFormat)
      * @since 1.4
      */
-    public static synchronized void setDateGenFormat( DateFormat fmt )
-    {
+    public static synchronized void setDateGenFormat(DateFormat fmt) {
         dateGenFormat = fmt;
     }
 
@@ -1019,9 +986,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.4
      */
     @Override
-    public void clearDateGenFormat()
-    {
-        synchronized ( getClass() ){
+    public void clearDateGenFormat() {
+        synchronized (getClass()) {
             dateGenFormat = null;
         }
     }
@@ -1033,8 +999,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return the list of date parsing formats.
      * @since 1.4
      */
-    static List<DateFormat> getDateParseFormats()
-    {
+    static List<DateFormat> getDateParseFormats() {
         return dateParseFormats;
     }
 
@@ -1046,15 +1011,14 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param fmtStr Passed to
-     * {@link SimpleDateFormat#SimpleDateFormat(String,Locale)} using
-     * the result of {@link #getLocale()}.
+     *               {@link SimpleDateFormat#SimpleDateFormat(String, Locale)} using
+     *               the result of {@link #getLocale()}.
      * @return The format that gets created so that it can be modified.
      * @see JSONConfig#addDateParseFormat(String)
      * @since 1.4
      */
     @Override
-    public DateFormat addDateParseFormat( String fmtStr )
-    {
+    public DateFormat addDateParseFormat(String fmtStr) {
         DateFormat fmt = new SimpleDateFormat(fmtStr, getLocale());
         addDateParseFormat(fmt);
         return fmt;
@@ -1070,9 +1034,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#addDateParseFormat(DateFormat)
      * @since 1.4
      */
-    public static void addDateParseFormat( DateFormat fmt )
-    {
-        if ( fmt != null ){
+    public static void addDateParseFormat(DateFormat fmt) {
+        if (fmt != null) {
             addDateParseFormats(Arrays.asList(fmt));
         }
     }
@@ -1086,8 +1049,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#addDateParseFormats(Collection)
      * @since 1.4
      */
-    public static synchronized void addDateParseFormats( Collection<? extends DateFormat> fmts )
-    {
+    public static synchronized void addDateParseFormats(Collection<? extends DateFormat> fmts) {
         dateParseFormats = JSONConfigUtil.addDateParseFormats(dateParseFormats, fmts);
     }
 
@@ -1096,12 +1058,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * when encodeDatesAsStrings or encodeDatesAsObjects is true.
      * <p>
      * Accessible via MBean server.
+     *
      * @see JSONConfig#clearDateParseFormats()
      */
     @Override
-    public void clearDateParseFormats()
-    {
-        synchronized ( getClass() ){
+    public void clearDateParseFormats() {
+        synchronized (getClass()) {
             dateParseFormats = null;
         }
     }
@@ -1113,8 +1075,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#getIndentPadding()
      * @since 1.7
      */
-    public static synchronized IndentPadding getIndentPadding()
-    {
+    public static synchronized IndentPadding getIndentPadding() {
         return indentPadding;
     }
 
@@ -1125,8 +1086,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setIndentPadding(IndentPadding)
      * @since 1.7
      */
-    public static synchronized void setIndentPadding( IndentPadding indentPadding )
-    {
+    public static synchronized void setIndentPadding(IndentPadding indentPadding) {
         JSONConfigDefaults.indentPadding = indentPadding;
     }
 
@@ -1144,8 +1104,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public int getReflectionPrivacy()
-    {
+    public int getReflectionPrivacy() {
         return reflectionPrivacy;
     }
 
@@ -1165,19 +1124,18 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setReflectionPrivacy( int dflt ) throws MBeanException
-    {
+    public void setReflectionPrivacy(int dflt) throws MBeanException {
         int privacyLevel;
-        try{
+        try {
             privacyLevel = ReflectUtil.confirmPrivacyLevel(dflt, new JSONConfig());
-            synchronized ( getClass() ){
+            synchronized (getClass()) {
                 reflectionPrivacy = privacyLevel;
             }
-        }catch ( JSONReflectionException e ){
-            synchronized ( getClass() ){
-                if ( logging ){
+        } catch (JSONReflectionException e) {
+            synchronized (getClass()) {
+                if (logging) {
                     ensureLogger();
-                    if ( log.isErrorEnabled() ){
+                    if (log.isErrorEnabled()) {
                         log.error(e.getLocalizedMessage(), e);
                     }
                     releaseLogger();
@@ -1196,8 +1154,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isReflectClass(Object)
      * @since 1.9
      */
-    public static boolean isReflectClass( Object obj )
-    {
+    public static boolean isReflectClass(Object obj) {
         return getReflectedClass(obj) != null;
     }
 
@@ -1210,8 +1167,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @return the reflected class object or null if not found.
      * @see JSONConfig#getReflectedClass(Object)
      */
-    public static synchronized JSONReflectedClass getReflectedClass( Object obj )
-    {
+    public static synchronized JSONReflectedClass getReflectedClass(Object obj) {
         return reflectClasses == null || obj == null ? null : reflectClasses.get(ReflectUtil.getClass(obj));
     }
 
@@ -1237,18 +1193,17 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * "org.example.Widget,foo=bar" to this method.
      *
      * @param className The name of the class suitable for
-     *            {@link ClassLoader#loadClass(String)} followed optionally by a
-     *            comma separated list of field names and/or field aliases.
+     *                  {@link ClassLoader#loadClass(String)} followed optionally by a
+     *                  comma separated list of field names and/or field aliases.
      * @throws MBeanException If there's a problem loading the class.
      * @see JSONConfig#addReflectClassByName(String)
      * @since 1.9
      */
     @Override
-    public void addReflectClassByName( String className ) throws MBeanException
-    {
-        try{
+    public void addReflectClassByName(String className) throws MBeanException {
+        try {
             addReflectClass(new JSONReflectedClass(className));
-        }catch ( ClassNotFoundException e ){
+        } catch (ClassNotFoundException e) {
             throw new MBeanException(e, getClassNotFoundExceptionMsg(e, className, logging));
         }
     }
@@ -1264,8 +1219,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#addReflectClass(Object)
      * @since 1.9
      */
-    public static synchronized void addReflectClass( Object obj )
-    {
+    public static synchronized void addReflectClass(Object obj) {
         reflectClasses = JSONConfigUtil.addReflectClass(reflectClasses, obj);
     }
 
@@ -1279,8 +1233,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#addReflectClasses(Collection)
      * @since 1.9
      */
-    public static synchronized void addReflectClasses( Collection<?> classes )
-    {
+    public static synchronized void addReflectClasses(Collection<?> classes) {
         reflectClasses = JSONConfigUtil.addReflectClasses(reflectClasses, classes);
     }
 
@@ -1288,17 +1241,16 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Remove the given class from the set of classes to be reflected.
      *
      * @param className The name of the class suitable for
-     * (@link {@link ClassLoader#loadClass(String)}}.
+     *                  (@link {@link ClassLoader#loadClass(String)}}.
      * @throws MBeanException If there's a problem loading the class.
      * @since 1.9
      */
     @Override
-    public void removeReflectClassByName( String className ) throws MBeanException
-    {
+    public void removeReflectClassByName(String className) throws MBeanException {
         String[] parts = className.split(",");
-        try{
+        try {
             removeReflectClass(ReflectUtil.getClassByName(parts[0].trim()));
-        }catch ( ClassNotFoundException e ){
+        } catch (ClassNotFoundException e) {
             throw new MBeanException(e, getClassNotFoundExceptionMsg(e, parts[0], logging));
         }
     }
@@ -1307,19 +1259,18 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Get the exception message for a {@link ClassNotFoundException} and log the
      * exception if appropriate.
      *
-     * @param e the exception.
+     * @param e         the exception.
      * @param className the class name that it failed to load.
      * @param isLogging if true then also log the message and exception.
      * @return The message.
      */
-    private static String getClassNotFoundExceptionMsg( ClassNotFoundException e, String className, boolean isLogging )
-    {
+    private static String getClassNotFoundExceptionMsg(ClassNotFoundException e, String className, boolean isLogging) {
         ResourceBundle bundle = JSONUtil.getBundle(getLocale());
         String msg = String.format(bundle.getString("couldntLoadClass"), className);
-        if ( isLogging ){
-            synchronized ( jsonConfigDefaults.getClass() ){
+        if (isLogging) {
+            synchronized (jsonConfigDefaults.getClass()) {
                 ensureLogger();
-                if ( log.isErrorEnabled() ){
+                if (log.isErrorEnabled()) {
                     log.error(msg, e);
                 }
                 releaseLogger();
@@ -1337,8 +1288,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#removeReflectClass(Object)
      * @since 1.9
      */
-    public static synchronized void removeReflectClass( Object obj )
-    {
+    public static synchronized void removeReflectClass(Object obj) {
         reflectClasses = JSONConfigUtil.removeReflectClass(reflectClasses, obj);
     }
 
@@ -1350,8 +1300,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#removeReflectClasses(Collection)
      * @since 1.9
      */
-    public static synchronized void removeReflectClasses( Collection<?> classes )
-    {
+    public static synchronized void removeReflectClasses(Collection<?> classes) {
         reflectClasses = JSONConfigUtil.removeReflectClasses(reflectClasses, classes);
     }
 
@@ -1365,9 +1314,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void clearReflectClasses()
-    {
-        synchronized ( getClass() ){
+    public void clearReflectClasses() {
+        synchronized (getClass()) {
             reflectClasses = null;
         }
     }
@@ -1380,8 +1328,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void clearReflectionCache()
-    {
+    public void clearReflectionCache() {
         ReflectedObjectMapBuilder.clearReflectionCache();
     }
 
@@ -1394,36 +1341,35 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public String listReflectedClasses()
-    {
+    public String listReflectedClasses() {
         List<JSONReflectedClass> refClasses = null;
-        synchronized ( getClass() ){
-            if ( reflectClasses != null ){
+        synchronized (getClass()) {
+            if (reflectClasses != null) {
                 refClasses = new ArrayList<>(reflectClasses.values());
             }
         }
         StringBuilder result = new StringBuilder();
-        if ( refClasses != null ){
+        if (refClasses != null) {
             List<String> classes = new ArrayList<>(refClasses.size());
-            for ( JSONReflectedClass refClass : refClasses ){
+            for (JSONReflectedClass refClass : refClasses) {
                 Class<?> clazz = refClass.getObjClass();
                 StringBuilder buf = new StringBuilder(clazz.getCanonicalName());
                 Collection<String> fieldNames = refClass.getFieldNamesRaw();
-                if ( fieldNames != null ){
-                    for ( String fieldName : fieldNames ){
+                if (fieldNames != null) {
+                    for (String fieldName : fieldNames) {
                         buf.append(',').append(fieldName);
                     }
                 }
-                Map<String,String> customNames = refClass.getFieldAliases();
-                if ( customNames != null ){
-                    for ( Entry<String,String> entry : customNames.entrySet() ){
+                Map<String, String> customNames = refClass.getFieldAliases();
+                if (customNames != null) {
+                    for (Entry<String, String> entry : customNames.entrySet()) {
                         buf.append(',').append(entry.getKey()).append('=').append(entry.getValue());
                     }
                 }
                 classes.add(buf.toString());
             }
             Collections.sort(classes);
-            for ( String className : classes ){
+            for (String className : classes) {
                 result.append(className).append('\n');
             }
         }
@@ -1444,8 +1390,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#getUnmatchedSurrogatePolicy()
      */
     @Override
-    public int getUnmatchedSurrogatePolicy()
-    {
+    public int getUnmatchedSurrogatePolicy() {
         return unmatchedSurrogatePolicy;
     }
 
@@ -1453,11 +1398,11 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Tell JSONUtil what to do by default when it encounters unmatched surrogates in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link JSONConfig#DISCARD} - Discard them.</li>
-     *   <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
-     *   <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
-     *   <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
+     * <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link JSONConfig#DISCARD} - Discard them.</li>
+     * <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
+     * <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
+     * <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      * <p>
@@ -1467,16 +1412,14 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setUnmatchedSurrogatePolicy(int)
      */
     @Override
-    public void setUnmatchedSurrogatePolicy( int dflt )
-    {
-        switch ( dflt )
-        {
+    public void setUnmatchedSurrogatePolicy(int dflt) {
+        switch (dflt) {
             case JSONConfig.REPLACE:
             case JSONConfig.DISCARD:
             case JSONConfig.EXCEPTION:
             case JSONConfig.ESCAPE:
             case JSONConfig.PASS:
-                synchronized ( getClass() ){
+                synchronized (getClass()) {
                     unmatchedSurrogatePolicy = dflt;
                 }
                 break;
@@ -1497,8 +1440,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#getUndefinedCodePointPolicy()
      */
     @Override
-    public int getUndefinedCodePointPolicy()
-    {
+    public int getUndefinedCodePointPolicy() {
         return undefinedCodePointPolicy;
     }
 
@@ -1506,11 +1448,11 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Tell JSONUtil what to do by default when it encounters undefined code points in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link JSONConfig#DISCARD} - Discard them.</li>
-     *   <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
-     *   <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
-     *   <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
+     * <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link JSONConfig#DISCARD} - Discard them.</li>
+     * <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
+     * <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
+     * <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      * <p>
@@ -1520,16 +1462,14 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setUndefinedCodePointPolicy(int)
      */
     @Override
-    public void setUndefinedCodePointPolicy( int dflt )
-    {
-        switch ( dflt )
-        {
+    public void setUndefinedCodePointPolicy(int dflt) {
+        switch (dflt) {
             case JSONConfig.REPLACE:
             case JSONConfig.DISCARD:
             case JSONConfig.EXCEPTION:
             case JSONConfig.ESCAPE:
             case JSONConfig.PASS:
-                synchronized ( getClass() ){
+                synchronized (getClass()) {
                     undefinedCodePointPolicy = dflt;
                 }
                 break;
@@ -1548,8 +1488,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#PASS
      * @see JSONConfig#setBadCharacterPolicy(int)
      */
-    public static synchronized void setBadCharacterPolicy( int badCharacterPolicy )
-    {
+    public static synchronized void setBadCharacterPolicy(int badCharacterPolicy) {
         jsonConfigDefaults.setUnmatchedSurrogatePolicy(badCharacterPolicy);
         jsonConfigDefaults.setUndefinedCodePointPolicy(badCharacterPolicy);
     }
@@ -1563,8 +1502,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isValidatePropertyNames()
      */
     @Override
-    public boolean isValidatePropertyNames()
-    {
+    public boolean isValidatePropertyNames() {
         return validatePropertyNames;
     }
 
@@ -1579,9 +1517,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setValidatePropertyNames(boolean)
      */
     @Override
-    public void setValidatePropertyNames( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setValidatePropertyNames(boolean dflt) {
+        synchronized (getClass()) {
             validatePropertyNames = dflt;
         }
     }
@@ -1594,8 +1531,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isDetectDataStructureLoops()
      */
     @Override
-    public boolean isDetectDataStructureLoops()
-    {
+    public boolean isDetectDataStructureLoops() {
         return detectDataStructureLoops;
     }
 
@@ -1612,9 +1548,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setDetectDataStructureLoops(boolean)
      */
     @Override
-    public void setDetectDataStructureLoops( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setDetectDataStructureLoops(boolean dflt) {
+        synchronized (getClass()) {
             detectDataStructureLoops = dflt;
         }
     }
@@ -1628,8 +1563,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEscapeBadIdentifierCodePoints()
      */
     @Override
-    public boolean isEscapeBadIdentifierCodePoints()
-    {
+    public boolean isEscapeBadIdentifierCodePoints() {
         return escapeBadIdentifierCodePoints;
     }
 
@@ -1643,9 +1577,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setEscapeBadIdentifierCodePoints(boolean)
      */
     @Override
-    public void setEscapeBadIdentifierCodePoints( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setEscapeBadIdentifierCodePoints(boolean dflt) {
+        synchronized (getClass()) {
             escapeBadIdentifierCodePoints = dflt;
         }
     }
@@ -1659,8 +1592,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isFullJSONIdentifierCodePoints()
      */
     @Override
-    public boolean isFullJSONIdentifierCodePoints()
-    {
+    public boolean isFullJSONIdentifierCodePoints() {
         return fullJSONIdentifierCodePoints;
     }
 
@@ -1677,11 +1609,10 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setFullJSONIdentifierCodePoints(boolean)
      */
     @Override
-    public void setFullJSONIdentifierCodePoints( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setFullJSONIdentifierCodePoints(boolean dflt) {
+        synchronized (getClass()) {
             fullJSONIdentifierCodePoints = dflt;
-            if ( fullJSONIdentifierCodePoints ){
+            if (fullJSONIdentifierCodePoints) {
                 quoteIdentifier = true;
             }
         }
@@ -1694,8 +1625,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isFastStrings()
      */
     @Override
-    public boolean isFastStrings()
-    {
+    public boolean isFastStrings() {
         return fastStrings;
     }
 
@@ -1714,13 +1644,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * escaped.
      *
      * @param dflt If true, then string values will be copied as is with no escaping
-     *            or validation.
+     *             or validation.
      * @see JSONConfig#setFastStrings(boolean)
      */
     @Override
-    public void setFastStrings( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setFastStrings(boolean dflt) {
+        synchronized (getClass()) {
             fastStrings = dflt;
         }
     }
@@ -1734,8 +1663,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEncodeNumericStringsAsNumbers()
      */
     @Override
-    public boolean isEncodeNumericStringsAsNumbers()
-    {
+    public boolean isEncodeNumericStringsAsNumbers() {
         return encodeNumericStringsAsNumbers;
     }
 
@@ -1745,13 +1673,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, then strings that look like valid JSON numbers
-     * will be encoded as numbers.
+     *             will be encoded as numbers.
      * @see JSONConfig#setEncodeNumericStringsAsNumbers(boolean)
      */
     @Override
-    public void setEncodeNumericStringsAsNumbers( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setEncodeNumericStringsAsNumbers(boolean dflt) {
+        synchronized (getClass()) {
             encodeNumericStringsAsNumbers = dflt;
         }
     }
@@ -1765,8 +1692,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEscapeNonAscii()
      */
     @Override
-    public boolean isEscapeNonAscii()
-    {
+    public boolean isEscapeNonAscii() {
         return escapeNonAscii;
     }
 
@@ -1782,11 +1708,10 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setEscapeNonAscii(boolean)
      */
     @Override
-    public void setEscapeNonAscii( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setEscapeNonAscii(boolean dflt) {
+        synchronized (getClass()) {
             escapeNonAscii = dflt;
-            if ( escapeNonAscii ){
+            if (escapeNonAscii) {
                 escapeSurrogates = false;
             }
         }
@@ -1801,8 +1726,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEscapeSurrogates()
      */
     @Override
-    public boolean isEscapeSurrogates()
-    {
+    public boolean isEscapeSurrogates() {
         return escapeSurrogates;
     }
 
@@ -1812,15 +1736,14 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, then surrogates will be escaped in strings and identifiers
-     * and escapeNonAscii will be forced to false.
+     *             and escapeNonAscii will be forced to false.
      * @see JSONConfig#setEscapeSurrogates(boolean)
      */
     @Override
-    public void setEscapeSurrogates( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setEscapeSurrogates(boolean dflt) {
+        synchronized (getClass()) {
             escapeSurrogates = dflt;
-            if ( escapeSurrogates ){
+            if (escapeSurrogates) {
                 escapeNonAscii = false;
             }
         }
@@ -1835,8 +1758,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isUnEscapeWherePossible()
      */
     @Override
-    public boolean isUnEscapeWherePossible()
-    {
+    public boolean isUnEscapeWherePossible() {
         return unEscapeWherePossible;
     }
 
@@ -1849,9 +1771,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setUnEscapeWherePossible(boolean)
      */
     @Override
-    public void setUnEscapeWherePossible( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setUnEscapeWherePossible(boolean dflt) {
+        synchronized (getClass()) {
             unEscapeWherePossible = dflt;
         }
     }
@@ -1865,8 +1786,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isPassThroughEscapes()
      */
     @Override
-    public boolean isPassThroughEscapes()
-    {
+    public boolean isPassThroughEscapes() {
         return passThroughEscapes;
     }
 
@@ -1880,9 +1800,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setPassThroughEscapes(boolean)
      */
     @Override
-    public void setPassThroughEscapes( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setPassThroughEscapes(boolean dflt) {
+        synchronized (getClass()) {
             passThroughEscapes = dflt;
         }
     }
@@ -1896,8 +1815,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEncodeDatesAsStrings()
      */
     @Override
-    public boolean isEncodeDatesAsStrings()
-    {
+    public boolean isEncodeDatesAsStrings() {
         return encodeDatesAsStrings;
     }
 
@@ -1908,16 +1826,15 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, then {@link Date} objects will be encoded as ISO 8601 date
-     * strings or a custom date format if you have called
-     * {@link #setDateGenFormat(DateFormat)}.
+     *             strings or a custom date format if you have called
+     *             {@link #setDateGenFormat(DateFormat)}.
      * @see JSONConfig#setEncodeDatesAsStrings(boolean)
      */
     @Override
-    public synchronized void setEncodeDatesAsStrings( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public synchronized void setEncodeDatesAsStrings(boolean dflt) {
+        synchronized (getClass()) {
             encodeDatesAsStrings = dflt;
-            if ( encodeDatesAsStrings ){
+            if (encodeDatesAsStrings) {
                 encodeDatesAsObjects = false;
             }
         }
@@ -1933,8 +1850,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public boolean isReflectUnknownObjects()
-    {
+    public boolean isReflectUnknownObjects() {
         return reflectUnknownObjects;
     }
 
@@ -1947,7 +1863,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, then attempt to use reflection to encode objects
-     *            which are otherwise unknown.
+     *             which are otherwise unknown.
      * @see #addReflectClass(Object)
      * @see #addReflectClasses(Collection)
      * @see #addReflectClassByName(String)
@@ -1955,9 +1871,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setReflectUnknownObjects( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setReflectUnknownObjects(boolean dflt) {
+        synchronized (getClass()) {
             reflectUnknownObjects = dflt;
         }
     }
@@ -1970,8 +1885,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public boolean isPreciseNumbers()
-    {
+    public boolean isPreciseNumbers() {
         return preciseNumbers;
     }
 
@@ -1986,9 +1900,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setPreciseNumbers( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setPreciseNumbers(boolean dflt) {
+        synchronized (getClass()) {
             preciseNumbers = dflt;
         }
     }
@@ -2001,8 +1914,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public boolean isSmallNumbers()
-    {
+    public boolean isSmallNumbers() {
         return smallNumbers;
     }
 
@@ -2018,9 +1930,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setSmallNumbers( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setSmallNumbers(boolean dflt) {
+        synchronized (getClass()) {
             smallNumbers = dflt;
         }
     }
@@ -2033,8 +1944,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public boolean isUsePrimitiveArrays()
-    {
+    public boolean isUsePrimitiveArrays() {
         return usePrimitiveArrays;
     }
 
@@ -2057,9 +1967,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setUsePrimitiveArrays( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setUsePrimitiveArrays(boolean dflt) {
+        synchronized (getClass()) {
             usePrimitiveArrays = dflt;
         }
     }
@@ -2072,8 +1981,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public boolean isCacheReflectionData()
-    {
+    public boolean isCacheReflectionData() {
         return cacheReflectionData;
     }
 
@@ -2087,11 +1995,10 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @since 1.9
      */
     @Override
-    public void setCacheReflectionData( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setCacheReflectionData(boolean dflt) {
+        synchronized (getClass()) {
             cacheReflectionData = dflt;
-            if ( cacheReflectionData == false ){
+            if (cacheReflectionData == false) {
                 ReflectedObjectMapBuilder.clearReflectionCache();
             }
         }
@@ -2106,8 +2013,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isQuoteIdentifier()
      */
     @Override
-    public boolean isQuoteIdentifier()
-    {
+    public boolean isQuoteIdentifier() {
         return quoteIdentifier;
     }
 
@@ -2122,9 +2028,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setQuoteIdentifier(boolean)
      */
     @Override
-    public void setQuoteIdentifier( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setQuoteIdentifier(boolean dflt) {
+        synchronized (getClass()) {
             quoteIdentifier = fullJSONIdentifierCodePoints || dflt;
         }
     }
@@ -2138,8 +2043,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isUseECMA6()
      */
     @Override
-    public boolean isUseECMA6()
-    {
+    public boolean isUseECMA6() {
         return useECMA6;
     }
 
@@ -2153,13 +2057,12 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, use EMCAScript 6 code point escapes and allow
-     * ECMAScript 6 identifier character set.
+     *             ECMAScript 6 identifier character set.
      * @see JSONConfig#setUseECMA6(boolean)
      */
     @Override
-    public void setUseECMA6( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setUseECMA6(boolean dflt) {
+        synchronized (getClass()) {
             useECMA6 = dflt;
         }
     }
@@ -2173,8 +2076,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isAllowReservedWordsInIdentifiers()
      */
     @Override
-    public boolean isAllowReservedWordsInIdentifiers()
-    {
+    public boolean isAllowReservedWordsInIdentifiers() {
         return allowReservedWordsInIdentifiers;
     }
 
@@ -2187,9 +2089,8 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#setAllowReservedWordsInIdentifiers(boolean)
      */
     @Override
-    public void setAllowReservedWordsInIdentifiers( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public void setAllowReservedWordsInIdentifiers(boolean dflt) {
+        synchronized (getClass()) {
             allowReservedWordsInIdentifiers = dflt;
         }
     }
@@ -2203,8 +2104,7 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * @see JSONConfig#isEncodeDatesAsObjects()
      */
     @Override
-    public boolean isEncodeDatesAsObjects()
-    {
+    public boolean isEncodeDatesAsObjects() {
         return encodeDatesAsObjects;
     }
 
@@ -2217,15 +2117,14 @@ public class JSONConfigDefaults implements JSONConfigDefaultsMBean, Serializable
      * Accessible via MBean server.
      *
      * @param dflt If true, then {@link Date} objects will be encoded as
-     * Javascript dates.
+     *             Javascript dates.
      * @see JSONConfig#setEncodeDatesAsObjects(boolean)
      */
     @Override
-    public synchronized void setEncodeDatesAsObjects( boolean dflt )
-    {
-        synchronized ( getClass() ){
+    public synchronized void setEncodeDatesAsObjects(boolean dflt) {
+        synchronized (getClass()) {
             encodeDatesAsObjects = dflt;
-            if ( encodeDatesAsObjects ){
+            if (encodeDatesAsObjects) {
                 encodeDatesAsStrings = false;
             }
         }

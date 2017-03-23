@@ -30,8 +30,7 @@ import javax.management.MBeanException;
  *
  * @author Bill Davidson
  */
-public interface JSONConfigDefaultsMBean
-{
+public interface JSONConfigDefaultsMBean {
     /**
      * Reset all defaults to their original unmodified values.  This
      * overrides JNDI and previous MBean changes.
@@ -50,7 +49,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param languageTag A language tag suitable for use by {@link Locale#forLanguageTag(String)}.
      */
-    public void setLocaleLanguageTag( String languageTag );
+    public void setLocaleLanguageTag(String languageTag);
 
     /**
      * Clear any default number formats.
@@ -64,12 +63,12 @@ public interface JSONConfigDefaultsMBean
      * encodeDatesAsStrings or encodeDatesAsObjects is true.
      *
      * @param fmtStr passed to the constructor for
-     * {@link SimpleDateFormat#SimpleDateFormat(String,Locale)} using
-     * the result of {@link JSONConfigDefaults#getLocale()}.
+     *               {@link SimpleDateFormat#SimpleDateFormat(String, Locale)} using
+     *               the result of {@link JSONConfigDefaults#getLocale()}.
      * @return the format that is created.
      * @since 1.4
      */
-    public DateFormat setDateGenFormat( String fmtStr );
+    public DateFormat setDateGenFormat(String fmtStr);
 
     /**
      * Clear date generation format.
@@ -84,12 +83,12 @@ public interface JSONConfigDefaultsMBean
      * encodeDatesAsObjects is true.
      *
      * @param fmtStr Passed to
-     * {@link SimpleDateFormat#SimpleDateFormat(String,Locale)} using
-     * the result of {@link JSONConfigDefaults#getLocale()}.
+     *               {@link SimpleDateFormat#SimpleDateFormat(String, Locale)} using
+     *               the result of {@link JSONConfigDefaults#getLocale()}.
      * @return The format that gets created.
      * @since 1.4
      */
-    public DateFormat addDateParseFormat( String fmtStr );
+    public DateFormat addDateParseFormat(String fmtStr);
 
     /**
      * Clear any date parse formats from the list of formats
@@ -126,7 +125,7 @@ public interface JSONConfigDefaultsMBean
      * @see ReflectUtil#PUBLIC
      * @since 1.9
      */
-    public void setReflectionPrivacy( int dflt ) throws MBeanException;
+    public void setReflectionPrivacy(int dflt) throws MBeanException;
 
     /**
      * Clear all reflection classes, disabling all default automatic reflection.
@@ -144,21 +143,21 @@ public interface JSONConfigDefaultsMBean
      * Add the given class to the set of classes to be reflected.
      *
      * @param className The name of the class suitable for
-     * (@link {@link ClassLoader#loadClass(String)}}.
+     *                  (@link {@link ClassLoader#loadClass(String)}}.
      * @throws MBeanException If there's a problem loading the class.
      * @since 1.9
      */
-    public void addReflectClassByName( String className ) throws MBeanException;
+    public void addReflectClassByName(String className) throws MBeanException;
 
     /**
      * Remove the given class from the set of classes to be reflected.
      *
      * @param className The name of the class suitable for
-     * (@link {@link ClassLoader#loadClass(String)}}.
+     *                  (@link {@link ClassLoader#loadClass(String)}}.
      * @throws MBeanException If there's a problem loading the class.
      * @since 1.9
      */
-    public void removeReflectClassByName( String className ) throws MBeanException;
+    public void removeReflectClassByName(String className) throws MBeanException;
 
     /**
      * Get a string with newline separated list of classes that get reflected.
@@ -179,17 +178,17 @@ public interface JSONConfigDefaultsMBean
      * Tell JSONUtil what to do by default when it encounters unmatched surrogates in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link JSONConfig#DISCARD} - Discard them.</li>
-     *   <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
-     *   <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
-     *   <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
+     * <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link JSONConfig#DISCARD} - Discard them.</li>
+     * <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
+     * <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
+     * <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      *
      * @param dflt the default unmatchedSurrogatePolicy to set
      */
-    public void setUnmatchedSurrogatePolicy( int dflt );
+    public void setUnmatchedSurrogatePolicy(int dflt);
 
     /**
      * Get the default policy for undefined code points.
@@ -202,17 +201,17 @@ public interface JSONConfigDefaultsMBean
      * Tell JSONUtil what to do by default when it encounters undefined code points in strings
      * and identifiers.  The permitted values are:
      * <ul>
-     *   <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
-     *   <li>{@link JSONConfig#DISCARD} - Discard them.</li>
-     *   <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
-     *   <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
-     *   <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
+     * <li>{@link JSONConfig#REPLACE} - Replace with Unicode replacement character U+FFFD (default)</li>
+     * <li>{@link JSONConfig#DISCARD} - Discard them.</li>
+     * <li>{@link JSONConfig#EXCEPTION} - Throw a {@link UndefinedCodePointException}</li>
+     * <li>{@link JSONConfig#ESCAPE} - Include them but escape them</li>
+     * <li>{@link JSONConfig#PASS} - Pass them through unmodified.</li>
      * </ul>
      * Any other value will be ignored.
      *
      * @param dflt the default undefinedCodePointPolicy to set
      */
-    public void setUndefinedCodePointPolicy( int dflt );
+    public void setUndefinedCodePointPolicy(int dflt);
 
     /**
      * Set the default flag for validation of property names.
@@ -221,7 +220,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then property names will be validated by default.
      */
-    public void setValidatePropertyNames( boolean dflt );
+    public void setValidatePropertyNames(boolean dflt);
 
     /**
      * Get the default detect data structure loops policy.
@@ -240,7 +239,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then the code will detect loops in data structures.
      */
-    public void setDetectDataStructureLoops( boolean dflt );
+    public void setDetectDataStructureLoops(boolean dflt);
 
     /**
      * Get the default escape bad identifier code points policy.
@@ -255,7 +254,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt if true, then any bad code points in identifiers will be escaped.
      */
-    public void setEscapeBadIdentifierCodePoints( boolean dflt );
+    public void setEscapeBadIdentifierCodePoints(boolean dflt);
 
     /**
      * Get the full JSON identifier code points policy.
@@ -273,7 +272,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then allow all code points permitted by the JSON standard in identifiers.
      */
-    public void setFullJSONIdentifierCodePoints( boolean dflt );
+    public void setFullJSONIdentifierCodePoints(boolean dflt);
 
     /**
      * Get the fastStrings policy.
@@ -297,9 +296,9 @@ public interface JSONConfigDefaultsMBean
      * to be escaped.
      *
      * @param dflt If true, then strings will be copied as is with no escaping
-     *            or validation.
+     *             or validation.
      */
-    public void setFastStrings( boolean dflt );
+    public void setFastStrings(boolean dflt);
 
     /**
      * Get the default encode numeric strings as numbers policy.
@@ -312,9 +311,9 @@ public interface JSONConfigDefaultsMBean
      * Set the default flag for encoding of numeric strings as numbers.
      *
      * @param dflt If true, then strings that look like valid JSON numbers
-     * will be encoded as numbers.
+     *             will be encoded as numbers.
      */
-    public void setEncodeNumericStringsAsNumbers( boolean dflt );
+    public void setEncodeNumericStringsAsNumbers(boolean dflt);
 
     /**
      * Get the default escape non-ASCII policy.
@@ -331,7 +330,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then all non-ASCII will be Unicode escaped.
      */
-    public void setEscapeNonAscii( boolean dflt );
+    public void setEscapeNonAscii(boolean dflt);
 
     /**
      * The default unEscape policy.
@@ -345,7 +344,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true then where possible, undo inline escapes in strings.
      */
-    public void setUnEscapeWherePossible( boolean dflt );
+    public void setUnEscapeWherePossible(boolean dflt);
 
     /**
      * Get the default escape surrogates policy.
@@ -358,9 +357,9 @@ public interface JSONConfigDefaultsMBean
      * Set the default escapeSurrogates policy.
      *
      * @param dflt If true, then surrogates will be escaped in strings and identifiers
-     * and escapeNonAscii will be forced to false.
+     *             and escapeNonAscii will be forced to false.
      */
-    public void setEscapeSurrogates( boolean dflt );
+    public void setEscapeSurrogates(boolean dflt);
 
     /**
      * Get the pass through escapes policy.
@@ -379,7 +378,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then pass escapes through.
      */
-    public void setPassThroughEscapes( boolean dflt );
+    public void setPassThroughEscapes(boolean dflt);
 
     /**
      * Get the encode dates as strings policy.
@@ -395,10 +394,10 @@ public interface JSONConfigDefaultsMBean
      * Accessible via MBean server.
      *
      * @param dflt If true, then {@link Date} objects will be encoded as ISO 8601 date
-     * strings or a custom date format if you have called
-     * {@link JSONConfigDefaults#setDateGenFormat(DateFormat)}.
+     *             strings or a custom date format if you have called
+     *             {@link JSONConfigDefaults#setDateGenFormat(DateFormat)}.
      */
-    public void setEncodeDatesAsStrings( boolean dflt );
+    public void setEncodeDatesAsStrings(boolean dflt);
 
     /**
      * Get the reflection of unknown objects policy.
@@ -415,10 +414,10 @@ public interface JSONConfigDefaultsMBean
      * objects will have their toString() method called.
      *
      * @param dflt If true, then attempt to use reflection
-     * to encode objects which are otherwise unknown.
+     *             to encode objects which are otherwise unknown.
      * @since 1.9
      */
-    public void setReflectUnknownObjects( boolean dflt );
+    public void setReflectUnknownObjects(boolean dflt);
 
     /**
      * Get the preciseFloatingPoint policy.
@@ -437,7 +436,7 @@ public interface JSONConfigDefaultsMBean
      * @param dflt If true then quote numbers that lose precision in 64-bit floating point.
      * @since 1.9
      */
-    public void setPreciseNumbers( boolean dflt );
+    public void setPreciseNumbers(boolean dflt);
 
     /**
      * Get the smallNumbers policy.
@@ -457,7 +456,7 @@ public interface JSONConfigDefaultsMBean
      * @param dflt If true then numbers will be made to use as little memory as possible.
      * @since 1.9
      */
-    public void setSmallNumbers( boolean dflt );
+    public void setSmallNumbers(boolean dflt);
 
     /**
      * The primitive arrays policy.
@@ -482,10 +481,10 @@ public interface JSONConfigDefaultsMBean
      * memory as possible.
      *
      * @param dflt if true, then the parser will create arrays of primitives as
-     *            applicable.
+     *             applicable.
      * @since 1.9
      */
-    public void setUsePrimitiveArrays( boolean dflt );
+    public void setUsePrimitiveArrays(boolean dflt);
 
 
     /**
@@ -504,7 +503,7 @@ public interface JSONConfigDefaultsMBean
      * @param dflt if true, then cache reflection data.
      * @since 1.9
      */
-    public void setCacheReflectionData( boolean dflt );
+    public void setCacheReflectionData(boolean dflt);
 
     /**
      * Get the default quote identifier policy.
@@ -522,7 +521,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then all identifiers will be quoted.
      */
-    public void setQuoteIdentifier( boolean dflt );
+    public void setQuoteIdentifier(boolean dflt);
 
     /**
      * Get the default escape ECMAScript 6 code points policy.
@@ -539,9 +538,9 @@ public interface JSONConfigDefaultsMBean
      * letter numbers in addition to other letters.  Default is false.
      *
      * @param dflt If true, use EMCAScript 6 code point escapes and allow
-     * ECMAScript 6 identifier character set.
+     *             ECMAScript 6 identifier character set.
      */
-    public void setUseECMA6( boolean dflt );
+    public void setUseECMA6(boolean dflt);
 
     /**
      * Get the default for allowing reserved words in identifiers.
@@ -555,7 +554,7 @@ public interface JSONConfigDefaultsMBean
      *
      * @param dflt If true, then reserved words will be allowed in identifiers.
      */
-    public void setAllowReservedWordsInIdentifiers( boolean dflt );
+    public void setAllowReservedWordsInIdentifiers(boolean dflt);
 
     /**
      * Get the encode dates as objects policy.
@@ -571,7 +570,7 @@ public interface JSONConfigDefaultsMBean
      * set to false.
      *
      * @param dflt If true, then {@link Date} objects will be encoded as
-     * Javascript dates.
+     *             Javascript dates.
      */
-    public void setEncodeDatesAsObjects( boolean dflt );
+    public void setEncodeDatesAsObjects(boolean dflt);
 }

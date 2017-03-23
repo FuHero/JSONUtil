@@ -38,8 +38,7 @@ import java.util.Arrays;
  *
  * @author Bill Davidson
  */
-class StringWriter extends Writer
-{
+class StringWriter extends Writer {
     private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
     private static final int INITIAL_SIZE = 16;
 
@@ -49,8 +48,7 @@ class StringWriter extends Writer
     /**
      * Create a new StringWriter.
      */
-    public StringWriter()
-    {
+    public StringWriter() {
         value = new char[INITIAL_SIZE];
         count = 0;
     }
@@ -61,8 +59,7 @@ class StringWriter extends Writer
      * @param str the string.
      */
     @Override
-    public void write( String str )
-    {
+    public void write(String str) {
         write(str, 0, str.length());
     }
 
@@ -75,10 +72,9 @@ class StringWriter extends Writer
      * @param len the number of chars to write.
      */
     @Override
-    public void write( String str, int off, int len )
-    {
+    public void write(String str, int off, int len) {
         ensureCapacity(count + len);
-        str.getChars(off, off+len, value, count);
+        str.getChars(off, off + len, value, count);
         count += len;
     }
 
@@ -88,10 +84,9 @@ class StringWriter extends Writer
      * @param c the value of the char
      */
     @Override
-    public void write( int c )
-    {
+    public void write(int c) {
         ensureCapacity(count + 1);
-        value[count++] = (char)c;
+        value[count++] = (char) c;
     }
 
     /**
@@ -99,15 +94,14 @@ class StringWriter extends Writer
      * single code point.
      *
      * @param cbuf a char array for a single code point.
-     * @param off will always be 0.
-     * @param len will always be 1 for BMP code points or 2 for a surrogate pair.
+     * @param off  will always be 0.
+     * @param len  will always be 1 for BMP code points or 2 for a surrogate pair.
      */
     @Override
-    public void write( char[] cbuf, int off, int len )
-    {
+    public void write(char[] cbuf, int off, int len) {
         ensureCapacity(count + len);
         value[count++] = cbuf[0];
-        if ( len == 2 ){
+        if (len == 2) {
             value[count++] = cbuf[1];
         }
     }
@@ -118,42 +112,36 @@ class StringWriter extends Writer
      * @return the string that has been built.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new String(value, 0, count);
     }
 
-    private void ensureCapacity( int capacity )
-    {
-        if ( capacity - value.length > 0 ){
+    private void ensureCapacity(int capacity) {
+        if (capacity - value.length > 0) {
             value = Arrays.copyOf(value, newCapacity(capacity));
         }
     }
 
-    private int newCapacity( int capacity )
-    {
+    private int newCapacity(int capacity) {
         int newCapacity = (value.length << 1) + 2;
-        if ( newCapacity - capacity < 0 ){
+        if (newCapacity - capacity < 0) {
             newCapacity = capacity;
         }
         return (newCapacity <= 0 || MAX_BUFFER_SIZE - newCapacity < 0) ? maxCapacity(capacity) : newCapacity;
     }
 
-    private int maxCapacity( int capacity )
-    {
-        if ( Integer.MAX_VALUE - capacity < 0 ){
+    private int maxCapacity(int capacity) {
+        if (Integer.MAX_VALUE - capacity < 0) {
             throw new OutOfMemoryError();
         }
         return (capacity > MAX_BUFFER_SIZE) ? capacity : MAX_BUFFER_SIZE;
     }
 
     @Override
-    public void flush()
-    {
+    public void flush() {
     }
 
     @Override
-    public void close()
-    {
+    public void close() {
     }
 }

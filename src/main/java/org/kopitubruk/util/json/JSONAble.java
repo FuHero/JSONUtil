@@ -33,8 +33,7 @@ import java.io.Writer;
  *
  * @author Bill Davidson
  */
-public interface JSONAble
-{
+public interface JSONAble {
 
     /**
      * Convert this object to a string of JSON data.
@@ -91,7 +90,7 @@ public interface JSONAble
     }
     * */
     // Java 7 version.
-    public String toJSON( JSONConfig jsonConfig );
+    public String toJSON(JSONConfig jsonConfig);
 
     /**
      * Write to the given writer as JSON data using all defaults for the
@@ -110,7 +109,7 @@ public interface JSONAble
     }
     * */
     // Java 7 version.
-    public void toJSON( Writer json ) throws IOException;
+    public void toJSON(Writer json) throws IOException;
 
     /**
      * Write this object to the given writer as JSON data. This is the one that
@@ -127,8 +126,8 @@ public interface JSONAble
      * detected properly.
      *
      * @param jsonConfig A configuration object to use to optionally set encoding options.
-     * @param json A writer for the output.
+     * @param json       A writer for the output.
      * @throws IOException If there is an error on output.
      */
-    public void toJSON( JSONConfig jsonConfig, Writer json ) throws IOException;
+    public void toJSON(JSONConfig jsonConfig, Writer json) throws IOException;
 }
