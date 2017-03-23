@@ -26,3 +26,6 @@ release.properties
 /JSONUtil/.settings
 /JSONUtil/.classpath
 /JSONUtil/.project
+.idea/
+JSONUtil.iml
+
